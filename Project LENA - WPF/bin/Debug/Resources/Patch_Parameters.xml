@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Method type="Patch_Parameters">
+  <Parameters>
+    <Patch_Method>1</Patch_Method>
+    <Number_of_Sectors>384</Number_of_Sectors>
+    <Step>3</Step>
+    <Network_Size>511, 511, 511, 169</Network_Size>
+    <Output_Neurons>1</Output_Neurons>
+  </Parameters>
+</Method>
