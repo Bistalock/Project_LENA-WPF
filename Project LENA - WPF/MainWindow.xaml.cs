@@ -52,6 +52,40 @@ namespace Project_LENA___WPF
             
         }
 
+        //protected override void WndProc(ref Message m)
+        //{
+        //    base.WndProc(ref m);
+        //    switch (m.Msg)
+        //    {
+        //        case 0x84: //WM_NCHITTEST
+        //            var result = (HitTest)m.Result.ToInt32();
+        //            if (result == HitTest.Left || result == HitTest.Right)
+        //                m.Result = new IntPtr((int)HitTest.Caption);
+        //            if (result == HitTest.TopLeft || result == HitTest.TopRight)
+        //                m.Result = new IntPtr((int)HitTest.Top);
+        //            if (result == HitTest.BottomLeft || result == HitTest.BottomRight)
+        //                m.Result = new IntPtr((int)HitTest.Bottom);
+
+        //            break;
+        //    }
+        //}
+        //enum HitTest
+        //{
+        //    Caption = 2,
+        //    Transparent = -1,
+        //    Nowhere = 0,
+        //    Client = 1,
+        //    Left = 10,
+        //    Right = 11,
+        //    Top = 12,
+        //    TopLeft = 13,
+        //    TopRight = 14,
+        //    Bottom = 15,
+        //    BottomLeft = 16,
+        //    BottomRight = 17,
+        //    Border = 18
+        //}
+
         public static IntPtr SetClassLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
         {
             //check for x64
@@ -185,12 +219,12 @@ namespace Project_LENA___WPF
                     return;
                 }
             }
-            #endregion
-
+            #endregion        
+           
+            #region GetTagInfo
             Tiff image = Tiff.Open(textBox1.Text, "r");
 
             // Obtain basic tag information of the image
-            #region GetTagInfo
             int width = image.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
             int height = image.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
             byte bits = image.GetField(TiffTag.BITSPERSAMPLE)[0].ToByte();
@@ -1298,7 +1332,188 @@ namespace Project_LENA___WPF
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(textBox3.Text))
+            {
+                MessageBoxResult result = MessageBox.Show("Please input the color image.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
 
+            else
+            {
+                Tiff image = Tiff.Open(textBox3.Text, "r");
+                // Obtain basic tag information of the image
+                #region GetTagInfo
+                int width = image.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
+                int height = image.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
+                byte bits = image.GetField(TiffTag.BITSPERSAMPLE)[0].ToByte();
+                #endregion
+
+                int imageSize = height * width * 3;
+                int[] raster = new int[imageSize];
+
+                byte[] scanline = new byte[image.ScanlineSize()];
+
+                // Initiallization of RGB values
+                int[,] red = new int[height, width];
+                int[,] green = new int[height, width];
+                int[,] blue = new int[height, width];
+
+                // Initiallization of YUV values
+                double[,] Y = new double[height, width];
+                double[,] U = new double[height, width];
+                double[,] V = new double[height, width];
+
+                // I want the closest result to VEGA
+                for (int i = height - 1; i != -1; i--)
+                {
+                    image.ReadScanline(scanline, i);
+                    for (int j = 0; j < width; j++)
+                    {
+                        red[i, j] = scanline[3 * j]; // PSNR: INFINITY, Channel is correct
+                        green[i, j] = scanline[3 * j + 1]; // PSNR: INFINITY, Channel is correct
+                        blue[i, j] = scanline[3 * j + 2]; // PSNR: INFINITY, Channel is correct
+
+
+                        // This is what MATLAB uses to convert RGB to YUV - PSNR 26.25002 to VEGA
+                        //Y[i, j] = (0.257 * red[i, j]) + (0.504 * green[i, j]) + (0.098 * blue[i, j]) + 16;
+                        //U[i, j] = -(0.148 * red[i, j]) - (0.291 * green[i, j]) + (0.439 * blue[i, j]) + 128;
+                        //V[i, j] = (0.439 * red[i, j]) - (0.368 * green[i, j]) - (0.071 * blue[i, j]) + 128;
+
+                        // Using bitwise shift operations to convert, no success - PSNR 26.21524
+                        //Y[i, j] = ((66 * red[i, j] + 129 * green[i, j] + 25 * blue[i, j] + 128) >> 8) + 16;
+
+                        // CCIR Recommendation 709 - PSNR 30.61359 to VEGA
+                        //Y[i, j] = (0.2125 * red[i, j]) + (0.7154 * green[i, j]) + (0.0721 * blue[i, j]);
+
+                        // Conversion from RGB to YUV, as written here:
+                        // http://www.eagle.tamut.edu/faculty/igor/MY%20CLASSES/CS-467/Lecture-12.pdf on slide 18
+                        // Also part of the CCIR Recommendation 601-1 - PSNR 27.8757 to VEGA
+                        //Y[i, j] = (0.299 * red[i, j]) + (0.587 * green[i, j]) + (0.114 * blue[i, j]);
+                        Y[i, j] = (0.3 * red[i, j]) + (0.59 * green[i, j]) + (0.11 * blue[i, j]);
+                        U[i, j] = -(0.14713 * red[i, j]) - (0.28886 * green[i, j]) + (0.436 * blue[i, j]);
+                        V[i, j] = (0.615 * red[i, j]) - (0.51499 * green[i, j]) - (0.10001 * blue[i, j]);
+
+                    }
+                }
+
+                #region Merge YUV - (for debugging purposes)
+
+                //byte[,] YUV = new byte[height, image.ScanlineSize()];
+
+                //for (int i = 0; i < height; i++)
+                //{
+                //    for (int j = 0; j < width; j++)
+                //    {
+                //        YUV[i, 3 * j] = Convert.ToByte(Y[i, j]);
+                //    }
+                //}
+
+                //for (int i = 0; i < height; i++)
+                //{
+                //    for (int j = 0; j < width; j++)
+                //    {
+                //        YUV[i, 3 * j + 1] = Convert.ToByte(U[i, j]);
+                //    }
+                //}
+                //for (int i = 0; i < height; i++)
+                //{
+                //    for (int j = 0; j < width; j++)
+                //    {
+                //        YUV[i, 3 * j + 2] = Convert.ToByte(V[i, j]);
+                //    }
+                //}
+                #endregion
+
+                #region Save Image
+                // Create OpenFileDialog 
+                Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+
+                // Set filter for file extension and default file extension 
+                dlg.DefaultExt = ".tif";
+                dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+                dlg.FileName = System.IO.Path.GetFileNameWithoutExtension(textBox3.Text) + "_Y" + ".tif";
+                // Assigns the results value when Dialog is opened
+                var dlgresult = dlg.ShowDialog();
+
+                // Checks if value is true
+                if (dlgresult == true)
+                {
+                    using (Tiff output = Tiff.Open(dlg.FileName, "w"))
+                    {
+                        // Write the tiff tags to the file
+                        output.SetField(TiffTag.IMAGEWIDTH, width);
+                        output.SetField(TiffTag.IMAGELENGTH, height);
+                        output.SetField(TiffTag.COMPRESSION, Compression.NONE);
+                        output.SetField(TiffTag.PLANARCONFIG, PlanarConfig.CONTIG);
+                        output.SetField(TiffTag.PHOTOMETRIC, Photometric.MINISBLACK);
+                        output.SetField(TiffTag.BITSPERSAMPLE, 8);
+                        output.SetField(TiffTag.SAMPLESPERPIXEL, 1);
+
+                        //output.SetField(TiffTag.IMAGEWIDTH, width);
+                        //output.SetField(TiffTag.IMAGELENGTH, height);
+                        //output.SetField(TiffTag.BITSPERSAMPLE, bits);
+                        //output.SetField(TiffTag.SAMPLESPERPIXEL, 1);
+                        //output.SetField(TiffTag.ORIENTATION, BitMiracle.LibTiff.Classic.Orientation.TOPLEFT);
+                        //output.SetField(TiffTag.PHOTOMETRIC, Photometric.MINISBLACK);
+                        //output.SetField(TiffTag.PLANARCONFIG, PlanarConfig.CONTIG);
+                        //output.SetField(TiffTag.ROWSPERSTRIP, height);
+                        //output.SetField(TiffTag.XRESOLUTION, dpiX);
+                        //output.SetField(TiffTag.YRESOLUTION, dpiY);
+                        //output.SetField(TiffTag.RESOLUTIONUNIT, ResUnit.CENTIMETER);
+                        //output.SetField(TiffTag.COMPRESSION, Compression.NONE);
+                        //output.SetField(TiffTag.FILLORDER, FillOrder.MSB2LSB);
+
+                        byte[] im = new byte[width * sizeof(byte /*can be changed depending on the format of the image)*/)];
+
+                        for (int i = 0; i < height; ++i)
+                        {
+                            for (int j = 0; j < width; ++j)
+                            {
+                                if (Y[i, j] > 255) Y[i, j] = 255;
+                                if (Y[i, j] < 0) Y[i, j] = 0;
+                                im[j] = Convert.ToByte(Y[i, j]);
+                            }
+                            output.WriteScanline(im, i);
+                        }
+                        output.WriteDirectory();
+                        output.Dispose();
+
+                        #region Save YUV image - (for debugging purposes)
+
+                        //// Write the tiff tags to the file
+                        //output.SetField(TiffTag.IMAGEWIDTH, width);
+                        //output.SetField(TiffTag.IMAGELENGTH, height);
+                        //output.SetField(TiffTag.COMPRESSION, Compression.NONE);
+                        //output.SetField(TiffTag.PLANARCONFIG, PlanarConfig.SEPARATE);
+                        //output.SetField(TiffTag.PHOTOMETRIC, Photometric.YCBCR);
+                        //output.SetField(TiffTag.BITSPERSAMPLE, 8);
+                        //output.SetField(TiffTag.SAMPLESPERPIXEL, 3);
+                        ////output.YCBCRCOEFFICIENTS
+                        //  //  output.YCBCRSUBSAMPLING
+                        //    //    output.YCBCRPOSITIONING = 
+
+                        //byte[] im = new byte[image.ScanlineSize() * sizeof(byte /*can be changed depending on the format of the image*/)];
+
+                        //for (int i = 0; i < height; i++)
+                        //{
+
+                        //    for (int j = 0; j < image.ScanlineSize(); j++)
+                        //    {
+                        //        im[j] = YUV[i, j];
+                        //    }
+                        //    output.WriteEncodedStrip(i, im, image.ScanlineSize());
+                        //}
+                        #endregion
+                    }
+                    //System.Diagnostics.Process.Start(FileName);                   
+                }
+                #endregion
+                textBox1.Text = dlg.FileName;
+                image.Dispose();
+            }
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
