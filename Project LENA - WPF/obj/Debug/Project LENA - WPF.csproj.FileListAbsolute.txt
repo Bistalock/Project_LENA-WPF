@@ -20,7 +20,6 @@ C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Debug\Proj
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Debug\Project LENA - WPF.pdb
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Debug\BitMiracle.LibTiff.NET.dll
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Debug\BitMiracle.LibTiff.NET.xml
-C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\Project LENA - WPF.csprojResolveAssemblyReference.cache
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\MainWindow.baml
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\MainWindow.g.cs
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\App.g.cs
@@ -28,3 +27,4 @@ C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\Proj
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\Project LENA - WPF.g.resources
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\Project_LENA___WPF.Properties.Resources.resources
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\Project LENA - WPF.csproj.GenerateResource.Cache
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\Project LENA - WPF.csprojResolveAssemblyReference.cache

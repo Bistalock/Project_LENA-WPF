@@ -112,7 +112,8 @@ namespace Project_LENA___WPF
             // Create OpenFileDialog 
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
-            // Set filter for file extension and default file extension 
+            // Set filter for file extension and default file extension
+            dlg.InitialDirectory = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, @"Resources");
             dlg.DefaultExt = ".tif";
             dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
 
@@ -146,6 +147,7 @@ namespace Project_LENA___WPF
                         if (radioButton3.IsChecked == true || radioButton4.IsChecked == true) this.AnimateWindowSize(365);
                         else this.AnimateWindowSize(220);
                     }
+                    else if (About.IsSelected) this.AnimateWindowSize(400);
                 }
             }
         }
@@ -910,6 +912,7 @@ namespace Project_LENA___WPF
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
             // Set filter for file extension and default file extension 
+            dlg.InitialDirectory = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, @"Resources");
             dlg.DefaultExt = ".tif";
             dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
 
@@ -1518,7 +1521,22 @@ namespace Project_LENA___WPF
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
+            // Set filter for file extension and default file extension 
+            dlg.InitialDirectory = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, @"Resources");
+            dlg.DefaultExt = ".tif";
+            dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+
+            // Assigns the results value when Dialog is opened
+            var result = dlg.ShowDialog();
+
+            // Checks if value is true
+            if (result == true)
+            {
+                textBox4.Text = dlg.FileName;
+            }
         }
 
         private void radioButton3_Checked(object sender, RoutedEventArgs e)
@@ -1529,6 +1547,306 @@ namespace Project_LENA___WPF
         private void radioButton4_Checked(object sender, RoutedEventArgs e)
         {
             this.AnimateWindowSize(365);
+        }
+
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".tif";
+            dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+
+            // Assigns the results value when Dialog is opened
+            var result = dlg.ShowDialog();
+
+            // Checks if value is true
+            if (result == true)
+            {
+                textBox5.Text = dlg.FileName;
+            }
+        }
+
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".tif";
+            dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+
+            // Assigns the results value when Dialog is opened
+            var result = dlg.ShowDialog();
+
+            // Checks if value is true
+            if (result == true)
+            {
+                textBox6.Text = dlg.FileName;
+            }
+        }
+
+        private void Button_Click_7(object sender, RoutedEventArgs e)
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".tif";
+            dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+
+            // Assigns the results value when Dialog is opened
+            var result = dlg.ShowDialog();
+
+            // Checks if value is true
+            if (result == true)
+            {
+                textBox7.Text = dlg.FileName;
+            }
+        }
+
+        private void Button_Click_8(object sender, RoutedEventArgs e)
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".tif";
+            dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+
+            // Assigns the results value when Dialog is opened
+            var result = dlg.ShowDialog();
+
+            // Checks if value is true
+            if (result == true)
+            {
+                textBox14.Text = dlg.FileName;
+            }
+        }
+
+        private void Button_Click_9(object sender, RoutedEventArgs e)
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".tif";
+            dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+
+            // Assigns the results value when Dialog is opened
+            var result = dlg.ShowDialog();
+
+            // Checks if value is true
+            if (result == true)
+            {
+                textBox15.Text = dlg.FileName;
+            }
+        }
+
+        private void Button_Click_10(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_11(object sender, RoutedEventArgs e)
+        {
+            GenSample_Button.IsEnabled = false;
+
+            // open the images
+            Tiff cleanimage = Tiff.Open(textBox4.Text, "r");
+            Tiff noisedimage = Tiff.Open(textBox5.Text, "r");
+
+            #region Error Checking
+            // Error Windows when no image entered
+            if (cleanimage == null || noisedimage == null)
+            {
+                GenSample_Button.IsEnabled = true;
+                MessageBoxResult result = MessageBox.Show("Invalid or no image entered.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+
+            // Error Windows when no radio button checked
+            if (radioButton1.IsChecked == false && radioButton2.IsChecked == false)
+            {
+                GenSample_Button.IsEnabled = true;
+                MessageBoxResult result = MessageBox.Show("No inplementation checked.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+
+            // Error Windows when no number of samples entered
+            if (comboBox3.Text == "")
+            {
+                GenSample_Button.IsEnabled = true;
+                MessageBoxResult result = MessageBox.Show("Please enter the number of samples.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+            #endregion
+
+            int sSize = Convert.ToInt32(comboBox3.Text);
+
+            // Obtain basic tag information of the image
+            #region GetTagInfo
+            int width = cleanimage.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
+            int height = cleanimage.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
+            byte bits = cleanimage.GetField(TiffTag.BITSPERSAMPLE)[0].ToByte();
+            byte pixel = cleanimage.GetField(TiffTag.SAMPLESPERPIXEL)[0].ToByte();
+            double dpiX = cleanimage.GetField(TiffTag.XRESOLUTION)[0].ToDouble();
+            double dpiY = cleanimage.GetField(TiffTag.YRESOLUTION)[0].ToDouble();
+            #endregion
+
+            // The clean image
+            byte[,] clean = new byte[height, width];
+            clean = Functions.Tiff2Array(cleanimage, height, width);
+
+            // The noisy image
+            byte[,] noised = new byte[height, width];
+            noised = Functions.Tiff2Array(noisedimage, height, width);
+
+            #region Samples using Pixels
+            if (radioButton1.IsChecked == true) // Process using pixels
+            {
+                int kernel = 0;
+
+                if (comboBox1.Text == "")
+                {
+                    // Error Windows when no number of samples entered
+                    GenSample_Button.IsEnabled = true;
+                    MessageBoxResult result = MessageBox.Show("No kernel size selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    if (result == MessageBoxResult.OK)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    char[] c = comboBox1.Text.ToCharArray(); // seperates compbox elements into an array
+
+                    for (int i = 0; i < c.Length; i++)
+                    {
+                        if (c[i].ToString() == " " || c[i].ToString() == "x" || c[i].ToString() == "X")
+                            break;
+                        else
+                            kernel = Convert.ToInt32(comboBox1.Text.Substring(0, i + 1));
+                    }
+
+                    // ************************  Let the user enter any odd number as size of the pixel
+                    if (kernel % 2 != 1)
+                    {
+                        GenSample_Button.IsEnabled = true;
+                        MessageBoxResult result = MessageBox.Show("Please enter an odd number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (result == MessageBoxResult.OK)
+                        {
+                            return;
+                        }
+                    }
+                }
+
+                string fileName = System.IO.Path.GetFileNameWithoutExtension(textBox5.Text) + "_Samples_" + comboBox3.Text + "_Pixels_" + kernel + "x" + kernel + ".txt";
+
+                // Create OpenFileDialog 
+                Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+
+                // Set filter for file extension and default file extension 
+                dlg.DefaultExt = ".tif";
+                dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+                dlg.FileName = fileName;
+                // Assigns the results value when Dialog is opened
+                var dlgresult = dlg.ShowDialog();
+
+                // Checks if value is true
+                if (dlgresult == true)
+                {
+                    Functions.LearnSet(clean, noised, kernel, sSize, dlg.FileName);
+                }
+            }
+            #endregion
+
+            #region Samples using Patches
+            else if (radioButton2.IsChecked == true) // Process using patches
+            {
+                // combobox values
+                int kernel = 0;
+
+                if (comboBox2.Text == "")
+                {
+                    // Error Windows when no number of samples entered
+                    GenSample_Button.IsEnabled = true;
+                    MessageBoxResult result = MessageBox.Show("No kernel size selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    if (result == MessageBoxResult.OK)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    char[] c = comboBox2.Text.ToCharArray(); // seperates compbox elements into an array
+
+                    for (int i = 0; i < c.Length; i++)
+                    {
+                        if (c[i].ToString() == " " || c[i].ToString() == "x" || c[i].ToString() == "X")
+                            break;
+                        else
+                            kernel = Convert.ToInt32(comboBox2.Text.Substring(0, i + 1));
+                    }
+
+                    // ************************  Let the user enter any odd number as size of the patch
+                    if (kernel % 2 != 1)
+                    {
+                        GenSample_Button.IsEnabled = true;
+                        MessageBoxResult result = MessageBox.Show("Please enter an odd number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (result == MessageBoxResult.OK)
+                        {
+                            return;
+                        }
+                    }
+                }
+
+
+                string fileName = System.IO.Path.GetFileNameWithoutExtension(textBox5.Text) + "_Samples_" + comboBox3.Text + "_Patches_" + kernel + "x" + kernel + ".txt";
+
+                // Create OpenFileDialog 
+                Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+
+                // Set filter for file extension and default file extension                
+                dlg.DefaultExt = ".tif";
+                dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+                dlg.FileName = fileName;
+                // Assigns the results value when Dialog is opened
+                var dlgresult = dlg.ShowDialog();
+
+                // Checks if value is true
+                if (dlgresult == true)
+                {
+                    Functions.LearnSetPatch(clean, noised, kernel, sSize, dlg.FileName);
+                }
+            }
+            #endregion
+
+            cleanimage.Dispose();
+            noisedimage.Dispose();
+            GenSample_Button.IsEnabled = true;
+        }
+
+        private void radioButton1_Checked(object sender, RoutedEventArgs e)
+        {
+            comboBox1.IsEnabled = true;
+            comboBox2.IsEnabled = false;
+        }
+
+        private void radioButton2_Checked(object sender, RoutedEventArgs e)
+        {
+            comboBox1.IsEnabled = false;
+            comboBox2.IsEnabled = true;
         }
     }
 
