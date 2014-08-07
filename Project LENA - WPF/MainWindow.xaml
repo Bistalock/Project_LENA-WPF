@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Project_LENA___WPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Project LENA - WPF" Height="580" Width="650" Background="#FFE5E5E5" MinWidth="650" Icon="favicon.ico" ScrollViewer.VerticalScrollBarVisibility="Disabled" ResizeMode="CanMinimize">
+        Title="Project LENA - WPF" Height="580" Width="640" Background="#FFE5E5E5" MinWidth="650" Icon="favicon.ico" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Right" MaxWidth="1024">
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo/>
     </Window.TaskbarItemInfo>
@@ -218,7 +218,7 @@
                     <ProgressBar x:Name="progressBar1" Height="22" Margin="10,441,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="About" Header="About" Margin="137,0,-137,0">
+            <TabItem x:Name="About" Header="About" IsHitTestVisible="True" Visibility="Hidden">
                 <Grid Background="#FFE5E5E5">
                     <Grid Margin="0" Background="White">
                         <Label Content="Project LENA" HorizontalAlignment="Left" Margin="285,10,0,0" VerticalAlignment="Top" Foreground="Black" FontFamily="Tahoma" FontSize="30"/>
@@ -229,6 +229,9 @@
                 </Grid>
             </TabItem>
         </TabControl>
+        <Grid HorizontalAlignment="Right" Height="27" Margin="0,0,10,0" VerticalAlignment="Top" Width="30">
+            <Button x:Name="InfoButton" Content="i" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Monotype Corsiva" Style="{DynamicResource InfoButtonStyle1}" FontSize="17.333" Width="18" Height="18" Foreground="White" Click="InfoButton_Click" Margin="7,5,0,0" ToolTip="About"/>
+        </Grid>
 
     </Grid>
 </Window>

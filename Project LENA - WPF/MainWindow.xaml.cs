@@ -2118,6 +2118,11 @@ namespace Project_LENA___WPF
 
             //this.Text = Title;
         }
+
+        private void InfoButton_Click(object sender, RoutedEventArgs e)
+        {
+            About.IsSelected = true;
+        }
     }
 
     /// <summary>
