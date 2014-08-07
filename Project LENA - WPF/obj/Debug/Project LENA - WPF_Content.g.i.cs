@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("textsplash.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("lena.bmp")]
 
 
