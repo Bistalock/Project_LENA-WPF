@@ -25,8 +25,8 @@
                             </Grid.RowDefinitions>
                             <Label Content="Image:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="46"/>
                             <Label Content="Noise:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top" Height="26" Width="43"/>
-                            <TextBox x:Name="textBox1" Height="23" Margin="61,13,122,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.ColumnSpan="3" Padding="2" AllowDrop="True" PreviewDrop="TextBox_PreviewDrop" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver"/>
-                            <TextBox x:Name="textBox2" Height="23" Margin="61,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2"/>
+                            <TextBox x:Name="textBox1" Height="23" Margin="61,13,122,0" VerticalAlignment="Top" Grid.ColumnSpan="3" Padding="2" AllowDrop="True" PreviewDrop="TextBox_PreviewDrop" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver"/>
+                            <TextBox x:Name="textBox2" Height="23" Margin="61,44,0,0" VerticalAlignment="Top" Padding="2"/>
                             <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="2" Click="Button_Click"/>
                             <CheckBox x:Name="checkBox1" Content="Add Gaussian noise to image" HorizontalAlignment="Center" Margin="10,47,0,0" VerticalAlignment="Top" IsChecked="True" Grid.Column="1"/>
                             <CheckBox x:Name="checkBox2" Content="Generate grayscale noise (color image)" HorizontalAlignment="Center" Margin="3,48,0,0" VerticalAlignment="Top" Grid.Column="2"/>
@@ -37,7 +37,7 @@
                     <GroupBox Header="GroupBox" Margin="10,154,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
                         <Grid>
                             <Label Content="Color Image:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top"/>
-                            <TextBox x:Name="textBox3" Margin="92,14,122,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="23" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
+                            <TextBox x:Name="textBox3" Margin="92,14,122,0" VerticalAlignment="Top" Height="23" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
                             <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,14,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_2"/>
                         </Grid>
                     </GroupBox>
@@ -54,8 +54,8 @@
                         <Grid>
                             <Label Content="Clean Image:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top"/>
                             <Label Content="Noisy Image:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top"/>
-                            <TextBox x:Name="textBox4" Height="23" Margin="93,13,122,0" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
-                            <TextBox x:Name="textBox5" Height="23" Margin="93,44,122,0" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
+                            <TextBox x:Name="textBox4" Height="23" Margin="93,13,122,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
+                            <TextBox x:Name="textBox5" Height="23" Margin="93,44,122,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
                             <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_4"/>
                             <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,43,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_5"/>
                         </Grid>
@@ -100,11 +100,14 @@
                         <Grid>
                             <Label Content="Samples:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top"/>
                             <Label Content="Initial Weights:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top"/>
-                            <TextBox x:Name="textBox6" Height="23" Margin="72,13,133,0" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
-                            <TextBox x:Name="textBox7" Height="23" Margin="237,44,133,0" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
+                            <TextBox x:Name="textBox6" Height="23" Margin="72,13,133,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
+                            <TextBox x:Name="textBox7" Height="23" Margin="237,44,133,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop" IsEnabled="False"/>
                             <Button Content="Load Samples. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_6"/>
-                            <Button Content="Load Weights. . ." HorizontalAlignment="Right" Margin="0,43,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_7"/>
-                            <ComboBox x:Name="comboBox4" Margin="103,44,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120"/>
+                            <Button x:Name="button1" Content="Load Weights. . ." HorizontalAlignment="Right" Margin="0,43,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_7" IsEnabled="False"/>
+                            <ComboBox x:Name="comboBox4" Margin="103,44,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" SelectionChanged="comboBox4_SelectionChanged">
+                                <ComboBoxItem Content="Random"/>
+                                <ComboBoxItem Content="Existing"/>
+                            </ComboBox>
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="Stopping Criteria" Margin="10,220,5,0" Height="65" VerticalAlignment="Top">
@@ -112,11 +115,13 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <CheckBox x:Name="checkBox4" Content="Angular RMSE" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0" FlowDirection="RightToLeft" HorizontalContentAlignment="Right"/>
+                            <CheckBox x:Name="checkBox4" Content="Angular RMSE" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0" HorizontalContentAlignment="Right"/>
+
                             <ComboBox x:Name="comboBox6" Margin="10,10,119,0" VerticalAlignment="Top">
-                                <ComboBoxItem Content="3 x 3"/>
-                                <ComboBoxItem Content="5 x 5"/>
-                                <ComboBoxItem Content="7 x 7"/>
+                                <ComboBoxItem Content="MAX"/>
+                                <ComboBoxItem Content="Error Rate"/>
+                                <ComboBoxItem Content="RMSE"/>
+                                <ComboBoxItem Content="MSE"/>
                             </ComboBox>
                         </Grid>
                     </GroupBox>
@@ -128,14 +133,14 @@
                             </Grid.ColumnDefinitions>
                             <Label Content="Local Threshold:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                             <Label Content="Global Threshold:" HorizontalAlignment="Left" Margin="13,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.903,0.885" Grid.Column="1"/>
-                            <TextBox x:Name="textBox12" Height="23" Margin="111,10,13,0" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2"/>
-                            <TextBox x:Name="textBox13" Height="23" Margin="121,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Padding="2"/>
+                            <TextBox x:Name="textBox12" Height="23" Margin="111,10,13,0" VerticalAlignment="Top" Padding="2"/>
+                            <TextBox x:Name="textBox13" Height="23" Margin="121,10,10,0" VerticalAlignment="Top" Grid.Column="1" Padding="2"/>
                         </Grid>
                     </GroupBox>
-                    <Button Content="Load Parameters. . ." HorizontalAlignment="Left" Margin="10,299,0,0" VerticalAlignment="Top" Padding="10,2"/>
-                    <Button Content="Save Parameters. . ." HorizontalAlignment="Left" Margin="140,299,0,0" VerticalAlignment="Top" Padding="10,2" Grid.ColumnSpan="2"/>
+                    <Button Content="Load Parameters. . ." HorizontalAlignment="Left" Margin="10,299,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_12"/>
+                    <Button Content="Save Parameters. . ." HorizontalAlignment="Left" Margin="140,299,0,0" VerticalAlignment="Top" Padding="10,2" Grid.ColumnSpan="2" Click="Button_Click_13"/>
                     <Button Content="Test" HorizontalAlignment="Right" Margin="0,299,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1"/>
-                    <Button Content="Learn" HorizontalAlignment="Right" Margin="0,299,99,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1"/>
+                    <Button x:Name="button14" Content="Learn" HorizontalAlignment="Right" Margin="0,299,99,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Button_Click_14"/>
                     <TextBox x:Name="Console1" Height="133" Margin="10,335,10,0" TextWrapping="Wrap" VerticalAlignment="Top" AllowDrop="False" Focusable="False" IsTabStop="False" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2" Background="White"/>
                     <Button x:Name="lol_Copy8" Content="Generate Image Parameters. . ." HorizontalAlignment="Left" Margin="10,482,0,0" VerticalAlignment="Top" Padding="10,2"/>
                     <Button Content="Cancel" HorizontalAlignment="Right" Margin="0,482,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Button_Click_2"/>
@@ -152,14 +157,17 @@
                             </Grid.ColumnDefinitions>
                             <Label Content="Network Size:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                             <Label Content="Output:" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1"/>
-                            <TextBox x:Name="textBox8" Height="23" Margin="97,10,1,0" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2"/>
-                            <TextBox x:Name="textBox9" Height="23" Margin="107,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2" Grid.Column="2"/>
-                            <ComboBox x:Name="comboBox5" Margin="65,11,11,0" VerticalAlignment="Top" Grid.Column="1"/>
+                            <TextBox x:Name="textBox8" Height="23" Margin="97,10,1,0" VerticalAlignment="Top" Padding="2"/>
+                            <TextBox x:Name="textBox9" Height="23" Margin="107,10,10,0" VerticalAlignment="Top" Padding="2" Grid.Column="2"/>
+                            <ComboBox x:Name="comboBox5" Margin="65,11,11,0" VerticalAlignment="Top" Grid.Column="1">
+                                <ComboBoxItem Content="Discrete"/>
+                                <ComboBoxItem Content="Continuous"/>
+                            </ComboBox>
                             <Label Content="Output Neurons:" HorizontalAlignment="Left" Margin="3,10,0,0" VerticalAlignment="Top" Grid.Column="2"/>
                             <Label Content="Samples in Learning:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
-                            <TextBox x:Name="textBox10" Height="23" Margin="134,44,15,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                            <TextBox x:Name="textBox10" Height="23" Margin="134,44,15,0" VerticalAlignment="Top"/>
                             <Label Content="Number of Sectors:" Margin="10,44,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1"/>
-                            <TextBox x:Name="textBox11" Height="23" Margin="127,44,133,0" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2" Grid.ColumnSpan="2" Grid.Column="1"/>
+                            <TextBox x:Name="textBox11" Height="23" Margin="127,44,11,0" VerticalAlignment="Top" Padding="2" Grid.Column="1"/>
                         </Grid>
                     </GroupBox>
                 </Grid>
@@ -174,8 +182,8 @@
                         <Grid>
                             <Label Content="Noisy Image:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top"/>
                             <Label Content="Weights:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top"/>
-                            <TextBox x:Name="textBox14" Height="23" Margin="93,13,133,0" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
-                            <TextBox x:Name="textBox15" Height="23" Margin="93,44,133,0" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
+                            <TextBox x:Name="textBox14" Height="23" Margin="93,13,133,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
+                            <TextBox x:Name="textBox15" Height="23" Margin="93,44,133,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
                             <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Width="109" Click="Button_Click_8"/>
                             <Button Content="Load Weights. . ." HorizontalAlignment="Right" Margin="0,43,10,0" VerticalAlignment="Top" Padding="10,2" ScrollViewer.CanContentScroll="True" Click="Button_Click_9"/>
                         </Grid>
@@ -188,15 +196,15 @@
                                 <ColumnDefinition Width="233*"/>
                             </Grid.ColumnDefinitions>
                             <Label Content="Number of Sectors:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                            <TextBox x:Name="textBox16" Height="23" Margin="127,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                            <TextBox x:Name="textBox16" Height="23" Margin="127,10,10,0" VerticalAlignment="Top"/>
                             <Label Content="Input Layer Size:" HorizontalAlignment="Left" Margin="8,10,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-                            <TextBox x:Name="textBox17" Height="23" Margin="109,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1"/>
+                            <TextBox x:Name="textBox17" Height="23" Margin="109,10,10,0" VerticalAlignment="Top" Grid.Column="1"/>
                             <Label Content="Hidden Layer Size:" HorizontalAlignment="Left" Margin="9,10,0,0" VerticalAlignment="Top" Grid.Column="2"/>
-                            <TextBox x:Name="textBox18" Height="23" Margin="121,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="2"/>
+                            <TextBox x:Name="textBox18" Height="23" Margin="121,10,10,0" VerticalAlignment="Top" Grid.Column="2"/>
                             <Label Content="Kernel Size:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
                             <ComboBox x:Name="comboBox7" Margin="85,45,156,0" VerticalAlignment="Top" IsEditable="True" Grid.ColumnSpan="2"/>
                             <Label Content="Output Neurons:" HorizontalAlignment="Left" Margin="29,44,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-                            <TextBox x:Name="textBox19" Height="23" Margin="130,44,223,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2"/>
+                            <TextBox x:Name="textBox19" Height="23" Margin="130,44,223,0" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2"/>
                         </Grid>
                     </GroupBox>
                     <Button Content="Load Parameters. . ." HorizontalAlignment="Left" Margin="10,258,0,0" VerticalAlignment="Top" Padding="10,2"/>
