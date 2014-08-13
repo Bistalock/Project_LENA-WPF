@@ -73,7 +73,7 @@ namespace Project_LENA___WPF {
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "4.0.0.0")]
         public static void Main() {
-            SplashScreen splashScreen = new SplashScreen("textsplash.png");
+            SplashScreen splashScreen = new SplashScreen("textsplash.bmp");
             splashScreen.Show(true);
             Project_LENA___WPF.App app = new Project_LENA___WPF.App();
             app.InitializeComponent();

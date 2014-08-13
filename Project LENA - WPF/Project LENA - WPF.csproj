@@ -124,15 +124,17 @@
     <Resource Include="favicon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <SplashScreen Include="TextSplash.png" />
-  </ItemGroup>
-  <ItemGroup>
     <BlendEmbeddedFont Include="Fonts\ChaparralPro-LightIt.otf">
       <IsSystemFont>True</IsSystemFont>
       <All>True</All>
       <AutoFill>True</AutoFill>
     </BlendEmbeddedFont>
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Lena.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="TextSplash.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Expression\Blend\.NETFramework\v4.5\Microsoft.Expression.Blend.WPF.targets" />
