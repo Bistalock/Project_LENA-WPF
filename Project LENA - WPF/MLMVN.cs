@@ -12,12 +12,12 @@ namespace Project_LENA___WPF
 {
     class MLMVN
     {
-        MainWindow Window;
+        MainWindow window;
         Functions functions;
 
         public MLMVN(MainWindow function)
         {
-            Window = function;
+            window = function;
             functions = new Functions(function);
         }
 
@@ -46,7 +46,7 @@ namespace Project_LENA___WPF
             } // end switch
             if (offset == 0)
             {
-                Window.SetText1("Value of kernel is not properly set." + Environment.NewLine);
+                window.SetText1("Value of kernel is not properly set." + Environment.NewLine);
                 return null;
             }
 
@@ -54,7 +54,7 @@ namespace Project_LENA___WPF
             byte[,] image = new byte[height + offset * 2, width + offset * 2];
             image = functions.MirrorImage(noisyImage, height, width, offset);
 
-            Window.SetProgress1(4);
+            window.SetProgress1(4);
             progressBar1 += 4;
 
             // pre-instantiate complex 2d-array
@@ -267,24 +267,24 @@ namespace Project_LENA___WPF
 
             #region Initialization
 
-            Window.SetText2("Initializing components...\r\n" + Environment.NewLine);
-            Window.SetProgress1(2);
+            window.SetText2("Initializing components...\r\n" + Environment.NewLine);
+            window.SetProgress1(2);
 
-            Window.SetText2("Loading weights... ");
+            window.SetText2("Loading weights... ");
             // load the weights
             Complex[][,] weights = loadMlmvnWeights(fileName, layer, networkSize, inputsPerSample);
-            Window.SetText2("Done." + Environment.NewLine);
+            window.SetText2("Done." + Environment.NewLine);
 
-            Window.SetText2("Configuring patch size... ");
+            window.SetText2("Configuring patch size... ");
 
             // size of input / output patch
             int patchSz = (int)Math.Sqrt(weights[0].GetLength(1) - 1); // <-- Implement outside of function to determine type of weights
             int patchSzOut = (int)Math.Sqrt(weights[layer - 1].GetLength(0));
             // Size of each sector on unit circle
-            Window.SetText2("Done.\r\n" + Environment.NewLine);
+            window.SetText2("Done.\r\n" + Environment.NewLine);
 
-            Window.SetText2("Input patch size is: " + patchSz + Environment.NewLine);
-            Window.SetText2("Output patch size is: " + patchSzOut + Environment.NewLine);
+            window.SetText2("Input patch size is: " + patchSz + Environment.NewLine);
+            window.SetText2("Output patch size is: " + patchSzOut + Environment.NewLine);
 
             // calculate the difference of the patches
             int p_diff = (patchSz - patchSzOut) / 2;
@@ -336,8 +336,8 @@ namespace Project_LENA___WPF
             // end if
             #endregion
 
-            Window.SetText2("\r\nDifference of the patche size is: " + p_diff + Environment.NewLine);
-            Window.SetText2("Beginning variable initialization... ");
+            window.SetText2("\r\nDifference of the patche size is: " + p_diff + Environment.NewLine);
+            window.SetText2("Beginning variable initialization... ");
 
             // pre-instantiate complex 2d-arrays
             // patch of interest
@@ -365,8 +365,8 @@ namespace Project_LENA___WPF
             int offset = ((patchSzOut - 3) / 2) + 1;
             double bb = (2 * Math.PI) / numberofsectors;
 
-            Window.SetText2("Done.\r\n" + Environment.NewLine);
-            Window.SetText2("Beginning the processing... \r\n" + Environment.NewLine);
+            window.SetText2("Done.\r\n" + Environment.NewLine);
+            window.SetText2("Beginning the processing... \r\n" + Environment.NewLine);
             #endregion
 
             //int increment = 0;
@@ -500,7 +500,7 @@ namespace Project_LENA___WPF
                     //    increment = 0;
                     //}
                     
-                    Window.SetProgress1(1);
+                    window.SetProgress1(1);
                     #endregion
                 }//); // end col for loop
 
@@ -511,7 +511,7 @@ namespace Project_LENA___WPF
                 // Action when pause button is clicked
                 await pauseToken.WaitWhilePausedAsync();
 
-                Window.SetText2("Patches in row " + (row + 1) + " of " + range_y.Length + " done." + Environment.NewLine);
+                window.SetText2("Patches in row " + (row + 1) + " of " + range_y.Length + " done." + Environment.NewLine);
 
             }//); // end row for loop
             #region Average
@@ -653,26 +653,26 @@ namespace Project_LENA___WPF
 
             #region Initialization
 
-            Window.SetText2("Using the new patch method.\r\n" + Environment.NewLine);
+            window.SetText2("Using the new patch method.\r\n" + Environment.NewLine);
 
-            Window.SetText2("Initializing Components...\r\n" + Environment.NewLine);
-            Window.SetProgress1(2);
+            window.SetText2("Initializing Components...\r\n" + Environment.NewLine);
+            window.SetProgress1(2);
 
-            Window.SetText2("Loading weights... ");
+            window.SetText2("Loading weights... ");
             // load the weights
             Complex[][,] weights = loadMlmvnWeights(fileName, layer, networkSize, inputsPerSample);
-            Window.SetText2("Done." + Environment.NewLine);
+            window.SetText2("Done." + Environment.NewLine);
 
-            Window.SetText2("Configuring Patch Size... ");
+            window.SetText2("Configuring Patch Size... ");
             // size of input / output patch
             int patchSz = (int)Math.Sqrt(weights[0].GetLength(1));
             int patchSzOut = (int)Math.Sqrt(weights[layer - 1].GetLength(0));
             // Size of each sector on unit circle
 
-            Window.SetText2("Done.\r\n" + Environment.NewLine);
+            window.SetText2("Done.\r\n" + Environment.NewLine);
 
-            Window.SetText2("Input patch size is: " + patchSz + Environment.NewLine);
-            Window.SetText2("Output patch size is: " + patchSzOut + Environment.NewLine);
+            window.SetText2("Input patch size is: " + patchSz + Environment.NewLine);
+            window.SetText2("Output patch size is: " + patchSzOut + Environment.NewLine);
 
             // calculate the difference of the patches
             int p_diff = (patchSz - patchSzOut) / 2;
@@ -735,8 +735,8 @@ namespace Project_LENA___WPF
             // end if
             #endregion
 
-            Window.SetText2("\r\nDifference of the patche size is: " + p_diff + Environment.NewLine);
-            Window.SetText2("Beginning variable initialization... ");
+            window.SetText2("\r\nDifference of the patche size is: " + p_diff + Environment.NewLine);
+            window.SetText2("Beginning variable initialization... ");
 
             // pre-instantiate complex 2d-arrays
             // patch of interest
@@ -764,8 +764,8 @@ namespace Project_LENA___WPF
             int offset = ((patchSzOut - 3) / 2) + 1;
             double bb = (2 * Math.PI) / numberofsectors;
 
-            Window.SetText2("Done.\r\n" + Environment.NewLine);
-            Window.SetText2("Beginning Processing... \r\n" + Environment.NewLine);
+            window.SetText2("Done.\r\n" + Environment.NewLine);
+            window.SetText2("Beginning Processing... \r\n" + Environment.NewLine);
             #endregion
 
             // --------------- Processing Begins ------------------------------
@@ -935,7 +935,7 @@ namespace Project_LENA___WPF
                     }
 
                     #endregion
-                    Window.SetProgress1(1);
+                    window.SetProgress1(1);
                 } // end col for loop
 
                 if (cancelToken.IsCancellationRequested)
@@ -944,7 +944,7 @@ namespace Project_LENA___WPF
                 // Action when pause button is clicked
                 await pauseToken.WaitWhilePausedAsync();
 
-                Window.SetText2("Patches in row " + (row + 1) + " of " + range_y.Length + " done." + Environment.NewLine);
+                window.SetText2("Patches in row " + (row + 1) + " of " + range_y.Length + " done." + Environment.NewLine);
             } // end row for loop
 
             return cleanIm;
@@ -1113,11 +1113,11 @@ namespace Project_LENA___WPF
             //Window.SetText1("\r\nInitializing components... ");
             // load the samples
             byte[,] samples = loadLearningSamples(fileNameSamples, numberOfInputSamples, twoInputsPerSample);
-            Window.SetText1("\r\nInitializing components... Done." + Environment.NewLine);
+            window.SetText1("\r\nInitializing components... Done." + Environment.NewLine);
             //Window.SetText1("Loading weights... ");
             // load the weights
             Complex[][,] weights = loadMlmvnWeights(fileNameWeights, layer, networkSize, inputsPerSample);
-            Window.SetText1("Loading weights... Done." + Environment.NewLine);
+            window.SetText1("Loading weights... Done." + Environment.NewLine);
             //Window.SetText1("Loading learning samples... ");
 
             double twoPi = Math.PI * 2;
@@ -1162,7 +1162,7 @@ namespace Project_LENA___WPF
                     Cinputs[i, j] = Exp(complex1 * 2 * Math.PI * inputs[i, j] / numberofsectors);
             // end nested for loop
 
-            Window.SetText1("Done." + Environment.NewLine + "Beginning the processing... ");
+            window.SetText1("Done." + Environment.NewLine + "Beginning the processing... ");
             #endregion
 
             // --------------- BEGIN OUTPUT CALCULATION ------------------------------
@@ -1242,7 +1242,7 @@ namespace Project_LENA___WPF
                 } // end for
                 #endregion second to last layer
             } // end row for loop
-            Window.SetText1("Done." + Environment.NewLine + "Calculating errors... " + Environment.NewLine);
+            window.SetText1("Done." + Environment.NewLine + "Calculating errors... " + Environment.NewLine);
             // -------------- END OUTPUT CALCULATION -----------------------------
             double mse = 0;
             double rmse = 0;
@@ -1261,7 +1261,7 @@ namespace Project_LENA___WPF
             mse /= numberOfInputSamples;
             // calculate rmse
             rmse = Math.Sqrt(mse);
-            Window.SetText1("RMSE: " + rmse + Environment.NewLine + Environment.NewLine);
+            window.SetText1("RMSE: " + rmse + Environment.NewLine + Environment.NewLine);
 
             return networkOutputs;
         }
@@ -1270,11 +1270,12 @@ namespace Project_LENA___WPF
         {
             #region Initialization
             int twoInputsPerSample = networkSize[layer - 1] * 2;
-            Window.SetText1("Initializing components..." + Environment.NewLine);
+
+            window.SetText1("Initializing components..." + Environment.NewLine);
             // load the samples
-            Window.SetText1("Loading learning samples... ");
+            window.SetText1("Loading learning samples... ");
             byte[,] samples = loadLearningSamples(fileNameSamples, numberOfInputSamples, twoInputsPerSample);
-            Window.SetText1("Done." + Environment.NewLine);
+            window.SetText1("Done." + Environment.NewLine);
             // Initial Weights Initialization
             #region Weights Initialization
             Random random = new Random();
@@ -1305,10 +1306,10 @@ namespace Project_LENA___WPF
             }
             else
             {
-                Window.SetText1("Loading weights... ");
+                window.SetText1("Loading weights... ");
                 // load the weights
                 weights = loadMlmvnWeights(fileNameWeights, layer, networkSize, inputsPerSample);
-                Window.SetText1("Done.\n" + Environment.NewLine);
+                window.SetText1("Done.\n" + Environment.NewLine);
             } // end if 
             #endregion
             double twoPi = Math.PI * 2;
@@ -1379,7 +1380,7 @@ namespace Project_LENA___WPF
             Complex[,] e1;
             Complex[,] f1;
 
-            Window.SetText1("Beginning the learning of the weights...\r\n" + Environment.NewLine);
+            window.SetText1("Beginning the learning of the weights...\r\n" + Environment.NewLine);
             #endregion
 
             #region RMSE ALGORITHM
@@ -1488,9 +1489,9 @@ namespace Project_LENA___WPF
                 mse /= numberOfInputSamples;
                 // calculate rmse
                 rmse = Math.Sqrt(mse);
-                Window.SetText1("Iteration " + iteration + " done.          RMSE: " + rmse + Environment.NewLine);
+                window.SetText1("Iteration " + iteration + " done.          RMSE: " + rmse + Environment.NewLine);
                 // Check if learning has converged
-                Window.TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Normal;
+  //--->        window.TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Normal;
                 // Action when cancel button is clicked
                 if (cancelToken.IsCancellationRequested)
                     cancelToken.ThrowIfCancellationRequested();
@@ -1501,7 +1502,7 @@ namespace Project_LENA___WPF
                 if (rmse <= globalThreasholdValue)
                 {
                     finishedLearning = true;
-                    Window.SetText1("\r\nLearning Converged!!!" + Environment.NewLine);
+                    window.SetText1("\r\nLearning Converged!!!" + Environment.NewLine);
                 }
                 // end if
                 #endregion

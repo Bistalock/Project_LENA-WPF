@@ -41,6 +41,8 @@ namespace Project_LENA___WPF
 
         public MainWindow()
         {
+            functions = new Functions(this);
+            mlmvn = new MLMVN(this);
             InitializeComponent();
             this.Height = 230;
 
@@ -52,7 +54,10 @@ namespace Project_LENA___WPF
             
         }
 
-        string Title = "Project LENA - WPF";
+        private bool IsLearing = false;
+        private bool IsTesting = false;
+        private bool IsProcessing = false;
+
         //protected override void WndProc(ref Message m)
         //{
         //    base.WndProc(ref m);
@@ -142,7 +147,11 @@ namespace Project_LENA___WPF
                         else if (checkBox3.IsChecked == true) this.AnimateWindowSize(345);
                     }
                     else if (Sample_Generation.IsSelected) this.AnimateWindowSize(345);
-                    else if (Learning_of_Weights.IsSelected) this.AnimateWindowSize(405);
+                    else if (Learning_of_Weights.IsSelected)
+                    {
+                        if (IsLearing == false && IsTesting == false) this.AnimateWindowSize(405);
+                        else if (IsLearing == true || IsTesting == true) this.AnimateWindowSize(655);
+                    }
                     else if (Processing_Image.IsSelected)
                     {
                         if (radioButton3.IsChecked == true || radioButton4.IsChecked == true) this.AnimateWindowSize(365);
@@ -990,7 +999,8 @@ namespace Project_LENA___WPF
             else
             {
                 SetTextCallback d = new SetTextCallback(SetText1);
-                Console1.Dispatcher.Invoke(d, new object[] { Console1, text });
+                this.Dispatcher.Invoke(d, new object[] { text });
+                //Console1.Dispatcher.Invoke(d, new object[] { Console1, text });
             }
         }
 
@@ -1007,7 +1017,7 @@ namespace Project_LENA___WPF
             else
             {
                 SetTextCallback d = new SetTextCallback(SetText2);
-                Console2.Dispatcher.Invoke(d, new object[] { Console2, text });
+                Console2.Dispatcher.Invoke(d, new object[] { text });
             }
         }
 
@@ -1575,8 +1585,9 @@ namespace Project_LENA___WPF
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
             // Set filter for file extension and default file extension 
-            dlg.DefaultExt = ".tif";
-            dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+            dlg.InitialDirectory = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, @"Resources");
+            dlg.DefaultExt = ".txt";
+            dlg.Filter = "Text Documents (*.txt)|*.txt|All files (*.*)|*.*";
 
             // Assigns the results value when Dialog is opened
             var result = dlg.ShowDialog();
@@ -1594,8 +1605,8 @@ namespace Project_LENA___WPF
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
             // Set filter for file extension and default file extension 
-            dlg.DefaultExt = ".tif";
-            dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+            dlg.DefaultExt = ".wgt";
+            dlg.Filter = "Weights (*.wgt)|*.wgt|All files (*.*)|*.*";
 
             // Assigns the results value when Dialog is opened
             var result = dlg.ShowDialog();
@@ -1931,23 +1942,25 @@ namespace Project_LENA___WPF
             }
         }
 
-        private void Button_Click_14(object sender, RoutedEventArgs e)
+        private async void Button_Click_14(object sender, RoutedEventArgs e)
         {
+            Learn_Button.IsEnabled = false;
+            IsLearing = true;
             #region Error checking
             // Error Windows when no image entered
             if (string.IsNullOrEmpty(textBox6.Text))
             {
-                button14.IsEnabled = true;
+                Learn_Button.IsEnabled = true;
                 MessageBoxResult result = MessageBox.Show("Samples file not entered.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 if (result == MessageBoxResult.OK)
                 {
                     return;
                 }
-               
+
             }
             if (comboBox4.SelectedIndex == -1)
             {
-                button14.IsEnabled = true;
+                Learn_Button.IsEnabled = true;
                 MessageBoxResult result = MessageBox.Show("No weight type selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 if (result == MessageBoxResult.OK)
                 {
@@ -1955,9 +1968,9 @@ namespace Project_LENA___WPF
                 }
             }
 
-            if (comboBox4.SelectedIndex == 1 && string.IsNullOrEmpty(textBox6.Text))
+            if (comboBox4.SelectedIndex == 1 && string.IsNullOrEmpty(textBox7.Text))
             {
-                button14.IsEnabled = true;
+                Learn_Button.IsEnabled = true;
                 MessageBoxResult result = MessageBox.Show("Selected existing weights, but no weights entered.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 if (result == MessageBoxResult.OK)
                 {
@@ -1969,7 +1982,7 @@ namespace Project_LENA___WPF
             //
             if (string.IsNullOrEmpty(textBox8.Text) || string.IsNullOrEmpty(textBox9.Text) || string.IsNullOrEmpty(textBox10.Text) || string.IsNullOrEmpty(textBox11.Text) || comboBox5.SelectedIndex == -1)
             {
-                button14.IsEnabled = true;
+                Learn_Button.IsEnabled = true;
                 MessageBoxResult result = MessageBox.Show("Check for empty parameters.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 if (result == MessageBoxResult.OK)
                 {
@@ -1979,7 +1992,7 @@ namespace Project_LENA___WPF
 
             if (comboBox6.SelectedIndex == -1)
             {
-                button14.IsEnabled = true;
+                Learn_Button.IsEnabled = true;
                 MessageBoxResult result = MessageBox.Show("No stopping criteria algorithm selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 if (result == MessageBoxResult.OK)
                 {
@@ -1988,7 +2001,7 @@ namespace Project_LENA___WPF
             }
             if (string.IsNullOrEmpty(textBox12.Text) || string.IsNullOrEmpty(textBox13.Text))
             {
-                button14.IsEnabled = true;
+                Learn_Button.IsEnabled = true;
                 MessageBoxResult result = MessageBox.Show("Check for empty threshold values.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 if (result == MessageBoxResult.OK)
                 {
@@ -1998,9 +2011,8 @@ namespace Project_LENA___WPF
             #endregion
 
             #region Variable Initiallization
-            string Weights = textBox6.Text;
-
-            string Samples = textBox2.Text;
+            string Samples = textBox6.Text;
+            string Weights = textBox7.Text;
 
             // New cancellation token
             cTokenSource2 = new CancellationTokenSource();
@@ -2015,19 +2027,19 @@ namespace Project_LENA___WPF
             var pToken = pTokenSource2.Token;
 
             bool randomWeights = false;
-            if (comboBox1.SelectedIndex == 0)
+            if (comboBox4.SelectedIndex == 0)
             {
                 randomWeights = true;
             }
-            if (comboBox1.SelectedIndex == 1)
+            if (comboBox4.SelectedIndex == 1)
             {
                 randomWeights = false;
             }
 
-            int NumberofSamples = Convert.ToInt32(textBox8.Text);
+            int NumberofSamples = Convert.ToInt32(textBox10.Text);
 
-            double GlobalThreshold = Convert.ToDouble(textBox4.Text);
-            double LocalThreshold = Convert.ToDouble(textBox5.Text);
+            double LocalThreshold = Convert.ToDouble(textBox12.Text);
+            double GlobalThreshold = Convert.ToDouble(textBox13.Text);
 
             // convert string array to int
             string[] a = textBox8.Text.Split(',', '.');
@@ -2044,85 +2056,169 @@ namespace Project_LENA___WPF
                 inputsPerSample[i] = networkSize[0] + Convert.ToInt32(textBox9.Text);
             // end for
 
-            int NumberofSectors = Convert.ToInt32(textBox7.Text);
+            int NumberofSectors = Convert.ToInt32(textBox11.Text);
             #endregion
 
-            //this.comboBox3.Enabled = false;
-            //this.checkBox1.Enabled = false;
-            //this.textBox5.Enabled = false;
-            //this.textBox4.Enabled = false;
-            //this.button15.Enabled = true;
-            //this.checkBox6.Enabled = true;
-            //this.button21.Enabled = true;
-            //this.timer9.Enabled = true;
+            this.comboBox6.IsEnabled = false;
+            this.checkBox4.IsEnabled = false;
+            this.textBox12.IsEnabled = false;
+            this.textBox13.IsEnabled = false;
+            this.button2.IsEnabled = true;
+            this.button3.IsEnabled = true;
+            this.button4.IsEnabled = true;            
+            this.AnimateWindowSize(655);
 
-            //// Begin processing
-            //// Create new stopwatch
-            //Stopwatch stopwatch = new Stopwatch();
+            // Begin processing
+            // Create new stopwatch
+            Stopwatch stopwatch = new Stopwatch();
 
-            //// Begin timing
-            //stopwatch.Start();
-            //this.Text = Title + " (Working)";
-            //TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Indeterminate);
+            // Begin timing
+            stopwatch.Start();
+            Title = "Project LENA - WPF (Working)";
+            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
 
-            //try
-            //{
-            //    Complex[][,] weights = await Task.Run(() => mlmvn.Learning(Samples, NumberofSamples, Weights, 4, networkSize, inputsPerSample, NumberofSectors, GlobalThreshold, LocalThreshold, randomWeights, cTokenSource2.Token, pTokenSource2.Token));
+            try
+            {
+                Complex[][,] weights = await Task.Run(() => mlmvn.Learning(Samples, NumberofSamples, Weights, 4, networkSize, inputsPerSample, NumberofSectors, GlobalThreshold, LocalThreshold, randomWeights, cTokenSource2.Token, pTokenSource2.Token));
 
-            //    string[] imagename = Path.GetFileNameWithoutExtension(textBox2.Text).Split('_');
+                string[] imagename = System.IO.Path.GetFileNameWithoutExtension(textBox6.Text).Split('_');
 
-            //    string fileName = imagename[0] + "_" + imagename[1] + "_" + imagename[2] + "_" + imagename[3] + "_Samples_" + NumberofSamples + "_Network_[" +
-            //            networkSize[0] + "," + networkSize[1] + "," + networkSize[2] + "," + networkSize[3] + "]" + "_RMSE_" + GlobalThreshold + ".wgt";
+                string fileName = imagename[0] + "_" + imagename[1] + "_" + imagename[2] + "_" + imagename[3] + "_Samples_" + NumberofSamples + "_Network_[" +
+                        networkSize[0] + "," + networkSize[1] + "," + networkSize[2] + "," + networkSize[3] + "]" + "_RMSE_" + GlobalThreshold + ".wgt";
 
-            //    // Stop timing
-            //    stopwatch.Stop();
+                // Stop timing
+                stopwatch.Stop();
 
-            //    // Write result
-            //    SetText2("Time elapsed: " + stopwatch.Elapsed + Environment.NewLine);
+                // Write result
+                SetText1("Time elapsed: " + stopwatch.Elapsed + Environment.NewLine);
 
-            //    saveFileDialog4.FileName = fileName;
+                // Create OpenFileDialog 
+                Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
 
-            //    if (saveFileDialog4.ShowDialog() == DialogResult.OK) // Test result.
-            //    {
-            //        MLMVN.saveMlmvnWeights(saveFileDialog4.FileName, weights, networkSize);
-            //    }
-            //}
-            //catch (OperationCanceledException)
-            //{
-            //    SetText2("\r\nProgress canceled.\r\n");
+                // Set filter for file extension and default file extension 
+                dlg.FileName = fileName;
+                dlg.DefaultExt = ".wgt";
+                dlg.Filter = "Weights (*.wgt)|*.wgt|All files (*.*)|*.*";
 
-            //    // Stop timing
-            //    stopwatch.Stop();
+                // Assigns the results value when Dialog is opened
+                var result = dlg.ShowDialog();
 
-            //    // Write result
-            //    SetText2("Time elapsed: " + stopwatch.Elapsed + Environment.NewLine + Environment.NewLine);
+                // Checks if value is true
+                if (result == true)
+                {
 
-            //    // Set the CancellationTokenSource to null when the work is complete.
-            //    cTokenSource2 = null;
-            //}
-            //TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
+                    MLMVN.saveMlmvnWeights(dlg.FileName, weights, networkSize);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                SetText1("\r\nProgress canceled.\r\n");
 
-            //cTokenSource2 = null;
+                // Stop timing
+                stopwatch.Stop();
 
-            //if (comboBox3.SelectedIndex == 2)
-            //{
-            //    checkBox1.Enabled = true;
-            //}
+                // Write result
+                SetText2("Time elapsed: " + stopwatch.Elapsed + Environment.NewLine + Environment.NewLine);
 
-            //this.comboBox3.Enabled = true;
-            //this.textBox5.Enabled = true;
-            //this.textBox4.Enabled = true;
-            //this.button7.Enabled = true;
-            //this.button15.Enabled = false;
-            //this.checkBox6.Enabled = false;
+                // Set the CancellationTokenSource to null when the work is complete.
+                cTokenSource2 = null;
+            }
+            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
 
-            //this.Text = Title;
+            cTokenSource2 = null;
+
+            this.Learn_Button.IsEnabled = true;
+            this.comboBox6.IsEnabled = true;
+            this.checkBox4.IsEnabled = true;
+            this.textBox12.IsEnabled = true;
+            this.textBox13.IsEnabled = true;
+            this.button2.IsEnabled = false;
+            this.button3.IsEnabled = false;
+
+            Title = "Project LENA - WPF";
         }
 
         private void InfoButton_Click(object sender, RoutedEventArgs e)
         {
             About.IsSelected = true;
         }
+
+        private void comboBox6_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (comboBox6.SelectedIndex == 2) checkBox4.IsEnabled = true;
+            else checkBox4.IsEnabled = false;
+        }
+
+        private void button2_Checked(object sender, RoutedEventArgs e)
+        {
+            Title = "Project LENA - WPF (Paused)";
+            SetText1("\r\nProcess is paused." + Environment.NewLine);
+            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+            this.button2.Content = "Resume";
+            button3.IsEnabled = false;
+            pTokenSource2.IsPaused = !pTokenSource2.IsPaused;
+        }
+
+        private void button2_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Title = "Project LENA - WPF (Working)";
+            SetText1("Process is resumed." + Environment.NewLine);
+            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
+            this.button2.Content = "Pause";
+            button3.IsEnabled = true;
+            pTokenSource2.IsPaused = !pTokenSource2.IsPaused;
+        }
+
+        private void button3_Click(object sender, RoutedEventArgs e)
+        {
+            if (cTokenSource2 != null)
+            {
+                cTokenSource2.Cancel();
+            }
+        }
+
+        private void button4_Click(object sender, RoutedEventArgs e)
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+
+            // Set filter for file extension and default file extension 
+            dlg.FileName = "Patch_Parameters.xml";
+            dlg.DefaultExt = ".xml";
+            dlg.Filter = "XML Documents (*.xml)|*.xml|All files (*.*)|*.*";
+
+            // Assigns the results value when Dialog is opened
+            var result = dlg.ShowDialog();
+
+            // Checks if value is true
+            if (result == true)
+            {
+                // defines the xml settings for the file
+                XmlWriterSettings settings = new XmlWriterSettings();
+                settings.Indent = true; // allows indentation
+
+                // xml name based on file dialogbox name
+                XmlWriter parameters = XmlWriter.Create(dlg.FileName, settings);
+
+                // start the generation of the xml parameters
+                parameters.WriteStartDocument();
+
+                // xml parameters
+                parameters.WriteStartElement("Method");
+                parameters.WriteAttributeString("type", "Patch_Parameters");
+                parameters.WriteStartElement("Parameters");
+                parameters.WriteElementString("Patch_Method", "-1");
+                parameters.WriteElementString("Number_of_Sectors", textBox11.Text);
+                parameters.WriteElementString("Step", "3");
+                parameters.WriteElementString("Network_Size", textBox8.Text);
+                parameters.WriteElementString("Output_Neurons", textBox9.Text);
+
+                // proper closure and disposing of the file and memory
+                parameters.Flush();
+                parameters.Close();
+                parameters.Dispose();
+            }
+        }        
     }
 
     /// <summary>
