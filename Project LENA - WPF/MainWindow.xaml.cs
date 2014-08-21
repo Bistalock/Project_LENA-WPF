@@ -995,6 +995,8 @@ namespace Project_LENA___WPF
             if (Console1.Dispatcher.CheckAccess())
             {
                 Console1.AppendText(text);
+                Console1.CaretIndex = Console1.Text.Length;
+                Console1.ScrollToEnd();
             }
             else
             {
@@ -2218,6 +2220,83 @@ namespace Project_LENA___WPF
                 parameters.Close();
                 parameters.Dispose();
             }
+        }
+
+        private async void Test_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Test_Button.IsEnabled = false;
+            IsTesting = true;
+            #region Error checking
+            // Error Windows when no image entered
+            if (string.IsNullOrEmpty(textBox6.Text))
+            {
+                Learn_Button.IsEnabled = true;
+                MessageBoxResult result = MessageBox.Show("Samples file not entered.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+
+            }
+
+            if (comboBox4.SelectedIndex != 1 && string.IsNullOrEmpty(textBox7.Text))
+            {
+                Learn_Button.IsEnabled = true;
+                MessageBoxResult result = MessageBox.Show("Input existing weights for testing.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+
+            // Error Windows when no radio button checked
+            //
+            if (string.IsNullOrEmpty(textBox8.Text) || string.IsNullOrEmpty(textBox9.Text) || string.IsNullOrEmpty(textBox10.Text) || string.IsNullOrEmpty(textBox11.Text))
+            {
+                Learn_Button.IsEnabled = true;
+                MessageBoxResult result = MessageBox.Show("Check for empty parameters.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+            #endregion
+
+            #region Variable Initiallization
+            string Samples = textBox6.Text;
+            string Weights = textBox7.Text;
+
+            // convert string array to int
+            string[] a = textBox8.Text.Split(',', '.');
+            int[] networkSize = new int[4];
+            for (int i = 0; i < a.Length; i++)
+            {
+                networkSize[i] = Convert.ToInt32(a[i]);
+            }
+
+            // determine number of samples
+            int[] inputsPerSample = new int[a.Length];
+            inputsPerSample[0] = networkSize[a.Length - 1] + Convert.ToInt32(textBox9.Text);
+            for (int i = 1; i < a.Length; i++)
+                inputsPerSample[i] = networkSize[0] + Convert.ToInt32(textBox9.Text);
+
+            int NumberofSamples = Convert.ToInt32(textBox10.Text);
+            int NumberofSectors = Convert.ToInt32(textBox11.Text);           
+            #endregion
+
+            this.button2.IsEnabled = true;
+            this.button3.IsEnabled = true;
+            this.button4.IsEnabled = true;
+            if (IsLearing == false) this.AnimateWindowSize(620);
+
+            Title = "Project LENA - WPF (Working)";
+
+            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
+
+            int[,] output = await Task.Run(() => mlmvn.TEST(Samples, NumberofSamples, Weights, 4, networkSize, inputsPerSample, NumberofSectors));
+
+            if (IsLearing == false) TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+            Test_Button.IsEnabled = true;
         }        
     }
 

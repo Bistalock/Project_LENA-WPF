@@ -139,7 +139,7 @@
                     </GroupBox>
                     <Button Content="Load Parameters. . ." HorizontalAlignment="Left" Margin="10,299,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_12"/>
                     <Button Content="Save Parameters. . ." HorizontalAlignment="Left" Margin="140,299,0,0" VerticalAlignment="Top" Padding="10,2" Grid.ColumnSpan="2" Click="Button_Click_13"/>
-                    <Button x:Name="Test_Button" Content="Test" HorizontalAlignment="Right" Margin="0,299,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1"/>
+                    <Button x:Name="Test_Button" Content="Test" HorizontalAlignment="Right" Margin="0,299,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Test_Button_Click"/>
                     <Button x:Name="Learn_Button" Content="Learn" HorizontalAlignment="Right" Margin="0,299,99,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Button_Click_14"/>
                     <TextBox x:Name="Console1" Height="200" Margin="10,335,10,0" TextWrapping="Wrap" VerticalAlignment="Top" AllowDrop="False" IsTabStop="False" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2" Background="Black" IsReadOnly="True" Foreground="White" FontFamily="Consolas"/>
                     <Button x:Name="button4" Content="Generate Image Parameters. . ." HorizontalAlignment="Left" Margin="10,549,0,0" VerticalAlignment="Top" Padding="10,2" Click="button4_Click"/>
