@@ -255,7 +255,7 @@ namespace Project_LENA___WPF
 
         /* -------------------------- Denoise by Patch ----------------------------------------------------------------- */
 
-        public async Task<byte[,]> fdenoiseNeural(byte[,] noisyIm, int step, string fileName, int layer, int[] networkSize, int[] inputsPerSample, int numberofsectors, CancellationToken cancelToken, PauseToken pauseToken, int progressBar1, int progressBar1Max)
+        public async Task<byte[,]> fdenoiseNeural(byte[,] noisyIm, int step, string fileName, int layer, int[] networkSize, int[] inputsPerSample, int numberofsectors, CancellationToken cancelToken, PauseToken pauseToken, double progressBar1, double progressBar1Max)
         {
             /*
                 noisyIm: an image corrupted by AWG noise
@@ -641,7 +641,7 @@ namespace Project_LENA___WPF
             return counter;
         } // end method
 
-        public async Task<byte[,]> fdenoiseNeural2(byte[,] noisyIm, int step, string fileName, int layer, int[] networkSize, int[] inputsPerSample, int numberofsectors, CancellationToken cancelToken, PauseToken pauseToken, int progressBar1, int progressBar1Max)
+        public async Task<byte[,]> fdenoiseNeural2(byte[,] noisyIm, int step, string fileName, int layer, int[] networkSize, int[] inputsPerSample, int numberofsectors, CancellationToken cancelToken, PauseToken pauseToken)//, double progressBar1, double progressBar1Max)
         {
             /*
             *   noisyIm: an image corrupted by AWG noise

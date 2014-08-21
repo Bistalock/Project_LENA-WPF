@@ -60,7 +60,7 @@
                             <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,43,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_5"/>
                         </Grid>
                     </GroupBox>
-                    <Button Content="Create Fragment From Images. . ." HorizontalAlignment="Right" Margin="0,121,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="1" Click="Button_Click_10"/>
+                    <Button Content="Create Fragment From Images. . ." HorizontalAlignment="Right" Margin="0,121,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="1" Click="Button_Click_10" IsEnabled="False"/>
                     <GroupBox Header="Kernel Size" Height="97" Margin="10,154,5,0" VerticalAlignment="Top">
                         <Grid>
                             <ComboBox x:Name="comboBox1" Margin="10,10,150,0" VerticalAlignment="Top" IsEditable="True" IsEnabled="False">
@@ -196,27 +196,27 @@
                                 <ColumnDefinition Width="143*"/>
                                 <ColumnDefinition Width="233*"/>
                             </Grid.ColumnDefinitions>
-                            <Label Content="Number of Sectors:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                            <TextBox x:Name="textBox16" Height="23" Margin="127,10,10,0" VerticalAlignment="Top"/>
-                            <Label Content="Input Layer Size:" HorizontalAlignment="Left" Margin="8,10,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2"/>
-                            <TextBox x:Name="textBox17" Height="23" Margin="86,10,10,0" VerticalAlignment="Top" Grid.Column="2"/>
-                            <Label Content="Hidden Layer Size:" HorizontalAlignment="Left" Margin="9,10,0,0" VerticalAlignment="Top" Grid.Column="3"/>
-                            <TextBox x:Name="textBox18" Height="23" Margin="121,10,10,0" VerticalAlignment="Top" Grid.Column="3"/>
-                            <Label Content="Kernel Size:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
-                            <ComboBox x:Name="comboBox7" Margin="85,45,13,0" VerticalAlignment="Top" IsEditable="True" Grid.ColumnSpan="2"/>
-                            <Label Content="Output Neurons:" HorizontalAlignment="Left" Margin="6,44,0,0" VerticalAlignment="Top" Grid.Column="2"/>
+                            <Label x:Name="label1" Content="Method:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                            <TextBox x:Name="textBox16" Height="23" Margin="104,10,214,0" VerticalAlignment="Top" Grid.Column="2" Grid.ColumnSpan="2"/>
+                            <Label x:Name="label2" Content="Number of Sectors:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2"/>
+                            <TextBox x:Name="textBox17" Height="23" Margin="84,10,102,0" VerticalAlignment="Top" Grid.Column="3"/>
+                            <Label x:Name="label3" Content="Step:" HorizontalAlignment="Left" Margin="43,10,0,0" VerticalAlignment="Top" Grid.Column="3"/>
+                            <TextBox x:Name="textBox18" Height="23" Margin="97,44,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                            <Label x:Name="label4" Content="Network Size:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                            <ComboBox x:Name="comboBox7" Margin="70,10,0,0" VerticalAlignment="Top" IsEditable="True"/>
+                            <Label x:Name="label5" Content="Output Neurons:" HorizontalAlignment="Left" Margin="6,41,0,0" VerticalAlignment="Top" Grid.Column="2"/>
                             <TextBox x:Name="textBox19" Height="23" Margin="107,44,223,0" VerticalAlignment="Top" Grid.Column="2" Grid.ColumnSpan="2"/>
                         </Grid>
                     </GroupBox>
-                    <Button Content="Load Parameters. . ." HorizontalAlignment="Left" Margin="10,258,0,0" VerticalAlignment="Top" Padding="10,2"/>
+                    <Button Content="Load Parameters. . ." HorizontalAlignment="Left" Margin="10,258,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_15"/>
                     <Button Content="Save Parameters. . ." HorizontalAlignment="Left" Margin="140,258,0,0" VerticalAlignment="Top" Padding="10,2"/>
-                    <Button x:Name="lol_Copy15" Content="Process Image" HorizontalAlignment="Right" Margin="0,258,10,0" VerticalAlignment="Top" Padding="10,2" Grid.IsSharedSizeScope="True" Grid.Column="1" Click="lol_Copy15_Click"/>
+                    <Button x:Name="Process_Button" Content="Process Image" HorizontalAlignment="Right" Margin="0,258,10,0" VerticalAlignment="Top" Padding="10,2" Grid.IsSharedSizeScope="True" Grid.Column="1" Click="Process_Button_Click"/>
                     <RadioButton x:Name="radioButton3" Content="Process Using Pixels" HorizontalAlignment="Right" Margin="0,124,10,0" VerticalAlignment="Top" Checked="radioButton3_Checked"/>
                     <RadioButton x:Name="radioButton4" Content="Process Using Patches" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Grid.Column="1" Checked="radioButton4_Checked"/>
-                    <TextBox x:Name="Console2" Height="133" Margin="10,294,10,0" TextWrapping="Wrap" VerticalAlignment="Top" AllowDrop="False" Focusable="False" IsTabStop="False" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2" Background="White"/>
-                    <Button Content="Cancel" HorizontalAlignment="Right" Margin="0,477,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Button_Click_2"/>
-                    <Button Content="Pause" HorizontalAlignment="Right" Margin="0,477,112,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Button_Click_1"/>
-                    <ProgressBar x:Name="progressBar1" Height="22" Margin="10,441,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="Console2" Height="200" Margin="10,294,10,0" TextWrapping="Wrap" VerticalAlignment="Top" AllowDrop="False" Focusable="False" IsTabStop="False" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2" Background="Black" Foreground="White" FontFamily="Consolas"/>
+                    <Button x:Name="button6" Content="Cancel" HorizontalAlignment="Right" Margin="0,544,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1"/>
+                    <Button x:Name="button5" Content="Pause" HorizontalAlignment="Right" Margin="0,544,112,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1"/>
+                    <ProgressBar x:Name="progressBar1" Height="22" Margin="10,508,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="About" Header="About" IsHitTestVisible="True" Visibility="Hidden">
@@ -228,7 +228,7 @@
                         </Grid.ColumnDefinitions>
                         <Label Content="Project LENA" HorizontalAlignment="Left" Margin="285,10,0,0" VerticalAlignment="Top" Foreground="Black" FontFamily="Tahoma" FontSize="30" Grid.ColumnSpan="2"/>
                         <Image HorizontalAlignment="Left" Height="256" Margin="14,37,0,0" VerticalAlignment="Top" Width="256" Source="Lena.bmp" Stretch="UniformToFill"/>
-                        <Label Content="Version 0.0.2.6" HorizontalAlignment="Left" Margin="288,47,0,0" VerticalAlignment="Top" FontFamily="Tahoma"/>
+                        <Label Content="Version 0.0.6.7" HorizontalAlignment="Left" Margin="288,47,0,0" VerticalAlignment="Top" FontFamily="Tahoma"/>
                         <TextBlock TextWrapping="Wrap" Margin="285,71,0,0" Height="249" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5" Grid.ColumnSpan="2"><Run Text="This program uses an intelligent approach to image processing using MLMVN, otherwise known as Multilayer feedforward neural network based on multi-valued neurons."/><LineBreak/><Run/><LineBreak/><Run Text="The user may create and generate an image suitable to be filtered, generate samples used to create weights used to process images, generate the weights learned from this process, and filter a noisy image from the weights created. "/><LineBreak/><Run/><LineBreak/><Run Text="Additional help can be provided by hovering the cursor over a label of an element of interest. "/><LineBreak/><Run/><LineBreak/><Run Text="Developed by Mr. Plumlee and Mr. Del Pino. We would like to thank Dr. Aizenberg and Dr. Laddomada for their support to help us make this program a reality."/></TextBlock>
                     </Grid>
                 </Grid>

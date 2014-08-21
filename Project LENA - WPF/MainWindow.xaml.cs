@@ -150,23 +150,425 @@ namespace Project_LENA___WPF
                     else if (Learning_of_Weights.IsSelected)
                     {
                         if (IsLearing == false && IsTesting == false) this.AnimateWindowSize(405);
-                        else if (IsLearing == true || IsTesting == true) this.AnimateWindowSize(655);
+                        else if (IsLearing == true) this.AnimateWindowSize(655);
+                        else if (IsTesting == true) this.AnimateWindowSize(620);
                     }
                     else if (Processing_Image.IsSelected)
                     {
-                        if (radioButton3.IsChecked == true || radioButton4.IsChecked == true) this.AnimateWindowSize(365);
+                        if (IsProcessing == true) this.AnimateWindowSize(650);
+                        else if (radioButton3.IsChecked == true || radioButton4.IsChecked == true) this.AnimateWindowSize(365);
                         else this.AnimateWindowSize(220);
                     }
                     else if (About.IsSelected) this.AnimateWindowSize(400);
                 }
             }
         }
-
-        private void lol_Copy15_Click(object sender, RoutedEventArgs e)
+        
+        private async void Process_Button_Click(object sender, RoutedEventArgs e)
         {
-            this.AnimateWindowSize(585);
+            IsProcessing = true;
+
+            Process_Button.IsEnabled = false; // Process Image button
+            button6.IsEnabled = true; // Cancel button
+            //button5.Checked = false; // Pause button; unchecked            
+            button5.IsEnabled = true; // Pause button; enabled
+            radioButton3.IsEnabled = false; // process using pixels button
+            radioButton4.IsEnabled = false; // process using patches button
+            //button17.Enabled = false; // load parameters button
+            //button22.Enabled = false; // save parameters button
+
+            // open the noisy image
+            Tiff noisyimage = Tiff.Open(textBox14.Text, "r");
+
+            // open the weights
+            string weights = textBox15.Text;
+
+            #region Error checking
+            // Error Windows when no image entered
+            if (noisyimage == null)
+            {
+                Process_Button.IsEnabled = true;
+                button6.IsEnabled = false;
+                button5.IsEnabled = false;
+                radioButton3.IsEnabled = true;
+                radioButton4.IsEnabled = true;
+                //button17.Enabled = true;
+                //button22.Enabled = true;
+                MessageBoxResult result = MessageBox.Show("Invalid or no image entered.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+            if (weights == "")
+            {
+                Process_Button.IsEnabled = true;
+                button6.IsEnabled = false;
+                button5.IsEnabled = false;
+                radioButton3.IsEnabled = true;
+                radioButton4.IsEnabled = true;
+                //button17.Enabled = true;
+                //button22.Enabled = true;
+                MessageBoxResult result = MessageBox.Show("No weights entered.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+
+            // Error Windows when no radio button checked
+            if (radioButton3.IsChecked == false && radioButton4.IsChecked == false)
+            {
+                Process_Button.IsEnabled = true;
+                button6.IsEnabled = false;
+                button5.IsEnabled = false;
+                radioButton3.IsEnabled = true;
+                radioButton4.IsEnabled = true;
+                //button17.Enabled = true;
+                //button22.Enabled = true;
+                MessageBoxResult result = MessageBox.Show("No implementation checked.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+            #endregion
+
+            // Create new stopwatch
+            Stopwatch stopwatch = new Stopwatch();
+
+            // Begin timing
+            stopwatch.Start();
+
+            // New cancellation token
+            cTokenSource1 = new CancellationTokenSource();
+
+            // Create a cancellation token from CancellationTokenSource
+            var cToken = cTokenSource1.Token;
+
+            // New pause token
+            pTokenSource1 = new PauseTokenSource();
+
+            // Create a pause token from PauseTokenSource
+            var pToken = pTokenSource1.Token;
+
+            // Obtain basic tag information of the image
+            #region GetTagInfo
+            int width = noisyimage.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
+            int height = noisyimage.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
+            byte bits = noisyimage.GetField(TiffTag.BITSPERSAMPLE)[0].ToByte();
+            byte pixel = noisyimage.GetField(TiffTag.SAMPLESPERPIXEL)[0].ToByte();
+            double dpiX = noisyimage.GetField(TiffTag.XRESOLUTION)[0].ToDouble();
+            double dpiY = noisyimage.GetField(TiffTag.YRESOLUTION)[0].ToDouble();
+            #endregion
+
+            // Display information
+            SetText2("Image information:" + Environment.NewLine);
+            SetText2("Width is : " + width + "\r\nHeight is: " + height + "\r\nDpi is: " + dpiX
+                + "\r\nThe scanline is " + noisyimage.ScanlineSize() + ".\r\nBits per Sample is: " + bits + "\r\nSample per pixel is: " + pixel + "\r\n" + Environment.NewLine);
+
+            // Store the intensity values of the image to 2d array                              
+            byte[,] noisy = new byte[height, width];
+            noisy = Functions.Tiff2Array(noisyimage, height, width);
+
+            // remove the loaded image from memory
+            noisyimage.Dispose();
+
+            // Update title text
+            Title = "Project LENA - WPF (Working)";
+
+            #region Process using pixels
+            if (radioButton3.IsChecked == true) // Process using pixels
+            {
+            //    try
+            //    {
+            //        if (string.IsNullOrEmpty(textBox13.Text) || string.IsNullOrEmpty(textBox16.Text) || string.IsNullOrEmpty(textBox17.Text) ||
+            //            comboBox4.SelectedIndex == -1)
+            //        {
+            //            button10.Enabled = true;
+            //            button11.Enabled = false;
+            //            checkBox2.Enabled = false;
+            //            radioButton3.Enabled = true;
+            //            radioButton4.Enabled = true;
+            //            button17.Enabled = true;
+            //            button22.Enabled = true;
+            //            MessageBox.Show("Please load or enter parameters.", "Error",
+            //                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //            return;
+            //        }
+
+            //        // parameters
+            //        int numberofsectors = Convert.ToInt32(textBox13.Text);
+            //        int inLayerSize = Convert.ToInt32(textBox16.Text);
+            //        int hidLayerSize = Convert.ToInt32(textBox17.Text);
+
+            //        // combobox values
+            //        int kernel = 0;
+
+            //        if (comboBox4.Text == "")
+            //        {
+            //            // Error Windows when no number of samples entered
+            //            button6.Enabled = true;
+            //            MessageBox.Show("No kernel size selected.", "Error",
+            //                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //            return;
+            //        }
+            //        else
+            //        {
+            //            char[] c = comboBox4.Text.ToCharArray(); // seperates compbox elements into an array
+
+            //            for (int i = 0; i < c.Length; i++)
+            //            {
+            //                if (c[i].ToString() == " " || c[i].ToString() == "x" || c[i].ToString() == "X")
+            //                    break;
+            //                else
+            //                    kernel = Convert.ToInt32(comboBox4.Text.Substring(0, i + 1));
+            //            }
+
+            //            // ************************  Let the user enter any odd number as size of the patch
+            //            if (kernel % 2 != 1)
+            //            {
+            //                MessageBox.Show("Please enter an odd number", "Error",
+            //                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //                button10.Enabled = true;
+            //                button11.Enabled = false;
+            //                checkBox2.Enabled = false;
+            //                radioButton3.Enabled = true;
+            //                radioButton4.Enabled = true;
+            //                button17.Enabled = true;
+            //                button22.Enabled = true;
+            //                this.Text = Title;
+            //                return;
+            //            }
+            //        }
+
+            //        // Enable the resize event
+            //        this.timer10.Enabled = true;
+
+            //        // Initiallization of progress bar elements
+            //        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+            //        progressBar1.Maximum = height + 8;
+            //        progressBar1.Value = 0;
+            //        TaskbarManager.Instance.SetProgressValue(0, progressBar1.Maximum);
+            //        NativeMethods.SetState(progressBar1, 1);
+
+            //        progressBar1.Value += 4;
+            //        TaskbarManager.Instance.SetProgressValue(progressBar1.Value, progressBar1.Maximum);
+
+            //        byte[,] denoised = await Task.Run(() => mlmvn.Activation(noisy, kernel, weights, numberofsectors, inLayerSize, hidLayerSize, cTokenSource1.Token, pTokenSource1.Token, progressBar1.Value, progressBar1.Maximum));
+
+            //        // Stop timing
+            //        stopwatch.Stop();
+
+            //        // Write result
+            //        SetText2("Time elapsed: " + stopwatch.Elapsed + Environment.NewLine);
+
+            //        string fileName = Path.GetFileNameWithoutExtension(textBox9.Text) + "_Pixels_" + kernel + ".tif";
+
+            //        saveFileDialog2.FileName = fileName;
+
+            //        if (saveFileDialog2.ShowDialog() == DialogResult.OK) // Test result.
+            //        {
+
+            //            functions.WriteToFile(denoised, width, height, bits, pixel, dpiX, dpiY, saveFileDialog2.FileName);
+
+            //        }
+            //    }
+            //    catch (OperationCanceledException)
+            //    {
+            //        SetText2("\r\nProgress canceled.\r\n");
+            //        // Set the CancellationTokenSource to null when the work is complete.
+            //        cTokenSource1 = null;
+
+            //        this.Text = Title;
+            //        // Stop timing
+            //        stopwatch.Stop();
+
+            //        // Write result
+            //        SetText2("Time elapsed: " + stopwatch.Elapsed + Environment.NewLine);
+            //        button10.Enabled = true;
+            //        button11.Enabled = false;
+            //        checkBox2.Enabled = false;
+            //        radioButton3.Enabled = true;
+            //        radioButton4.Enabled = true;
+            //        button17.Enabled = true;
+            //        button22.Enabled = true;
+            //        return;
+            //    }
+            }
+            #endregion
+
+            #region Process using patches
+
+            else if (radioButton4.IsChecked == true) // Process using patches
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(textBox16.Text) || string.IsNullOrEmpty(textBox17.Text) || string.IsNullOrEmpty(textBox18.Text) || string.IsNullOrEmpty(textBox19.Text))
+                    {
+                        Process_Button.IsEnabled = true;
+                        button6.IsEnabled = false;
+                        button5.IsEnabled = false;
+                        radioButton3.IsEnabled = true;
+                        radioButton4.IsEnabled = true;
+                        //button17.Enabled = true;
+                        //button22.Enabled = true;
+                        Title = "Project LENA - WPF";
+                        MessageBoxResult result = MessageBox.Show("Please load or enter parameters.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (result == MessageBoxResult.OK)
+                        {
+                            return;
+                        }                        
+                    }
+
+
+                    // network size
+                    string[] a = textBox18.Text.Split(',', '.');
+                    int[] networkSize = new int[a.Length];
+                    int layer = a.Length;
+
+
+                    for (int i = 0; i < a.Length; i++)
+                    {
+                        networkSize[i] = Convert.ToInt32(a[i]);
+                    }
+
+                    // determine number of samples
+                    int[] inputsPerSample = new int[layer];
+                    inputsPerSample[0] = networkSize[layer - 1] + Convert.ToInt32(textBox19.Text);
+                    for (int i = 1; i < layer; i++)
+                        inputsPerSample[i] = networkSize[0] + Convert.ToInt32(textBox19.Text);
+                    // end for
+
+                    // parameters
+                    int numberofsectors = Convert.ToInt32(textBox16.Text);
+                    int step = Convert.ToInt32(textBox17.Text);
+
+                    byte[,] denoised = null;
+
+                    // Initiallization of progress bar elements
+                    TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+                    int range_x;
+                    int pSize = (int)Math.Sqrt(networkSize[3]);
+
+                    // using old patch method
+                    if (comboBox7.SelectedIndex == 0)
+                    {
+
+                        int range_y = (height - pSize) / step + 2;
+                        range_x = (width - pSize) / step + 2;
+                        progressBar1.Maximum = (range_x * range_y) + 4;// * ( 4 + range_y % 4) + 4; // range_x * (range into fourths + range_Y % 4) + 4
+                    }
+                    // using new patch method
+                    else if (comboBox7.SelectedIndex == 1)
+                    {
+                        int interval = pSize - (step * 2);
+                        int range_y = (height - (pSize - step)) / interval + 2;
+                        range_x = (width - (pSize - step)) / interval + 2;
+                        progressBar1.Maximum = (range_x * range_y) + 4;
+                    }
+                    else
+                    {
+                        Process_Button.IsEnabled = true;
+                        button6.IsEnabled = false;
+                        button5.IsEnabled = false;
+                        radioButton3.IsEnabled = true;
+                        radioButton4.IsEnabled = true;
+                        //button17.Enabled = true;
+                        //button22.Enabled = true;
+                        Title = "Project LENA - WPF";
+                        MessageBoxResult result = MessageBox.Show("No patch method entered.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (result == MessageBoxResult.OK)
+                        {
+                            return;
+                        }
+                    }
+
+                    // Enable the resize event
+                    this.AnimateWindowSize(650);
+
+
+                    //progressBar1.Step = range_x;
+                    progressBar1.Minimum = 0;
+                    progressBar1.Value = 0;
+                    TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum;
+                    progressBar1.Value += 2;
+                    TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum;
+                    if (comboBox7.SelectedIndex == 0)
+                    {
+                        denoised = await Task.Run(() => mlmvn.fdenoiseNeural(noisy, step, weights, layer, networkSize, inputsPerSample, numberofsectors, cTokenSource1.Token, pTokenSource1.Token, progressBar1.Value, progressBar1.Maximum));
+                    }
+                    else if (comboBox7.SelectedIndex == 1)
+                    {
+                        denoised = await Task.Run(() => mlmvn.fdenoiseNeural2(noisy, step, weights, layer, networkSize, inputsPerSample, numberofsectors, cTokenSource1.Token, pTokenSource1.Token));//, progressBar1.Value, progressBar1.Maximum));
+                    }
+                    string fileName = System.IO.Path.GetFileNameWithoutExtension(textBox14.Text) + "_Patches_" + pSize + "_Network_[" +
+                        networkSize[0] + "," + networkSize[1] + "," + networkSize[2] + "," + networkSize[3] + "]" + ".tif";
+
+                    // Stop timing
+                    stopwatch.Stop();
+
+                    // Write result
+                    SetText2("\r\nTime elapsed: " + stopwatch.Elapsed + Environment.NewLine);
+
+
+                    // Create OpenFileDialog 
+                Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+
+                // Set filter for file extension and default file extension 
+                dlg.DefaultExt = ".tif";
+                dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+                dlg.FileName = fileName;
+                // Assigns the results value when Dialog is opened
+                var dlgresult = dlg.ShowDialog();
+
+                // Checks if value is true
+                if (dlgresult == true)
+                {
+                        functions.WriteToFile(denoised, width, height, bits, pixel, dpiX, dpiY, dlg.FileName);
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    SetText2("\r\nProgress canceled.\r\n");
+                    // Set the CancellationTokenSource to null when the work is complete.
+                    cTokenSource1 = null;
+                    // Stop timing
+                    stopwatch.Stop();
+
+                    // Write result
+                    SetText2("Time elapsed: " + stopwatch.Elapsed + Environment.NewLine);
+                    Process_Button.IsEnabled = true;
+                    button6.IsEnabled = false;
+                    button5.IsEnabled = false;
+                    radioButton3.IsEnabled = true;
+                    radioButton4.IsEnabled = true;
+                    //button17.Enabled = true;
+                    //button22.Enabled = true;
+                    Title = "Project LENA - WPF";
+                    return;
+                }
+            }
+            #endregion
+
+            // Set the CancellationTokenSource to null when the work is complete.
+            cTokenSource1 = null;
+
+            Process_Button.IsEnabled = true;
+            button6.IsEnabled = false;
+            button5.IsEnabled = false;
+            radioButton3.IsEnabled = true;
+            radioButton4.IsEnabled = true;
+            //button17.Enabled = true;
+            //button22.Enabled = true;
+            Title = "Project LENA - WPF";
+
+            progressBar1.Value = 0;
+            TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum;      
+        
+
             //ProgressBar1.Foreground = Brushes.Green;
-            Process();
+            //Process();
         }
 
         //Create a Delegate that matches 
@@ -182,7 +584,7 @@ namespace Project_LENA___WPF
             progressBar1.Maximum = short.MaxValue;
             progressBar1.Value = 0;
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
-            TaskbarItemInfo.ProgressValue = progressBar1.Value/progressBar1.Maximum;
+            TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum;
 
             //Stores the value of the ProgressBar
             double value = 0;
@@ -1015,18 +1417,20 @@ namespace Project_LENA___WPF
             if (Console2.Dispatcher.CheckAccess())
             {
                 Console2.AppendText(text);
+                Console2.CaretIndex = Console1.Text.Length;
+                Console2.ScrollToEnd();
             }
             else
             {
                 SetTextCallback d = new SetTextCallback(SetText2);
-                Console2.Dispatcher.Invoke(d, new object[] { text });
+                this.Dispatcher.Invoke(d, new object[] { text });
             }
         }
 
-        delegate int SetProgressCallback(int value);
+        delegate void SetProgressCallback(double value);
 
         // Progressbar for tab 4
-        public double SetProgress1(double value)
+        public void SetProgress1(double value)
         {
             // InvokeRequired required compares the thread ID of the
             // calling thread to the thread ID of the creating thread.
@@ -1038,10 +1442,10 @@ namespace Project_LENA___WPF
             }
             else
             {
-                SetTextCallback d = new SetTextCallback(SetText2);
-                Console2.Dispatcher.Invoke(d, new object[] { progressBar1, value });
+                SetProgressCallback d = new SetProgressCallback(SetProgress1);
+                this.Dispatcher.Invoke(d, new object[] { value });
             }
-            return progressBar1.Value;
+            //return progressBar1.Value;
         }
 
         // read parameters from xml file
@@ -1555,11 +1959,113 @@ namespace Project_LENA___WPF
         private void radioButton3_Checked(object sender, RoutedEventArgs e)
         {
             this.AnimateWindowSize(365);
+
+            label1.Visibility = Visibility.Visible;
+            label1.Content = "Number of sectors:";
+            label1.ToolTip = "The number of sectors to be processed from the unit circle.\r\nUsed for classification in the learning algorithm.";
+
+            textBox16.Visibility = Visibility.Visible;
+            Grid.SetColumn(textBox16, 0);
+            textBox16.Margin = new Thickness(127, 10, 0, 0);
+
+            label2.Visibility = Visibility.Visible;
+            label2.Content = "Input layer size:";
+            label2.ToolTip = "The size of the layers.";
+            Grid.SetColumn(label2, 1);
+            label2.Margin = new Thickness(8, 10, 0, 0);
+
+            textBox17.Visibility = Visibility.Visible;
+            Grid.SetColumn(textBox17, 2);
+            textBox17.Margin = new Thickness(86, 10, 0, 0);
+
+            label3.Visibility = Visibility.Visible;
+            label3.Content = "Hidden layer size:";
+            Grid.SetColumn(label3, 3);
+            label3.Margin = new Thickness(9, 10, 0, 0);
+            label3.ToolTip = "The size of the hidden layers used in the weights.";
+
+            textBox18.Visibility = Visibility.Visible;
+            textBox18.Clear();
+            //textBox18.Size = new Size(58, 20);
+            Grid.SetColumn(textBox18, 3);
+            textBox18.Margin = new Thickness(121, 10, 0, 0);
+
+            label4.Visibility = Visibility.Visible;
+            label4.Content = "Kernel size:";
+            label4.ToolTip = "Size of the kernel surrounding the pixel being processed.";
+
+            comboBox7.Visibility = Visibility.Visible;
+            comboBox7.IsEditable = true;
+            Grid.SetColumn(comboBox7, 0);
+            comboBox7.Margin = new Thickness(85, 45, 13, 0);
+            comboBox7.Items.Clear();
+            comboBox7.Items.Add("3 x 3");
+            comboBox7.Items.Add("5 x 5");
+            comboBox7.Items.Add("7 x 7");
+            comboBox7.ToolTip = "Size of the kernel surrounding the pixel being processed.";
+
+            label5.Visibility = Visibility.Collapsed;
+
+            textBox19.Visibility = Visibility.Collapsed;
         }
 
         private void radioButton4_Checked(object sender, RoutedEventArgs e)
         {
             this.AnimateWindowSize(365);
+
+            label1.Visibility = Visibility.Visible;
+            label1.Content = "Method:";
+            label1.ToolTip = "The patch function to be used.";
+
+            comboBox7.Visibility = Visibility.Visible;
+            comboBox7.IsEditable = false;
+            comboBox7.Margin = new Thickness(70, 10, 5, 0);
+            Grid.SetColumn(comboBox7, 0);
+            //comboBox7.Location = new Point(82, 57);
+            comboBox7.Items.Clear();
+            comboBox7.Items.Add("Legacy method");
+            comboBox7.Items.Add("New patch method");
+            comboBox7.ToolTip = "The patch function to be used.";         
+
+            label2.Visibility = Visibility.Visible;
+            label2.Content = "Number of sectors:";
+            label2.ToolTip = "The number of sectors to be processed from the unit circle.\r\nUsed for classification in the learning algorithm.";
+            label2.Margin = new Thickness(10, 10, 0, 0);
+            Grid.SetColumn(label2, 1);
+            //label2.Location = new Point(210, 30);
+
+            textBox16.Visibility = Visibility.Visible;
+            textBox16.Margin = new Thickness(104, 10, 214, 0);
+            Grid.SetColumn(textBox16, 2);
+            //textBox16.Location = new Point(117, 26);            
+
+            label3.Visibility = Visibility.Visible;
+            label3.Content = "Step:";
+            label3.Margin = new Thickness(43, 10, 0, 0);
+            Grid.SetColumn(label3, 3);
+            //label3.Location = new Point(390, 30);
+            label3.ToolTip = "The size to be overlapped by each patch.";
+
+            textBox17.Visibility = Visibility.Visible;
+            textBox17.Margin = new Thickness(84, 10, 102, 0);
+            Grid.SetColumn(textBox17, 3);
+            //textBox17.Location = new Point(296, 26);           
+
+            label4.Visibility = Visibility.Visible;
+            label4.Content = "Network size:";
+            label4.ToolTip = "The network array to be used to generate the weights.";
+
+            textBox18.Visibility = Visibility.Visible;
+            textBox18.Clear();
+            textBox18.Margin = new Thickness(97, 44, 19, 0);
+            Grid.SetColumn(textBox18, 0);
+            //textBox18.Size = new Size(58, 20);
+            //textBox18.Location = new Point(486, 26);
+
+            label5.Visibility = Visibility.Visible;
+            label5.ToolTip = "The number of hidden layers in the output.";
+
+            textBox19.Visibility = Visibility.Visible;
         }
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
@@ -1626,6 +2132,7 @@ namespace Project_LENA___WPF
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
             // Set filter for file extension and default file extension 
+            dlg.InitialDirectory = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, @"Resources");
             dlg.DefaultExt = ".tif";
             dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
 
@@ -1645,8 +2152,8 @@ namespace Project_LENA___WPF
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
             // Set filter for file extension and default file extension 
-            dlg.DefaultExt = ".tif";
-            dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+            dlg.DefaultExt = ".wgt";
+            dlg.Filter = "Weights (*.wgt)|*.wgt|All files (*.*)|*.*";
 
             // Assigns the results value when Dialog is opened
             var result = dlg.ShowDialog();
@@ -2230,7 +2737,7 @@ namespace Project_LENA___WPF
             // Error Windows when no image entered
             if (string.IsNullOrEmpty(textBox6.Text))
             {
-                Learn_Button.IsEnabled = true;
+                Test_Button.IsEnabled = true;
                 MessageBoxResult result = MessageBox.Show("Samples file not entered.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 if (result == MessageBoxResult.OK)
                 {
@@ -2239,9 +2746,9 @@ namespace Project_LENA___WPF
 
             }
 
-            if (comboBox4.SelectedIndex != 1 && string.IsNullOrEmpty(textBox7.Text))
+            if (comboBox4.SelectedIndex != 1 || string.IsNullOrEmpty(textBox7.Text))
             {
-                Learn_Button.IsEnabled = true;
+                Test_Button.IsEnabled = true;
                 MessageBoxResult result = MessageBox.Show("Input existing weights for testing.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 if (result == MessageBoxResult.OK)
                 {
@@ -2253,7 +2760,7 @@ namespace Project_LENA___WPF
             //
             if (string.IsNullOrEmpty(textBox8.Text) || string.IsNullOrEmpty(textBox9.Text) || string.IsNullOrEmpty(textBox10.Text) || string.IsNullOrEmpty(textBox11.Text))
             {
-                Learn_Button.IsEnabled = true;
+                Test_Button.IsEnabled = true;
                 MessageBoxResult result = MessageBox.Show("Check for empty parameters.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 if (result == MessageBoxResult.OK)
                 {
@@ -2297,6 +2804,26 @@ namespace Project_LENA___WPF
 
             if (IsLearing == false) TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
             Test_Button.IsEnabled = true;
+        }
+
+        private void Button_Click_15(object sender, RoutedEventArgs e)
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            // Set filter for file extension and default file extension 
+            dlg.InitialDirectory = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, @"Resources");
+            dlg.DefaultExt = ".xml";
+            dlg.Filter = "XML Documents (*.xml)|*.xml|All files (*.*)|*.*";
+
+            // Assigns the results value when Dialog is opened
+            var result = dlg.ShowDialog();
+
+            // Checks if value is true
+            if (result == true)
+            {
+                xmlImageParams(dlg.FileName);
+            }
         }        
     }
 
