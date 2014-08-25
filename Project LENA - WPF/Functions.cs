@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
 using System.Threading.Tasks;
 /* ---------------------- Added Libraries ---------------------- */
 using BitMiracle.LibTiff.Classic; // Use Tiff images

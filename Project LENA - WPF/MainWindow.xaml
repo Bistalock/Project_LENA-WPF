@@ -27,21 +27,21 @@
                             <Label Content="Noise:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top" Height="26" Width="43"/>
                             <TextBox x:Name="textBox1" Height="23" Margin="61,13,122,0" VerticalAlignment="Top" Grid.ColumnSpan="3" Padding="2" AllowDrop="True" PreviewDrop="TextBox_PreviewDrop" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver"/>
                             <TextBox x:Name="textBox2" Height="23" Margin="61,44,0,0" VerticalAlignment="Top" Padding="2"/>
-                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="2" Click="Button_Click"/>
+                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="2" Click="Button_Load_Click"/>
                             <CheckBox x:Name="checkBox1" Content="Add Gaussian noise to image" HorizontalAlignment="Center" Margin="10,47,0,0" VerticalAlignment="Top" IsChecked="True" Grid.Column="1"/>
                             <CheckBox x:Name="checkBox2" Content="Generate grayscale noise (color image)" HorizontalAlignment="Center" Margin="3,48,0,0" VerticalAlignment="Top" Grid.Column="2"/>
                         </Grid>
                     </GroupBox>
                     <CheckBox x:Name="checkBox3" Content="Create grayscale image" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" Checked="checkBox3_Checked" Unchecked="checkBox3_Unchecked"/>
-                    <Button Content="Create Gaussian Image" HorizontalAlignment="Right" Margin="0,121,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_Click_1" Grid.Column="1"/>
+                    <Button Content="Create Gaussian Image" HorizontalAlignment="Right" Margin="0,121,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_CreateGauss_Click" Grid.Column="1"/>
                     <GroupBox Header="GroupBox" Margin="10,154,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
                         <Grid>
                             <Label Content="Color Image:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top"/>
                             <TextBox x:Name="textBox3" Margin="92,14,122,0" VerticalAlignment="Top" Height="23" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
-                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,14,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_2"/>
+                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,14,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_1_Click"/>
                         </Grid>
                     </GroupBox>
-                    <Button Content="Create Grayscale Image" HorizontalAlignment="Right" Margin="0,237,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_Click_3" Grid.Column="1"/>
+                    <Button Content="Create Grayscale Image" HorizontalAlignment="Right" Margin="0,237,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_CreateGray_Click" Grid.Column="1"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="Sample_Generation" Header="Sample Generation">
@@ -56,11 +56,11 @@
                             <Label Content="Noisy Image:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top"/>
                             <TextBox x:Name="textBox4" Height="23" Margin="93,13,122,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
                             <TextBox x:Name="textBox5" Height="23" Margin="93,44,122,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
-                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_4"/>
-                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,43,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_5"/>
+                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_2_Click"/>
+                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,43,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_3_Click"/>
                         </Grid>
                     </GroupBox>
-                    <Button Content="Create Fragment From Images. . ." HorizontalAlignment="Right" Margin="0,121,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="1" Click="Button_Click_10" IsEnabled="False"/>
+                    <Button Content="Create Fragment From Images. . ." HorizontalAlignment="Right" Margin="0,121,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="1" Click="Button_CreateFrag_Click" IsEnabled="False"/>
                     <GroupBox Header="Kernel Size" Height="97" Margin="10,154,5,0" VerticalAlignment="Top">
                         <Grid>
                             <ComboBox x:Name="comboBox1" Margin="10,10,150,0" VerticalAlignment="Top" IsEditable="True" IsEnabled="False">
@@ -73,8 +73,8 @@
                                 <ComboBoxItem Content="13 x 13"/>
                                 <ComboBoxItem Content="15 x 15"/>
                             </ComboBox>
-                            <RadioButton x:Name="radioButton1" Content="Process Using Pixels" HorizontalAlignment="Right" Margin="0,17,20,0" VerticalAlignment="Top" Checked="radioButton1_Checked"/>
-                            <RadioButton x:Name="radioButton2" Content="Process Using Patches" HorizontalAlignment="Right" Margin="0,43,9,0" VerticalAlignment="Top" Checked="radioButton2_Checked"/>
+                            <RadioButton x:Name="radioButton1" Content="Process Using Pixels" HorizontalAlignment="Right" Margin="0,17,20,0" VerticalAlignment="Top" Checked="RadioButton_ProcesPixels_Checked"/>
+                            <RadioButton x:Name="radioButton2" Content="Process Using Patches" HorizontalAlignment="Right" Margin="0,43,9,0" VerticalAlignment="Top" Checked="RadioButton_ProcessPatches_Checked"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="Samples" Margin="5,154,10,0" VerticalAlignment="Top" Grid.Column="1">
@@ -87,7 +87,7 @@
                             <Label Content="Number of Samples:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top"/>
                         </Grid>
                     </GroupBox>
-                    <Button x:Name="GenSample_Button" Content="Generate Samples" HorizontalAlignment="Right" Margin="0,237,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="1" Click="Button_Click_11"/>
+                    <Button x:Name="GenSample_Button" Content="Generate Samples" HorizontalAlignment="Right" Margin="0,237,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="1" Click="Button_GenSamples_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="Learning_of_Weights" Header="Learning of Weights">
@@ -102,9 +102,9 @@
                             <Label Content="Initial Weights:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top"/>
                             <TextBox x:Name="textBox6" Height="23" Margin="72,13,133,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
                             <TextBox x:Name="textBox7" Height="23" Margin="237,44,133,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop" IsEnabled="False"/>
-                            <Button Content="Load Samples. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_6"/>
-                            <Button x:Name="button1" Content="Load Weights. . ." HorizontalAlignment="Right" Margin="0,43,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_7" IsEnabled="False"/>
-                            <ComboBox x:Name="comboBox4" Margin="103,44,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" SelectionChanged="comboBox4_SelectionChanged">
+                            <Button Content="Load Samples. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_4_Click"/>
+                            <Button x:Name="button1" Content="Load Weights. . ." HorizontalAlignment="Right" Margin="0,43,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_5_Click" IsEnabled="False"/>
+                            <ComboBox x:Name="comboBox4" Margin="103,44,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" SelectionChanged="ComboBox_Weights_SelectionChanged">
                                 <ComboBoxItem Content="Random"/>
                                 <ComboBoxItem Content="Existing"/>
                             </ComboBox>
@@ -117,7 +117,7 @@
                             </Grid.ColumnDefinitions>
                             <CheckBox x:Name="checkBox4" Content="Angular RMSE" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0" HorizontalContentAlignment="Right"/>
 
-                            <ComboBox x:Name="comboBox6" Margin="10,10,119,0" VerticalAlignment="Top" SelectionChanged="comboBox6_SelectionChanged">
+                            <ComboBox x:Name="comboBox6" Margin="10,10,119,0" VerticalAlignment="Top" SelectionChanged="ComboBox_StopCriteria_SelectionChanged">
                                 <ComboBoxItem Content="MAX"/>
                                 <ComboBoxItem Content="Error Rate"/>
                                 <ComboBoxItem Content="RMSE"/>
@@ -137,13 +137,13 @@
                             <TextBox x:Name="textBox13" Height="23" Margin="121,10,10,0" VerticalAlignment="Top" Grid.Column="1" Padding="2"/>
                         </Grid>
                     </GroupBox>
-                    <Button Content="Load Parameters. . ." HorizontalAlignment="Left" Margin="10,299,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_12"/>
-                    <Button Content="Save Parameters. . ." HorizontalAlignment="Left" Margin="140,299,0,0" VerticalAlignment="Top" Padding="10,2" Grid.ColumnSpan="2" Click="Button_Click_13"/>
-                    <Button x:Name="Test_Button" Content="Test" HorizontalAlignment="Right" Margin="0,299,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Test_Button_Click"/>
-                    <Button x:Name="Learn_Button" Content="Learn" HorizontalAlignment="Right" Margin="0,299,99,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Button_Click_14"/>
+                    <Button Content="Load Parameters. . ." HorizontalAlignment="Left" Margin="10,299,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_LoadParams_Click"/>
+                    <Button Content="Save Parameters. . ." HorizontalAlignment="Left" Margin="140,299,0,0" VerticalAlignment="Top" Padding="10,2" Grid.ColumnSpan="2" Click="Button_SaveParams_Click"/>
+                    <Button x:Name="Test_Button" Content="Test" HorizontalAlignment="Right" Margin="0,299,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Button_Test_Click"/>
+                    <Button x:Name="Learn_Button" Content="Learn" HorizontalAlignment="Right" Margin="0,299,99,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Button_Learn_Click"/>
                     <TextBox x:Name="Console1" Height="200" Margin="10,335,10,0" TextWrapping="Wrap" VerticalAlignment="Top" AllowDrop="False" IsTabStop="False" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2" Background="Black" IsReadOnly="True" Foreground="White" FontFamily="Consolas"/>
-                    <Button x:Name="button4" Content="Generate Image Parameters. . ." HorizontalAlignment="Left" Margin="10,549,0,0" VerticalAlignment="Top" Padding="10,2" Click="button4_Click"/>
-                    <Button x:Name="button3" Content="Cancel" HorizontalAlignment="Right" Margin="0,549,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" IsEnabled="False" Click="button3_Click"/>
+                    <Button x:Name="button4" Content="Generate Image Parameters. . ." HorizontalAlignment="Left" Margin="10,549,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_GenImParams_Click"/>
+                    <Button x:Name="button3" Content="Cancel" HorizontalAlignment="Right" Margin="0,549,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" IsEnabled="False" Click="Button_Cancel_Click"/>
                     <GroupBox Header="Configuration" Margin="10,115,10,0" VerticalAlignment="Top" Height="100" Grid.ColumnSpan="2">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -169,7 +169,7 @@
                             <TextBox x:Name="textBox11" Height="23" Margin="127,44,11,0" VerticalAlignment="Top" Padding="2" Grid.Column="1"/>
                         </Grid>
                     </GroupBox>
-                    <ToggleButton x:Name="button2" Content="Pause" Grid.Column="1" HorizontalAlignment="Right" Margin="0,549,112,0" VerticalAlignment="Top" Padding="30,2" IsEnabled="False" Checked="button2_Checked" Unchecked="button2_Unchecked"/>
+                    <ToggleButton x:Name="button2" Content="Pause" Grid.Column="1" HorizontalAlignment="Right" Margin="0,549,112,0" VerticalAlignment="Top" Padding="30,2" IsEnabled="False" Checked="Button_Pause_Checked" Unchecked="Button_Pause_Unchecked"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="Processing_Image" Header="Processing Image">
@@ -184,8 +184,8 @@
                             <Label Content="Weights:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top"/>
                             <TextBox x:Name="textBox14" Height="23" Margin="93,13,133,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
                             <TextBox x:Name="textBox15" Height="23" Margin="93,44,133,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
-                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Width="109" Click="Button_Click_8"/>
-                            <Button Content="Load Weights. . ." HorizontalAlignment="Right" Margin="0,43,10,0" VerticalAlignment="Top" Padding="10,2" ScrollViewer.CanContentScroll="True" Click="Button_Click_9"/>
+                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Width="109" Click="Button_Load_6_Click"/>
+                            <Button Content="Load Weights. . ." HorizontalAlignment="Right" Margin="0,43,10,0" VerticalAlignment="Top" Padding="10,2" ScrollViewer.CanContentScroll="True" Click="Button_Load_7_Click"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="Parameters" Margin="10,144,10,0" VerticalAlignment="Top" Height="100" Grid.ColumnSpan="2">
@@ -208,11 +208,11 @@
                             <TextBox x:Name="textBox19" Height="23" Margin="107,44,223,0" VerticalAlignment="Top" Grid.Column="2" Grid.ColumnSpan="2"/>
                         </Grid>
                     </GroupBox>
-                    <Button Content="Load Parameters. . ." HorizontalAlignment="Left" Margin="10,258,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Click_15"/>
-                    <Button Content="Save Parameters. . ." HorizontalAlignment="Left" Margin="140,258,0,0" VerticalAlignment="Top" Padding="10,2"/>
-                    <Button x:Name="Process_Button" Content="Process Image" HorizontalAlignment="Right" Margin="0,258,10,0" VerticalAlignment="Top" Padding="10,2" Grid.IsSharedSizeScope="True" Grid.Column="1" Click="Process_Button_Click"/>
-                    <RadioButton x:Name="radioButton3" Content="Process Using Pixels" HorizontalAlignment="Right" Margin="0,124,10,0" VerticalAlignment="Top" Checked="radioButton3_Checked"/>
-                    <RadioButton x:Name="radioButton4" Content="Process Using Patches" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Grid.Column="1" Checked="radioButton4_Checked"/>
+                    <Button Content="Load Parameters. . ." HorizontalAlignment="Left" Margin="10,258,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_LoadParams_1_Click"/>
+                    <Button Content="Save Parameters. . ." HorizontalAlignment="Left" Margin="140,258,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_SaveParams_1_Click"/>
+                    <Button x:Name="Process_Button" Content="Process Image" HorizontalAlignment="Right" Margin="0,258,10,0" VerticalAlignment="Top" Padding="10,2" Grid.IsSharedSizeScope="True" Grid.Column="1" Click="Button_Process_Click"/>
+                    <RadioButton x:Name="radioButton3" Content="Process Using Pixels" HorizontalAlignment="Right" Margin="0,124,10,0" VerticalAlignment="Top" Checked="RadioButton_Pixels_Checked"/>
+                    <RadioButton x:Name="radioButton4" Content="Process Using Patches" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Grid.Column="1" Checked="RadioButton_Patches_Checked"/>
                     <TextBox x:Name="Console2" Height="200" Margin="10,294,10,0" TextWrapping="Wrap" VerticalAlignment="Top" AllowDrop="False" Focusable="False" IsTabStop="False" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2" Background="Black" Foreground="White" FontFamily="Consolas"/>
                     <Button x:Name="button6" Content="Cancel" HorizontalAlignment="Right" Margin="0,544,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1"/>
                     <Button x:Name="button5" Content="Pause" HorizontalAlignment="Right" Margin="0,544,112,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1"/>
@@ -228,7 +228,7 @@
                         </Grid.ColumnDefinitions>
                         <Label Content="Project LENA" HorizontalAlignment="Left" Margin="285,10,0,0" VerticalAlignment="Top" Foreground="Black" FontFamily="Tahoma" FontSize="30" Grid.ColumnSpan="2"/>
                         <Image HorizontalAlignment="Left" Height="256" Margin="14,37,0,0" VerticalAlignment="Top" Width="256" Source="Lena.bmp" Stretch="UniformToFill"/>
-                        <Label Content="Version 0.0.6.7" HorizontalAlignment="Left" Margin="288,47,0,0" VerticalAlignment="Top" FontFamily="Tahoma"/>
+                        <Label Content="Version 0.0.7.3" HorizontalAlignment="Left" Margin="288,47,0,0" VerticalAlignment="Top" FontFamily="Tahoma"/>
                         <TextBlock TextWrapping="Wrap" Margin="285,71,0,0" Height="249" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5" Grid.ColumnSpan="2"><Run Text="This program uses an intelligent approach to image processing using MLMVN, otherwise known as Multilayer feedforward neural network based on multi-valued neurons."/><LineBreak/><Run/><LineBreak/><Run Text="The user may create and generate an image suitable to be filtered, generate samples used to create weights used to process images, generate the weights learned from this process, and filter a noisy image from the weights created. "/><LineBreak/><Run/><LineBreak/><Run Text="Additional help can be provided by hovering the cursor over a label of an element of interest. "/><LineBreak/><Run/><LineBreak/><Run Text="Developed by Mr. Plumlee and Mr. Del Pino. We would like to thank Dr. Aizenberg and Dr. Laddomada for their support to help us make this program a reality."/></TextBlock>
                     </Grid>
                 </Grid>
