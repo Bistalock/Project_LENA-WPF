@@ -4,6 +4,6 @@
     <Number_of_Sectors>384</Number_of_Sectors>
     <Input_Layer_Size>3</Input_Layer_Size>
     <Hidden_Layer_Size>54</Hidden_Layer_Size>
-    <Kernel>0</Kernel>
+    <Kernel>3 x 3</Kernel>
   </Parameters>
 </Method>

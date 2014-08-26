@@ -1918,7 +1918,7 @@ namespace Project_LENA___WPF
             label3.ToolTip = "The size of the hidden layers used in the weights.";
 
             textBox18.Visibility = Visibility.Visible;
-            textBox18.Clear();
+            //textBox18.Clear();
             //textBox18.Size = new Size(58, 20);
             Grid.SetColumn(textBox18, 4);
             textBox18.Margin = new Thickness(110, 10, 20, 0);
@@ -1986,10 +1986,10 @@ namespace Project_LENA___WPF
 
             label4.Visibility = Visibility.Visible;
             label4.Content = "Network size:";
-            label4.ToolTip = "The network array to be used to generate the weights.";
+            label4.ToolTip = "The network array to be used to process the image.";
 
             textBox18.Visibility = Visibility.Visible;
-            textBox18.Clear();
+            //textBox18.Clear();
             textBox18.Margin = new Thickness(97, 44, 0, 0);
             Grid.SetColumn(textBox18, 0);
             //textBox18.Size = new Size(58, 20);
@@ -2023,7 +2023,85 @@ namespace Project_LENA___WPF
 
         private void Button_SaveParams_1_Click(object sender, RoutedEventArgs e)
         {
-            //Save Parameters
+            // Create OpenFileDialog 
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".xml";
+            dlg.Filter = "XML Documents (*.xml)|*.xml|All files (*.*)|*.*";            
+
+            if (radioButton3.IsChecked == true) // Save pixel parameters
+            {
+                dlg.FileName = "Pixel_Parameters.xml";
+
+                // Assigns the results value when Dialog is opened
+                var result = dlg.ShowDialog();
+
+                // Checks if value is true
+                if (result == true)
+                {
+                    // defines the xml settings for the file
+                    XmlWriterSettings settings = new XmlWriterSettings();
+                    settings.Indent = true; // allows indentation
+
+                    // xml name based on file dialogbox name
+                    XmlWriter parameters = XmlWriter.Create(dlg.FileName, settings);
+
+                    // start the generation of the xml parameters
+                    parameters.WriteStartDocument();
+
+                    // xml parameters
+                    parameters.WriteStartElement("Method");
+                    parameters.WriteAttributeString("type", "Pixel_Parameters");
+                    parameters.WriteStartElement("Parameters");
+                    parameters.WriteElementString("Number_of_Sectors", textBox16.Text);
+                    parameters.WriteElementString("Input_Layer_Size", textBox17.Text);
+                    parameters.WriteElementString("Hidden_Layer_Size", textBox18.Text);
+                    parameters.WriteElementString("Kernel", Convert.ToString(comboBox7.Text));
+
+                    // proper closure and disposing of the file and memory
+                    parameters.Flush();
+                    parameters.Close();
+                    parameters.Dispose();
+                }
+            }
+            else if (radioButton4.IsChecked == true) // Save patch parameters
+            {
+                dlg.FileName = "Patch_Parameters.xml";
+
+                // Assigns the results value when Dialog is opened
+                var result = dlg.ShowDialog();
+
+                // Checks if value is true
+                if (result == true)
+                {
+                    // defines the xml settings for the file
+                    XmlWriterSettings settings = new XmlWriterSettings();
+                    settings.Indent = true; // allows indentation
+
+                    // xml name based on file dialogbox name
+                    XmlWriter parameters = XmlWriter.Create(dlg.FileName, settings);
+
+                    // start the generation of the xml parameters
+                    parameters.WriteStartDocument();
+
+                    // xml parameters
+                    parameters.WriteStartElement("Method");
+                    parameters.WriteAttributeString("type", "Patch_Parameters");
+                    parameters.WriteStartElement("Parameters");
+                    parameters.WriteElementString("Patch_Method", Convert.ToString(comboBox7.SelectedIndex));
+                    parameters.WriteElementString("Number_of_Sectors", textBox16.Text);
+                    parameters.WriteElementString("Step", textBox17.Text);
+                    parameters.WriteElementString("Network_Size", textBox18.Text);
+                    parameters.WriteElementString("Output_Neurons", textBox19.Text);
+
+
+                    // proper closure and disposing of the file and memory
+                    parameters.Flush();
+                    parameters.Close();
+                    parameters.Dispose();
+                }
+            }
         }
 
         private async void Button_Process_Click(object sender, RoutedEventArgs e)
@@ -2662,7 +2740,7 @@ namespace Project_LENA___WPF
                                             Xml.Read();
                                             if (Xml.NodeType == XmlNodeType.Text)
                                             {
-                                                comboBox7.SelectedIndex = Convert.ToInt32(Xml.Value); // Kernel
+                                                comboBox7.Text = Xml.Value; // Kernel
                                             }
                                         }
                                         Xml.Read();
