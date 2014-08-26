@@ -23,7 +23,7 @@ namespace Project_LENA___WPF
 
         /* -------------------------- Denoise by Pixels ----------------------------------------------------------------- */
 
-        public async Task<byte[,]> Activation(byte[,] noisyImage, int kernel, string weights, int numberofsectors, int inLayerSize, int hidLayerSize, CancellationToken cancelToken, PauseToken pauseToken, int progressBar1, int progressBar1Max)
+        public async Task<byte[,]> Activation(byte[,] noisyImage, int kernel, string weights, int numberofsectors, int inLayerSize, int hidLayerSize, CancellationToken cancelToken, PauseToken pauseToken)
         {
             // get height and width
             int height = noisyImage.GetLength(0);
@@ -55,7 +55,6 @@ namespace Project_LENA___WPF
             image = functions.MirrorImage(noisyImage, height, width, offset);
 
             window.SetProgress1(4);
-            progressBar1 += 4;
 
             // pre-instantiate complex 2d-array
             double[,] inputArray = new double[kernel, kernel];
@@ -90,6 +89,10 @@ namespace Project_LENA___WPF
 
                 // Action when pause button is clicked
                 await pauseToken.WaitWhilePausedAsync();
+
+                //Increments progress bar
+                window.SetProgress1(1);
+
             };//);  
             return noisyImage;
         }// end method
@@ -255,7 +258,7 @@ namespace Project_LENA___WPF
 
         /* -------------------------- Denoise by Patch ----------------------------------------------------------------- */
 
-        public async Task<byte[,]> fdenoiseNeural(byte[,] noisyIm, int step, string fileName, int layer, int[] networkSize, int[] inputsPerSample, int numberofsectors, CancellationToken cancelToken, PauseToken pauseToken, double progressBar1, double progressBar1Max)
+        public async Task<byte[,]> fdenoiseNeural(byte[,] noisyIm, int step, string fileName, int layer, int[] networkSize, int[] inputsPerSample, int numberofsectors, CancellationToken cancelToken, PauseToken pauseToken)
         {
             /*
                 noisyIm: an image corrupted by AWG noise
@@ -491,25 +494,16 @@ namespace Project_LENA___WPF
                     // end for
                     // end for
                     #endregion
-                    #region GUI incrementation
+                    #region Form elements
+                    if (cancelToken.IsCancellationRequested)
+                        cancelToken.ThrowIfCancellationRequested();
 
-                    //increment += 1;
-                    //if (range_x.GetLength(0)/2 <= increment)
-                    //{
-                    //    testval = Window.SetProgress1(1);
-                    //    increment = 0;
-                    //}
-                    
+                    // Action when pause button is clicked
+                    await pauseToken.WaitWhilePausedAsync();
+
                     window.SetProgress1(1);
                     #endregion
                 }//); // end col for loop
-
-                // Action when cancel button is clicked
-                if (cancelToken.IsCancellationRequested)
-                    cancelToken.ThrowIfCancellationRequested();
-
-                // Action when pause button is clicked
-                await pauseToken.WaitWhilePausedAsync();
 
                 window.SetText2("Patches in row " + (row + 1) + " of " + range_y.Length + " done." + Environment.NewLine);
 
@@ -935,14 +929,16 @@ namespace Project_LENA___WPF
                     }
 
                     #endregion
+                    #region Form elements
+                    if (cancelToken.IsCancellationRequested)
+                        cancelToken.ThrowIfCancellationRequested();
+
+                    // Action when pause button is clicked
+                    await pauseToken.WaitWhilePausedAsync();
+
                     window.SetProgress1(1);
-                } // end col for loop
-
-                if (cancelToken.IsCancellationRequested)
-                    cancelToken.ThrowIfCancellationRequested();
-
-                // Action when pause button is clicked
-                await pauseToken.WaitWhilePausedAsync();
+                    #endregion
+                } // end col for loop               
 
                 window.SetText2("Patches in row " + (row + 1) + " of " + range_y.Length + " done." + Environment.NewLine);
             } // end row for loop

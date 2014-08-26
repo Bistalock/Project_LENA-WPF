@@ -8,7 +8,7 @@ using System.Windows.Controls;
 //using System.Windows.Data;
 //using System.Windows.Documents;
 //using System.Windows.Input;
-//using System.Windows.Media;
+using System.Windows.Media;
 //using System.Windows.Media.Imaging;
 //using System.Windows.Navigation;
 //using System.Windows.Shapes;
@@ -1899,29 +1899,29 @@ namespace Project_LENA___WPF
 
             textBox16.Visibility = Visibility.Visible;
             Grid.SetColumn(textBox16, 0);
-            textBox16.Margin = new Thickness(127, 10, 0, 0);
+            textBox16.Margin = new Thickness(127, 10, 20, 0);
 
             label2.Visibility = Visibility.Visible;
             label2.Content = "Input layer size:";
             label2.ToolTip = "The size of the layers.";
-            Grid.SetColumn(label2, 1);
-            label2.Margin = new Thickness(8, 10, 0, 0);
+            Grid.SetColumn(label2, 2);
+            label2.Margin = new Thickness(0, 10, 0, 0);
 
             textBox17.Visibility = Visibility.Visible;
             Grid.SetColumn(textBox17, 2);
-            textBox17.Margin = new Thickness(86, 10, 0, 0);
+            textBox17.Margin = new Thickness(100, 10, 0, 0);
 
             label3.Visibility = Visibility.Visible;
             label3.Content = "Hidden layer size:";
-            Grid.SetColumn(label3, 3);
-            label3.Margin = new Thickness(9, 10, 0, 0);
+            Grid.SetColumn(label3, 4);
+            label3.Margin = new Thickness(0, 10, 0, 0);
             label3.ToolTip = "The size of the hidden layers used in the weights.";
 
             textBox18.Visibility = Visibility.Visible;
             textBox18.Clear();
             //textBox18.Size = new Size(58, 20);
-            Grid.SetColumn(textBox18, 3);
-            textBox18.Margin = new Thickness(121, 10, 0, 0);
+            Grid.SetColumn(textBox18, 4);
+            textBox18.Margin = new Thickness(110, 10, 20, 0);
 
             label4.Visibility = Visibility.Visible;
             label4.Content = "Kernel size:";
@@ -1952,7 +1952,7 @@ namespace Project_LENA___WPF
 
             comboBox7.Visibility = Visibility.Visible;
             comboBox7.IsEditable = false;
-            comboBox7.Margin = new Thickness(70, 10, 5, 0);
+            comboBox7.Margin = new Thickness(70, 10, 0, 0);
             Grid.SetColumn(comboBox7, 0);
             //comboBox7.Location = new Point(82, 57);
             comboBox7.Items.Clear();
@@ -1968,20 +1968,20 @@ namespace Project_LENA___WPF
             //label2.Location = new Point(210, 30);
 
             textBox16.Visibility = Visibility.Visible;
-            textBox16.Margin = new Thickness(104, 10, 214, 0);
+            textBox16.Margin = new Thickness(108, 10, 14, 0);
             Grid.SetColumn(textBox16, 2);
             //textBox16.Location = new Point(117, 26);            
 
             label3.Visibility = Visibility.Visible;
             label3.Content = "Step:";
-            label3.Margin = new Thickness(43, 10, 0, 0);
-            Grid.SetColumn(label3, 3);
+            label3.Margin = new Thickness(10, 10, 0, 0);
+            Grid.SetColumn(label3, 4);
             //label3.Location = new Point(390, 30);
             label3.ToolTip = "The size to be overlapped by each patch.";
 
             textBox17.Visibility = Visibility.Visible;
-            textBox17.Margin = new Thickness(84, 10, 102, 0);
-            Grid.SetColumn(textBox17, 3);
+            textBox17.Margin = new Thickness(51, 10, 102, 0);
+            Grid.SetColumn(textBox17, 4);
             //textBox17.Location = new Point(296, 26);           
 
             label4.Visibility = Visibility.Visible;
@@ -1990,7 +1990,7 @@ namespace Project_LENA___WPF
 
             textBox18.Visibility = Visibility.Visible;
             textBox18.Clear();
-            textBox18.Margin = new Thickness(97, 44, 19, 0);
+            textBox18.Margin = new Thickness(97, 44, 0, 0);
             Grid.SetColumn(textBox18, 0);
             //textBox18.Size = new Size(58, 20);
             //textBox18.Location = new Point(486, 26);
@@ -2024,7 +2024,7 @@ namespace Project_LENA___WPF
         private void Button_SaveParams_1_Click(object sender, RoutedEventArgs e)
         {
             //Save Parameters
-        }        
+        }
 
         private async void Button_Process_Click(object sender, RoutedEventArgs e)
         {
@@ -2142,121 +2142,139 @@ namespace Project_LENA___WPF
             #region Process using pixels
             if (radioButton3.IsChecked == true) // Process using pixels
             {
-            //    try
-            //    {
-            //        if (string.IsNullOrEmpty(textBox13.Text) || string.IsNullOrEmpty(textBox16.Text) || string.IsNullOrEmpty(textBox17.Text) ||
-            //            comboBox4.SelectedIndex == -1)
-            //        {
-            //            button10.Enabled = true;
-            //            button11.Enabled = false;
-            //            checkBox2.Enabled = false;
-            //            radioButton3.Enabled = true;
-            //            radioButton4.Enabled = true;
-            //            button17.Enabled = true;
-            //            button22.Enabled = true;
-            //            MessageBox.Show("Please load or enter parameters.", "Error",
-            //                MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //            return;
-            //        }
+                try
+                {
+                    if (string.IsNullOrEmpty(textBox16.Text) || string.IsNullOrEmpty(textBox17.Text) || string.IsNullOrEmpty(textBox18.Text))
+                    {
+                        Process_Button.IsEnabled = true;
+                        button6.IsEnabled = false;
+                        button5.IsEnabled = false;
+                        radioButton3.IsEnabled = true;
+                        radioButton4.IsEnabled = true;
+                        //button17.Enabled = true;
+                        //button22.Enabled = true;          
+                        MessageBoxResult result = MessageBox.Show("Please load or enter parameters.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (result == MessageBoxResult.OK)
+                        {
+                            return;
+                        }
+                    }
 
-            //        // parameters
-            //        int numberofsectors = Convert.ToInt32(textBox13.Text);
-            //        int inLayerSize = Convert.ToInt32(textBox16.Text);
-            //        int hidLayerSize = Convert.ToInt32(textBox17.Text);
+                    // parameters
+                    int numberofsectors = Convert.ToInt32(textBox16.Text);
+                    int inLayerSize = Convert.ToInt32(textBox17.Text);
+                    int hidLayerSize = Convert.ToInt32(textBox18.Text);
 
-            //        // combobox values
-            //        int kernel = 0;
+                    // combobox values
+                    int kernel = 0;
 
-            //        if (comboBox4.Text == "")
-            //        {
-            //            // Error Windows when no number of samples entered
-            //            button6.Enabled = true;
-            //            MessageBox.Show("No kernel size selected.", "Error",
-            //                MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //            return;
-            //        }
-            //        else
-            //        {
-            //            char[] c = comboBox4.Text.ToCharArray(); // seperates compbox elements into an array
+                    if (comboBox7.Text == "")
+                    {
+                        Process_Button.IsEnabled = true;
+                        button6.IsEnabled = false;
+                        button5.IsEnabled = false;
+                        radioButton3.IsEnabled = true;
+                        radioButton4.IsEnabled = true;
+                        MessageBoxResult result = MessageBox.Show("No kernel size selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (result == MessageBoxResult.OK)
+                        {
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        char[] c = comboBox7.Text.ToCharArray(); // seperates compbox elements into an array
 
-            //            for (int i = 0; i < c.Length; i++)
-            //            {
-            //                if (c[i].ToString() == " " || c[i].ToString() == "x" || c[i].ToString() == "X")
-            //                    break;
-            //                else
-            //                    kernel = Convert.ToInt32(comboBox4.Text.Substring(0, i + 1));
-            //            }
+                        for (int i = 0; i < c.Length; i++)
+                        {
+                            if (c[i].ToString() == " " || c[i].ToString() == "x" || c[i].ToString() == "X")
+                                break;
+                            else
+                                kernel = Convert.ToInt32(comboBox7.Text.Substring(0, i + 1));
+                        }
 
-            //            // ************************  Let the user enter any odd number as size of the patch
-            //            if (kernel % 2 != 1)
-            //            {
-            //                MessageBox.Show("Please enter an odd number", "Error",
-            //                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //                button10.Enabled = true;
-            //                button11.Enabled = false;
-            //                checkBox2.Enabled = false;
-            //                radioButton3.Enabled = true;
-            //                radioButton4.Enabled = true;
-            //                button17.Enabled = true;
-            //                button22.Enabled = true;
-            //                this.Text = Title;
-            //                return;
-            //            }
-            //        }
+                        // ************************  Let the user enter any odd number as size of the pixel
+                        if (kernel % 2 != 1)
+                        {
+                            Process_Button.IsEnabled = true;
+                            button6.IsEnabled = false;
+                            button5.IsEnabled = false;
+                            radioButton3.IsEnabled = true;
+                            radioButton4.IsEnabled = true;
+                            MessageBoxResult result = MessageBox.Show("Please enter an odd number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            if (result == MessageBoxResult.OK)
+                            {
+                                return;
+                            }
+                        }
+                    }
 
-            //        // Enable the resize event
-            //        this.timer10.Enabled = true;
+                    // Enable the resize event
+                    this.AnimateWindowSize(650);
 
-            //        // Initiallization of progress bar elements
-            //        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-            //        progressBar1.Maximum = height + 8;
-            //        progressBar1.Value = 0;
-            //        TaskbarManager.Instance.SetProgressValue(0, progressBar1.Maximum);
-            //        NativeMethods.SetState(progressBar1, 1);
+                    //progressBar1.Step = range_x;
+                    progressBar1.Minimum = 0;
+                    progressBar1.Value = 0;
+                    TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum;
+                    progressBar1.Value += 2;
+                    TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum;
 
-            //        progressBar1.Value += 4;
-            //        TaskbarManager.Instance.SetProgressValue(progressBar1.Value, progressBar1.Maximum);
+                    // Initiallization of progress bar elements
+                    progressBar1.Foreground = new SolidColorBrush() { Color = new Color() { A = 255, R = 6, G = 176, B = 37 } };
+                    TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+                    progressBar1.Maximum = height + 8;
+                    progressBar1.Value = 0;
+                    TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum; ;
 
-            //        byte[,] denoised = await Task.Run(() => mlmvn.Activation(noisy, kernel, weights, numberofsectors, inLayerSize, hidLayerSize, cTokenSource1.Token, pTokenSource1.Token, progressBar1.Value, progressBar1.Maximum));
+                    progressBar1.Value += 4;
+                    TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum;
 
-            //        // Stop timing
-            //        stopwatch.Stop();
+                    byte[,] denoised = await Task.Run(() => mlmvn.Activation(noisy, kernel, weights, numberofsectors, inLayerSize, hidLayerSize, cTokenSource1.Token, pTokenSource1.Token));
 
-            //        // Write result
-            //        SetText2("Time elapsed: " + stopwatch.Elapsed + Environment.NewLine);
+                    // Stop timing
+                    stopwatch.Stop();
 
-            //        string fileName = Path.GetFileNameWithoutExtension(textBox9.Text) + "_Pixels_" + kernel + ".tif";
+                    // Write result
+                    SetText2("Time elapsed: " + stopwatch.Elapsed + Environment.NewLine);
 
-            //        saveFileDialog2.FileName = fileName;
+                    string fileName = Path.GetFileNameWithoutExtension(textBox14.Text) + "_Pixels_" + kernel + ".tif";
 
-            //        if (saveFileDialog2.ShowDialog() == DialogResult.OK) // Test result.
-            //        {
+                    // Create OpenFileDialog 
+                    Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
 
-            //            functions.WriteToFile(denoised, width, height, bits, pixel, dpiX, dpiY, saveFileDialog2.FileName);
+                    // Set filter for file extension and default file extension 
+                    dlg.DefaultExt = ".tif";
+                    dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+                    dlg.FileName = fileName;
+                    // Assigns the results value when Dialog is opened
+                    var dlgresult = dlg.ShowDialog();
 
-            //        }
-            //    }
-            //    catch (OperationCanceledException)
-            //    {
-            //        SetText2("\r\nProgress canceled.\r\n");
-            //        // Set the CancellationTokenSource to null when the work is complete.
-            //        cTokenSource1 = null;
+                    // Checks if value is true
+                    if (dlgresult == true)
+                    {
+                        functions.WriteToFile(denoised, width, height, bits, pixel, dpiX, dpiY, dlg.FileName);
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    SetText2("\r\nProgress canceled.\r\n");
+                    // Set the CancellationTokenSource to null when the work is complete.
+                    cTokenSource1 = null;
+                    // Stop timing
+                    stopwatch.Stop();
 
-            //        this.Text = Title;
-            //        // Stop timing
-            //        stopwatch.Stop();
-
-            //        // Write result
-            //        SetText2("Time elapsed: " + stopwatch.Elapsed + Environment.NewLine);
-            //        button10.Enabled = true;
-            //        button11.Enabled = false;
-            //        checkBox2.Enabled = false;
-            //        radioButton3.Enabled = true;
-            //        radioButton4.Enabled = true;
-            //        button17.Enabled = true;
-            //        button22.Enabled = true;
-            //        return;
-            //    }
+                    // Write result
+                    SetText2("Time elapsed: " + stopwatch.Elapsed + Environment.NewLine);
+                    Process_Button.IsEnabled = true;
+                    button6.IsEnabled = false;
+                    button5.IsEnabled = false;
+                    radioButton3.IsEnabled = true;
+                    radioButton4.IsEnabled = true;
+                    //button17.Enabled = true;
+                    //button22.Enabled = true;
+                    Title = "Project LENA - WPF";
+                    return;
+                }
             }
             #endregion
 
@@ -2280,7 +2298,7 @@ namespace Project_LENA___WPF
                         if (result == MessageBoxResult.OK)
                         {
                             return;
-                        }                        
+                        }
                     }
 
 
@@ -2309,6 +2327,7 @@ namespace Project_LENA___WPF
                     byte[,] denoised = null;
 
                     // Initiallization of progress bar elements
+                    progressBar1.Foreground = new SolidColorBrush() { Color = new Color() { A = 255, R = 6, G = 176, B = 37 } };
                     TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
                     int range_x;
                     int pSize = (int)Math.Sqrt(networkSize[3]);
@@ -2358,7 +2377,7 @@ namespace Project_LENA___WPF
                     TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum;
                     if (comboBox7.SelectedIndex == 0)
                     {
-                        denoised = await Task.Run(() => mlmvn.fdenoiseNeural(noisy, step, weights, layer, networkSize, inputsPerSample, numberofsectors, cTokenSource1.Token, pTokenSource1.Token, progressBar1.Value, progressBar1.Maximum));
+                        denoised = await Task.Run(() => mlmvn.fdenoiseNeural(noisy, step, weights, layer, networkSize, inputsPerSample, numberofsectors, cTokenSource1.Token, pTokenSource1.Token));
                     }
                     else if (comboBox7.SelectedIndex == 1)
                     {
@@ -2375,18 +2394,18 @@ namespace Project_LENA___WPF
 
 
                     // Create OpenFileDialog 
-                Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+                    Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
 
-                // Set filter for file extension and default file extension 
-                dlg.DefaultExt = ".tif";
-                dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
-                dlg.FileName = fileName;
-                // Assigns the results value when Dialog is opened
-                var dlgresult = dlg.ShowDialog();
+                    // Set filter for file extension and default file extension 
+                    dlg.DefaultExt = ".tif";
+                    dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+                    dlg.FileName = fileName;
+                    // Assigns the results value when Dialog is opened
+                    var dlgresult = dlg.ShowDialog();
 
-                // Checks if value is true
-                if (dlgresult == true)
-                {
+                    // Checks if value is true
+                    if (dlgresult == true)
+                    {
                         functions.WriteToFile(denoised, width, height, bits, pixel, dpiX, dpiY, dlg.FileName);
                     }
                 }
@@ -2426,11 +2445,44 @@ namespace Project_LENA___WPF
             Title = "Project LENA - WPF";
 
             progressBar1.Value = 0;
-            TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum;      
-        
+            TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum;
+
 
             //ProgressBar1.Foreground = Brushes.Green;
             //Process();
+        }
+
+        private void Button_Pause_1_Checked(object sender, RoutedEventArgs e)
+        {
+            Title = "Project LENA - WPF (Paused)";
+            SetText2("\r\nProcess is paused." + Environment.NewLine);
+            progressBar1.Foreground = new SolidColorBrush() { Color = new Color() { A = 255, R = 218, G = 203, B = 38 } };
+            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Paused;
+            this.button5.Content = "Resume";
+            button6.IsEnabled = false;
+            pTokenSource1.IsPaused = !pTokenSource1.IsPaused;
+        }
+
+        private void Button_Pause_1_Unchecked(object sender, RoutedEventArgs e)
+        {
+            
+            Title = "Project LENA - WPF (Working)";
+            SetText2("Process is resumed.\r\n" + Environment.NewLine);
+            progressBar1.Foreground = new SolidColorBrush() { Color = new Color() { A = 255, R = 6, G = 176, B = 37 } };
+            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+            this.button5.Content = "Pause";
+            button6.IsEnabled = true;
+            pTokenSource1.IsPaused = !pTokenSource1.IsPaused;
+        }
+
+        private void Button_Cancel_1_Click(object sender, RoutedEventArgs e)
+        {
+            progressBar1.Foreground = new SolidColorBrush(){Color = new Color(){A = 255, R = 218, G = 38,B = 38}};
+            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Error;
+            if (cTokenSource1 != null)
+            {
+                cTokenSource1.Cancel();
+            }
         }
         #endregion
 
@@ -2841,7 +2893,7 @@ namespace Project_LENA___WPF
     }
 
     /// <summary>
-    /// Class to add resizing animation!
+    /// Class to add resizing animation
     /// </summary>
     public static class WindowUtilties
     {

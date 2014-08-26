@@ -23,25 +23,25 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Label Content="Image:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="46"/>
-                            <Label Content="Noise:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top" Height="26" Width="43"/>
+                            <Label Content="Image:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="46" ToolTip="The color or grayscale Y Tiff image to be corrupted by Gaussian noise.&#10;Drag and drop function is supported."/>
+                            <Label Content="Noise:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top" Height="26" Width="43" ToolTip="The percentage of Gaussian noise to be applied to the image in decimal."/>
                             <TextBox x:Name="textBox1" Height="23" Margin="61,13,122,0" VerticalAlignment="Top" Grid.ColumnSpan="3" Padding="2" AllowDrop="True" PreviewDrop="TextBox_PreviewDrop" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver"/>
                             <TextBox x:Name="textBox2" Height="23" Margin="61,44,0,0" VerticalAlignment="Top" Padding="2"/>
-                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="2" Click="Button_Load_Click"/>
-                            <CheckBox x:Name="checkBox1" Content="Add Gaussian noise to image" HorizontalAlignment="Center" Margin="10,47,0,0" VerticalAlignment="Top" IsChecked="True" Grid.Column="1"/>
-                            <CheckBox x:Name="checkBox2" Content="Generate grayscale noise (color image)" HorizontalAlignment="Center" Margin="3,48,0,0" VerticalAlignment="Top" Grid.Column="2"/>
+                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="2" Click="Button_Load_Click" ToolTip="Load the grayscale image."/>
+                            <CheckBox x:Name="checkBox1" Content="Add Gaussian noise to image" HorizontalAlignment="Center" Margin="10,47,0,0" VerticalAlignment="Top" IsChecked="True" Grid.Column="1" ToolTip="Check to add the Gaussian noise to the image.&#10;Uncheck to just generate the Gaussian noise."/>
+                            <CheckBox x:Name="checkBox2" Content="Generate grayscale noise (color image)" HorizontalAlignment="Center" Margin="3,48,0,0" VerticalAlignment="Top" Grid.Column="2" ToolTip="Check to apply a grayscale only Gausian noise to a color image.&#10;Uncheck to apply a color Gaussian noise to the color image."/>
                         </Grid>
                     </GroupBox>
-                    <CheckBox x:Name="checkBox3" Content="Create grayscale image" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" Checked="checkBox3_Checked" Unchecked="checkBox3_Unchecked"/>
-                    <Button Content="Create Gaussian Image" HorizontalAlignment="Right" Margin="0,121,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_CreateGauss_Click" Grid.Column="1"/>
+                    <CheckBox x:Name="checkBox3" Content="Create grayscale image" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" Checked="checkBox3_Checked" Unchecked="checkBox3_Unchecked" ToolTip="Convert a color image to a grayscale version of the image."/>
+                    <Button Content="Create Gaussian Image" HorizontalAlignment="Right" Margin="0,121,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_CreateGauss_Click" Grid.Column="1" ToolTip="Generates the noise based on the size inputed."/>
                     <GroupBox Header="GroupBox" Margin="10,154,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
                         <Grid>
-                            <Label Content="Color Image:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top"/>
+                            <Label Content="Color Image:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top" ToolTip="The color RGB Tiff image to be reduced to grayscale.&#10;Drag and drop function is supported."/>
                             <TextBox x:Name="textBox3" Margin="92,14,122,0" VerticalAlignment="Top" Height="23" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
-                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,14,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_1_Click"/>
+                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,14,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_1_Click" ToolTip="Load a color TIFF image to be processed to a grayscale image."/>
                         </Grid>
                     </GroupBox>
-                    <Button Content="Create Grayscale Image" HorizontalAlignment="Right" Margin="0,237,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_CreateGray_Click" Grid.Column="1"/>
+                    <Button Content="Create Grayscale Image" HorizontalAlignment="Right" Margin="0,237,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_CreateGray_Click" Grid.Column="1" ToolTip="Generates the grayscale image."/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="Sample_Generation" Header="Sample Generation">
@@ -142,7 +142,7 @@
                     <Button x:Name="Test_Button" Content="Test" HorizontalAlignment="Right" Margin="0,299,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Button_Test_Click"/>
                     <Button x:Name="Learn_Button" Content="Learn" HorizontalAlignment="Right" Margin="0,299,99,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Button_Learn_Click"/>
                     <TextBox x:Name="Console1" Height="200" Margin="10,335,10,0" TextWrapping="Wrap" VerticalAlignment="Top" AllowDrop="False" IsTabStop="False" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2" Background="Black" IsReadOnly="True" Foreground="White" FontFamily="Consolas"/>
-                    <Button x:Name="button4" Content="Generate Image Parameters. . ." HorizontalAlignment="Left" Margin="10,549,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_GenImParams_Click"/>
+                    <Button x:Name="button4" Content="Generate Image Parameters. . ." HorizontalAlignment="Left" Margin="10,549,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_GenImParams_Click" IsEnabled="False"/>
                     <Button x:Name="button3" Content="Cancel" HorizontalAlignment="Right" Margin="0,549,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" IsEnabled="False" Click="Button_Cancel_Click"/>
                     <GroupBox Header="Configuration" Margin="10,115,10,0" VerticalAlignment="Top" Height="100" Grid.ColumnSpan="2">
                         <Grid>
@@ -191,21 +191,22 @@
                     <GroupBox Header="Parameters" Margin="10,144,10,0" VerticalAlignment="Top" Height="100" Grid.ColumnSpan="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="195*"/>
-                                <ColumnDefinition Width="23*"/>
+                                <ColumnDefinition Width="202*"/>
+                                <ColumnDefinition Width="16*"/>
                                 <ColumnDefinition Width="143*"/>
-                                <ColumnDefinition Width="233*"/>
+                                <ColumnDefinition Width="33*"/>
+                                <ColumnDefinition Width="200*"/>
                             </Grid.ColumnDefinitions>
                             <Label x:Name="label1" Content="Method:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                            <TextBox x:Name="textBox16" Height="23" Margin="104,10,214,0" VerticalAlignment="Top" Grid.Column="2" Grid.ColumnSpan="2"/>
-                            <Label x:Name="label2" Content="Number of Sectors:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.ColumnSpan="2"/>
-                            <TextBox x:Name="textBox17" Height="23" Margin="84,10,102,0" VerticalAlignment="Top" Grid.Column="3"/>
-                            <Label x:Name="label3" Content="Step:" HorizontalAlignment="Left" Margin="43,10,0,0" VerticalAlignment="Top" Grid.Column="3"/>
+                            <TextBox x:Name="textBox16" Height="23" Margin="104,10,14,0" VerticalAlignment="Top" Grid.Column="2" Grid.ColumnSpan="2"/>
+                            <Label x:Name="label2" Content="Number of Sectors:" HorizontalAlignment="Left" Margin="3,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
+                            <TextBox x:Name="textBox17" Height="23" Margin="51,10,102,0" VerticalAlignment="Top" Grid.Column="4"/>
+                            <Label x:Name="label3" Content="Step:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Column="4"/>
                             <TextBox x:Name="textBox18" Height="23" Margin="97,44,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                             <Label x:Name="label4" Content="Network Size:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
                             <ComboBox x:Name="comboBox7" Margin="70,10,0,0" VerticalAlignment="Top" IsEditable="True"/>
                             <Label x:Name="label5" Content="Output Neurons:" HorizontalAlignment="Left" Margin="6,41,0,0" VerticalAlignment="Top" Grid.Column="2"/>
-                            <TextBox x:Name="textBox19" Height="23" Margin="107,44,223,0" VerticalAlignment="Top" Grid.Column="2" Grid.ColumnSpan="2"/>
+                            <TextBox x:Name="textBox19" Height="23" Margin="107,44,23,0" VerticalAlignment="Top" Grid.Column="2" Grid.ColumnSpan="2"/>
                         </Grid>
                     </GroupBox>
                     <Button Content="Load Parameters. . ." HorizontalAlignment="Left" Margin="10,258,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_LoadParams_1_Click"/>
@@ -214,9 +215,9 @@
                     <RadioButton x:Name="radioButton3" Content="Process Using Pixels" HorizontalAlignment="Right" Margin="0,124,10,0" VerticalAlignment="Top" Checked="RadioButton_Pixels_Checked"/>
                     <RadioButton x:Name="radioButton4" Content="Process Using Patches" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Grid.Column="1" Checked="RadioButton_Patches_Checked"/>
                     <TextBox x:Name="Console2" Height="200" Margin="10,294,10,0" TextWrapping="Wrap" VerticalAlignment="Top" AllowDrop="False" Focusable="False" IsTabStop="False" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2" Background="Black" Foreground="White" FontFamily="Consolas"/>
-                    <Button x:Name="button6" Content="Cancel" HorizontalAlignment="Right" Margin="0,544,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1"/>
-                    <Button x:Name="button5" Content="Pause" HorizontalAlignment="Right" Margin="0,544,112,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1"/>
+                    <Button x:Name="button6" Content="Cancel" HorizontalAlignment="Right" Margin="0,544,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" IsEnabled="False" Click="Button_Cancel_1_Click"/>
                     <ProgressBar x:Name="progressBar1" Height="22" Margin="10,508,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                    <ToggleButton x:Name="button5" Content="Pause" Grid.Column="1" HorizontalAlignment="Right" Margin="0,544,112,0" VerticalAlignment="Top" Padding="30,2" IsEnabled="False" Checked="Button_Pause_1_Checked" Unchecked="Button_Pause_1_Unchecked"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="About" Header="About" IsHitTestVisible="True" Visibility="Hidden">
@@ -228,7 +229,7 @@
                         </Grid.ColumnDefinitions>
                         <Label Content="Project LENA" HorizontalAlignment="Left" Margin="285,10,0,0" VerticalAlignment="Top" Foreground="Black" FontFamily="Tahoma" FontSize="30" Grid.ColumnSpan="2"/>
                         <Image HorizontalAlignment="Left" Height="256" Margin="14,37,0,0" VerticalAlignment="Top" Width="256" Source="Lena.bmp" Stretch="UniformToFill"/>
-                        <Label Content="Version 0.0.7.3" HorizontalAlignment="Left" Margin="288,47,0,0" VerticalAlignment="Top" FontFamily="Tahoma"/>
+                        <Label Content="Version 0.8.7.3" HorizontalAlignment="Left" Margin="288,47,0,0" VerticalAlignment="Top" FontFamily="Tahoma"/>
                         <TextBlock TextWrapping="Wrap" Margin="285,71,0,0" Height="249" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5" Grid.ColumnSpan="2"><Run Text="This program uses an intelligent approach to image processing using MLMVN, otherwise known as Multilayer feedforward neural network based on multi-valued neurons."/><LineBreak/><Run/><LineBreak/><Run Text="The user may create and generate an image suitable to be filtered, generate samples used to create weights used to process images, generate the weights learned from this process, and filter a noisy image from the weights created. "/><LineBreak/><Run/><LineBreak/><Run Text="Additional help can be provided by hovering the cursor over a label of an element of interest. "/><LineBreak/><Run/><LineBreak/><Run Text="Developed by Mr. Plumlee and Mr. Del Pino. We would like to thank Dr. Aizenberg and Dr. Laddomada for their support to help us make this program a reality."/></TextBlock>
                     </Grid>
                 </Grid>
