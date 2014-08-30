@@ -23,6 +23,7 @@ using BitMiracle.LibTiff.Classic; // Use Tiff images
 using System.Diagnostics; // Stopwatch
 using System.IO; // BinaryReader, open and save files
 using System.Numerics; // Incoporates the use of complex numbers
+using System.Windows.Interop;
 
 namespace Project_LENA___WPF
 {
@@ -40,11 +41,351 @@ namespace Project_LENA___WPF
         CancellationTokenSource cTokenSource2; // Declare a System.Threading.CancellationTokenSource for the third tab.
         PauseTokenSource pTokenSource2; // Declaring a usermade pausetoken for the third tab.
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MARGINS
+        {
+            /// <summary>Width of left border that retains its size.</summary>
+            public int cxLeftWidth;
+            /// <summary>Width of right border that retains its size.</summary>
+            public int cxRightWidth;
+            /// <summary>Height of top border that retains its size.</summary>
+            public int cyTopHeight;
+            /// <summary>Height of bottom border that retains its size.</summary>
+            public int cyBottomHeight;
+        };
+
+        [DllImport("DwmApi.dll")]
+        public static extern int DwmExtendFrameIntoClientArea(
+            IntPtr hwnd,
+            ref MARGINS pMarInset);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr DefWindowProc(
+            IntPtr hWnd,
+            int msg,
+            IntPtr wParam,
+            IntPtr lParam);
+
+        internal enum WM
+        {
+            NULL = 0x0000,
+            CREATE = 0x0001,
+            DESTROY = 0x0002,
+            MOVE = 0x0003,
+            SIZE = 0x0005,
+            ACTIVATE = 0x0006,
+            SETFOCUS = 0x0007,
+            KILLFOCUS = 0x0008,
+            ENABLE = 0x000A,
+            SETREDRAW = 0x000B,
+            SETTEXT = 0x000C,
+            GETTEXT = 0x000D,
+            GETTEXTLENGTH = 0x000E,
+            PAINT = 0x000F,
+            CLOSE = 0x0010,
+            QUERYENDSESSION = 0x0011,
+            QUIT = 0x0012,
+            QUERYOPEN = 0x0013,
+            ERASEBKGND = 0x0014,
+            SYSCOLORCHANGE = 0x0015,
+            SHOWWINDOW = 0x0018,
+            CTLCOLOR = 0x0019,
+            WININICHANGE = 0x001A,
+            SETTINGCHANGE = 0x001A,
+            ACTIVATEAPP = 0x001C,
+            SETCURSOR = 0x0020,
+            MOUSEACTIVATE = 0x0021,
+            CHILDACTIVATE = 0x0022,
+            QUEUESYNC = 0x0023,
+            GETMINMAXINFO = 0x0024,
+
+            WINDOWPOSCHANGING = 0x0046,
+            WINDOWPOSCHANGED = 0x0047,
+
+            CONTEXTMENU = 0x007B,
+            STYLECHANGING = 0x007C,
+            STYLECHANGED = 0x007D,
+            DISPLAYCHANGE = 0x007E,
+            GETICON = 0x007F,
+            SETICON = 0x0080,
+            NCCREATE = 0x0081,
+            NCDESTROY = 0x0082,
+            NCCALCSIZE = 0x0083,
+            NCHITTEST = 0x0084,
+            NCPAINT = 0x0085,
+            NCACTIVATE = 0x0086,
+            GETDLGCODE = 0x0087,
+            SYNCPAINT = 0x0088,
+            NCMOUSEMOVE = 0x00A0,
+            NCLBUTTONDOWN = 0x00A1,
+            NCLBUTTONUP = 0x00A2,
+            NCLBUTTONDBLCLK = 0x00A3,
+            NCRBUTTONDOWN = 0x00A4,
+            NCRBUTTONUP = 0x00A5,
+            NCRBUTTONDBLCLK = 0x00A6,
+            NCMBUTTONDOWN = 0x00A7,
+            NCMBUTTONUP = 0x00A8,
+            NCMBUTTONDBLCLK = 0x00A9,
+
+            SYSKEYDOWN = 0x0104,
+            SYSKEYUP = 0x0105,
+            SYSCHAR = 0x0106,
+            SYSDEADCHAR = 0x0107,
+            COMMAND = 0x0111,
+            SYSCOMMAND = 0x0112,
+
+            MOUSEMOVE = 0x0200,
+            LBUTTONDOWN = 0x0201,
+            LBUTTONUP = 0x0202,
+            LBUTTONDBLCLK = 0x0203,
+            RBUTTONDOWN = 0x0204,
+            RBUTTONUP = 0x0205,
+            RBUTTONDBLCLK = 0x0206,
+            MBUTTONDOWN = 0x0207,
+            MBUTTONUP = 0x0208,
+            MBUTTONDBLCLK = 0x0209,
+            MOUSEWHEEL = 0x020A,
+            XBUTTONDOWN = 0x020B,
+            XBUTTONUP = 0x020C,
+            XBUTTONDBLCLK = 0x020D,
+            MOUSEHWHEEL = 0x020E,
+            PARENTNOTIFY = 0x0210,
+
+            CAPTURECHANGED = 0x0215,
+            POWERBROADCAST = 0x0218,
+            DEVICECHANGE = 0x0219,
+
+            ENTERSIZEMOVE = 0x0231,
+            EXITSIZEMOVE = 0x0232,
+
+            IME_SETCONTEXT = 0x0281,
+            IME_NOTIFY = 0x0282,
+            IME_CONTROL = 0x0283,
+            IME_COMPOSITIONFULL = 0x0284,
+            IME_SELECT = 0x0285,
+            IME_CHAR = 0x0286,
+            IME_REQUEST = 0x0288,
+            IME_KEYDOWN = 0x0290,
+            IME_KEYUP = 0x0291,
+
+            NCMOUSELEAVE = 0x02A2,
+
+            TABLET_DEFBASE = 0x02C0,
+            //WM_TABLET_MAXOFFSET = 0x20,
+
+            TABLET_ADDED = TABLET_DEFBASE + 8,
+            TABLET_DELETED = TABLET_DEFBASE + 9,
+            TABLET_FLICK = TABLET_DEFBASE + 11,
+            TABLET_QUERYSYSTEMGESTURESTATUS = TABLET_DEFBASE + 12,
+
+            CUT = 0x0300,
+            COPY = 0x0301,
+            PASTE = 0x0302,
+            CLEAR = 0x0303,
+            UNDO = 0x0304,
+            RENDERFORMAT = 0x0305,
+            RENDERALLFORMATS = 0x0306,
+            DESTROYCLIPBOARD = 0x0307,
+            DRAWCLIPBOARD = 0x0308,
+            PAINTCLIPBOARD = 0x0309,
+            VSCROLLCLIPBOARD = 0x030A,
+            SIZECLIPBOARD = 0x030B,
+            ASKCBFORMATNAME = 0x030C,
+            CHANGECBCHAIN = 0x030D,
+            HSCROLLCLIPBOARD = 0x030E,
+            QUERYNEWPALETTE = 0x030F,
+            PALETTEISCHANGING = 0x0310,
+            PALETTECHANGED = 0x0311,
+            HOTKEY = 0x0312,
+            PRINT = 0x0317,
+            PRINTCLIENT = 0x0318,
+            APPCOMMAND = 0x0319,
+            THEMECHANGED = 0x031A,
+
+            DWMCOMPOSITIONCHANGED = 0x031E,
+            DWMNCRENDERINGCHANGED = 0x031F,
+            DWMCOLORIZATIONCOLORCHANGED = 0x0320,
+            DWMWINDOWMAXIMIZEDCHANGE = 0x0321,
+
+            GETTITLEBARINFOEX = 0x033F,
+            #region Windows 7
+            DWMSENDICONICTHUMBNAIL = 0x0323,
+            DWMSENDICONICLIVEPREVIEWBITMAP = 0x0326,
+            #endregion
+
+            USER = 0x0400,
+
+            // This is the hard-coded message value used by [....] for Shell_NotifyIcon.
+            // It's relatively safe to reuse.
+            TRAYMOUSEMESSAGE = 0x800, //WM_USER + 1024
+            APP = 0x8000,
+        }
+
+        internal enum SC
+        {
+            SIZE = 0xF000,
+            MOVE = 0xF010,
+            MINIMIZE = 0xF020,
+            MAXIMIZE = 0xF030,
+            NEXTWINDOW = 0xF040,
+            PREVWINDOW = 0xF050,
+            CLOSE = 0xF060,
+            VSCROLL = 0xF070,
+            HSCROLL = 0xF080,
+            MOUSEMENU = 0xF090,
+            KEYMENU = 0xF100,
+            ARRANGE = 0xF110,
+            RESTORE = 0xF120,
+            TASKLIST = 0xF130,
+            SCREENSAVE = 0xF140,
+            HOTKEY = 0xF150,
+            DEFAULT = 0xF160,
+            MONITORPOWER = 0xF170,
+            CONTEXTHELP = 0xF180,
+            SEPARATOR = 0xF00F,
+            /// <summary>
+            /// SCF_ISSECURE
+            /// </summary>
+            F_ISSECURE = 0x00000001,
+            ICON = MINIMIZE,
+            ZOOM = MAXIMIZE,
+        }
+
+        /// <summary>
+        /// WindowStyle values, WS_*
+        /// </summary>
+        [Flags]
+        internal enum WS : uint
+        {
+            OVERLAPPED = 0x00000000,
+            POPUP = 0x80000000,
+            CHILD = 0x40000000,
+            MINIMIZE = 0x20000000,
+            VISIBLE = 0x10000000,
+            DISABLED = 0x08000000,
+            CLIPSIBLINGS = 0x04000000,
+            CLIPCHILDREN = 0x02000000,
+            MAXIMIZE = 0x01000000,
+            BORDER = 0x00800000,
+            DLGFRAME = 0x00400000,
+            VSCROLL = 0x00200000,
+            HSCROLL = 0x00100000,
+            SYSMENU = 0x00080000,
+            THICKFRAME = 0x00040000,
+            GROUP = 0x00020000,
+            TABSTOP = 0x00010000,
+
+            MINIMIZEBOX = 0x00020000,
+            MAXIMIZEBOX = 0x00010000,
+
+            CAPTION = BORDER | DLGFRAME,
+            TILED = OVERLAPPED,
+            ICONIC = MINIMIZE,
+            SIZEBOX = THICKFRAME,
+            TILEDWINDOW = OVERLAPPEDWINDOW,
+
+            OVERLAPPEDWINDOW = OVERLAPPED | CAPTION | SYSMENU | THICKFRAME | MINIMIZEBOX | MAXIMIZEBOX,
+            POPUPWINDOW = POPUP | BORDER | SYSMENU,
+            CHILDWINDOW = CHILD,
+        }
+
+        internal enum HT
+        {
+            ERROR = -2,
+            TRANSPARENT = -1,
+            NOWHERE = 0,
+            CLIENT = 1,
+            CAPTION = 2,
+            SYSMENU = 3,
+            GROWBOX = 4,
+            SIZE = GROWBOX,
+            MENU = 5,
+            HSCROLL = 6,
+            VSCROLL = 7,
+            MINBUTTON = 8,
+            MAXBUTTON = 9,
+            LEFT = 10,
+            RIGHT = 11,
+            TOP = 12,
+            TOPLEFT = 13,
+            TOPRIGHT = 14,
+            BOTTOM = 15,
+            BOTTOMLEFT = 16,
+            BOTTOMRIGHT = 17,
+            BORDER = 18,
+            REDUCE = MINBUTTON,
+            ZOOM = MAXBUTTON,
+            SIZEFIRST = LEFT,
+            SIZELAST = BOTTOMRIGHT,
+            OBJECT = 19,
+            CLOSE = 20,
+            HELP = 21
+        }
+
+        public enum SC_Size_HT : int
+        {
+            LEFT = 1,
+            RIGHT = 2,
+            TOP = 3,
+            TOPLEFT = 4,
+            TOPRIGHT = 5,
+            BOTTOM = 6,
+            BOTTOMLEFT = 7,
+            BOTTOMRIGHT = 8
+        }
+
+        //public enum SysCommandSize : int
+        //{
+        //    SC_SIZE_HTLEFT = 1,
+        //    SC_SIZE_HTRIGHT = 2,
+        //    SC_SIZE_HTTOP = 3,
+        //    SC_SIZE_HTTOPLEFT = 4,
+        //    SC_SIZE_HTTOPRIGHT = 5,
+        //    SC_SIZE_HTBOTTOM = 6,
+        //    SC_SIZE_HTBOTTOMLEFT = 7,
+        //    SC_SIZE_HTBOTTOMRIGHT = 8
+        //}
+
+        /// <summary>
+        /// EnableMenuItem uEnable values, MF_*
+        /// </summary>
+        [Flags]
+        internal enum MF : uint
+        {
+            /// <summary>
+            /// Possible return value for EnableMenuItem
+            /// </summary>
+            DOES_NOT_EXIST = unchecked((uint)-1),
+            ENABLED = 0,
+            BYCOMMAND = 0,
+            GRAYED = 1,
+            DISABLED = 2,
+        }
+
+        [DllImport("user32.dll")]
+        static extern bool EnableMenuItem(IntPtr hMenu, uint uIDEnableItem,
+           uint uEnable);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        static extern int TrackPopupMenuEx(IntPtr hmenu, uint fuFlags,
+          int x, int y, IntPtr hwnd, IntPtr lptpm);
+
+        [DllImport("user32.dll")]
+        private static extern bool InsertMenu(IntPtr hMenu, Int32 wPosition, Int32 wFlags, Int32 wIDNewItem, string lpNewItem);
+
         public MainWindow()
         {
             functions = new Functions(this);
             mlmvn = new MLMVN(this);
             InitializeComponent();
+            //this.SourceInitialized += OnSourceInitialized;
+
             this.Height = 230;
 
             //ensure win32 handle is created
@@ -52,46 +393,191 @@ namespace Project_LENA___WPF
 
             //set window background
             var result = SetClassLong(handle, GCL_HBRBACKGROUND, GetSysColorBrush(COLOR_WINDOW));
-            
+
+        }
+
+        private const int GWL_STYLE = -16;
+        private const int WS_MAXIMIZEBOX = 0x10000;
+        const UInt32 MF_GRAYED = 0x00000001;
+
+        private const int WM_SYSCOMMAND = 0x112;
+
+        private const int TPM_LEFTBUTTON = 0x0000;
+
+        //private const int TPM_LEFTBUTTON = 0x0000;
+
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
+            HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
+            mainWindowSrc.AddHook(WndProc);
+
+            IntPtr hwnd = new WindowInteropHelper(this).Handle;
+            int value = (int)GetWindowLong(hwnd, GWL_STYLE);
+            SetWindowLong(hwnd, GWL_STYLE, (int)(value & (uint)~WS.MAXIMIZEBOX));
+
+
+
+        }
+
+        
+
+        [DllImport("User32.dll")]
+        public static extern IntPtr SendMessage(
+             IntPtr hWnd, UInt32 Msg, Int32 wParam, Int32 lParam);
+
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (msg == (uint)WM.SYSCOMMAND)
+            {
+
+
+
+                switch (wParam.ToInt32())
+                {
+                    case (int)SC.SIZE:
+                        {
+                            handled = true;
+                            var htLocation = DefWindowProc(hwnd, msg, wParam, lParam).ToInt32();
+                            switch (htLocation)
+                            {
+                                //case (int)HT.SIZE:
+                                case (int)SC_Size_HT.BOTTOM:
+                                case (int)SC_Size_HT.BOTTOMLEFT:
+                                case (int)SC_Size_HT.BOTTOMRIGHT:
+                                //case (int)HT.LEFT:
+                                //case (int)HT.RIGHT:
+                                case (int)SC_Size_HT.TOP:
+                                case (int)SC_Size_HT.TOPLEFT:
+                                case (int)SC_Size_HT.TOPRIGHT:
+                                    htLocation = (int)HT.BORDER;
+                                    break;
+                            }
+                            return new IntPtr(htLocation);
+                            //MessageBox.Show("No! Evil! NO RESIZING ALLOWED!");
+                            //handled = true;
+                            //        var htsizeLocation = DefWindowProc(hwnd, msg, wParam, lParam).ToInt32();
+                            //        switch (htsizeLocation)
+                            //{
+                            //            case (int) SysCommandSize.SC_SIZE_HTLEFT:
+                            //        }
+                        }
+                    //break;
+
+
+                    //        //MessageBox.Show("No! Evil! NO RESIZING ALLOWED!");
+                    //        handled = true;
+                    //        break;
+                    //EnableMenuItem(wMenu, (uint)SC.SIZE, MF_GRAYED);
+                    //}
+
+                    //    WindowInteropHelper helper = new WindowInteropHelper(this);
+                    //    IntPtr callingWindow = helper.Handle;
+                    //    IntPtr wMenu = GetSystemMenu(callingWindow, false);
+                    //    // Display the menu
+                    //    EnableMenuItem(wMenu, (uint)SC.SIZE, MF_GRAYED);
+
+                    //    //int command = TrackPopupMenuEx(wMenu, TPM_LEFTALIGN | TPM_RETURNCMD, 100, 100, callingWindow, IntPtr.Zero);
+                    //    //if (command == 0)
+                    //    //    return IntPtr.Zero;
+
+                    //    //PostMessage(callingWindow, WM_SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
+
+                }
+
+
+            }
+
+            //if (msg == (uint)WM.SIZE)
+            //{
+            //    handled = true;
+            //    var htLocation = DefWindowProc(hwnd, msg, wParam, lParam).ToInt32();
+            //    switch (htLocation)
+            //    {
+            //        case (int)HT.SIZE:
+            //        case (int)HT.BOTTOM:
+            //        case (int)HT.BOTTOMLEFT:
+            //        case (int)HT.BOTTOMRIGHT:
+            //        case (int)HT.LEFT:
+            //        case (int)HT.RIGHT:
+            //        case (int)HT.TOP:
+            //        case (int)HT.TOPLEFT:
+            //        case (int)HT.TOPRIGHT:
+            //            htLocation = (int)HT.BORDER;
+            //            break;
+            //    }
+            //    return new IntPtr(htLocation);
+            //}
+
+            if (msg == (uint)WM.NCHITTEST)
+            {
+                handled = true;
+                var htLocation = DefWindowProc(hwnd, msg, wParam, lParam).ToInt32();
+                switch (htLocation)
+                {
+                    //case (int)HT.SIZE:
+                    case (int)HT.BOTTOM:
+                    case (int)HT.BOTTOMLEFT:
+                    case (int)HT.BOTTOMRIGHT:
+                    //case (int)HT.LEFT:
+                    //case (int)HT.RIGHT:
+                    case (int)HT.TOP:
+                    case (int)HT.TOPLEFT:
+                    case (int)HT.TOPRIGHT:
+                        htLocation = (int)HT.BORDER;
+                        break;
+                }
+                return new IntPtr(htLocation);
+            }
+
+            return IntPtr.Zero;
         }
 
         private bool IsLearing = false;
         private bool IsTesting = false;
         private bool IsProcessing = false;
 
-        //protected override void WndProc(ref Message m)
-        //{
-        //    base.WndProc(ref m);
-        //    switch (m.Msg)
-        //    {
-        //        case 0x84: //WM_NCHITTEST
-        //            var result = (HitTest)m.Result.ToInt32();
-        //            if (result == HitTest.Left || result == HitTest.Right)
-        //                m.Result = new IntPtr((int)HitTest.Caption);
-        //            if (result == HitTest.TopLeft || result == HitTest.TopRight)
-        //                m.Result = new IntPtr((int)HitTest.Top);
-        //            if (result == HitTest.BottomLeft || result == HitTest.BottomRight)
-        //                m.Result = new IntPtr((int)HitTest.Bottom);
+        [DllImport("user32.dll", EntryPoint = "GetWindowLong")]
+        public static extern int GetWindowLong32(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr")]
+        public static extern long GetWindowLong64(IntPtr hWnd, int index);
+        [DllImport("user32.dll", EntryPoint = "SetWindowLong")]
+        private static extern int SetWindowLong32(IntPtr hWnd, int index, int value);
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]
+        private static extern long SetWindowLong64(IntPtr hWnd, int index, long value);
 
-        //            break;
-        //    }
-        //}
-        //enum HitTest
-        //{
-        //    Caption = 2,
-        //    Transparent = -1,
-        //    Nowhere = 0,
-        //    Client = 1,
-        //    Left = 10,
-        //    Right = 11,
-        //    Top = 12,
-        //    TopLeft = 13,
-        //    TopRight = 14,
-        //    Bottom = 15,
-        //    BottomLeft = 16,
-        //    BottomRight = 17,
-        //    Border = 18
-        //}
+
+        private static IntPtr GetWindowLong(IntPtr hWnd, int index)
+        {
+            switch (IntPtr.Size)
+            {
+                case 4:
+                    return (IntPtr)GetWindowLong32(hWnd, index);
+
+                case 8:
+                    return (IntPtr)GetWindowLong64(hWnd, index);
+            }
+
+            throw new NotSupportedException();
+        }
+
+        private static IntPtr SetWindowLong(IntPtr hWnd, int index, int value)
+        {
+            switch (IntPtr.Size)
+            {
+                case 4:
+                    return (IntPtr)SetWindowLong32(hWnd, index, (int)value);
+
+                case 8:
+                    return (IntPtr)SetWindowLong64(hWnd, index, (long)value);
+            }
+
+            throw new NotSupportedException();
+        }
+
 
         public static IntPtr SetClassLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
         {
@@ -928,7 +1414,7 @@ namespace Project_LENA___WPF
                 image.Dispose();
             }
             #endregion
-        }        
+        }
 
         private void checkBox3_Checked(object sender, RoutedEventArgs e)
         {
@@ -1450,7 +1936,7 @@ namespace Project_LENA___WPF
             if (result == true)
             {
                 xmlWeightParams(dlg.FileName);
-            }           
+            }
         }
 
         private void Button_SaveParams_Click(object sender, RoutedEventArgs e)
@@ -1497,7 +1983,7 @@ namespace Project_LENA___WPF
                 parameters.Flush();
                 parameters.Close();
                 parameters.Dispose();
-            }   
+            }
         }
 
         private async void Button_Learn_Click(object sender, RoutedEventArgs e)
@@ -1633,7 +2119,7 @@ namespace Project_LENA___WPF
             // Begin timing
             stopwatch.Start();
             Title = "Project LENA - WPF (Working)";
-            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
+            if (IsProcessing == false) TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
 
             try
             {
@@ -1676,12 +2162,11 @@ namespace Project_LENA___WPF
                 stopwatch.Stop();
 
                 // Write result
-                SetText2("Time elapsed: " + stopwatch.Elapsed + Environment.NewLine + Environment.NewLine);
+                SetText1("Time elapsed: " + stopwatch.Elapsed + Environment.NewLine + Environment.NewLine);
 
                 // Set the CancellationTokenSource to null when the work is complete.
                 cTokenSource2 = null;
             }
-            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
 
             cTokenSource2 = null;
 
@@ -1693,7 +2178,11 @@ namespace Project_LENA___WPF
             this.button2.IsEnabled = false;
             this.button3.IsEnabled = false;
 
-            Title = "Project LENA - WPF";
+            if (IsTesting == false && IsProcessing == false)
+            {
+                Title = "Project LENA - WPF";
+                TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+            }
         }
 
         private async void Button_Test_Click(object sender, RoutedEventArgs e)
@@ -1765,11 +2254,11 @@ namespace Project_LENA___WPF
 
             Title = "Project LENA - WPF (Working)";
 
-            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
+            if (IsProcessing == false) TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
 
             int[,] output = await Task.Run(() => mlmvn.TEST(Samples, NumberofSamples, Weights, 4, networkSize, inputsPerSample, NumberofSectors));
 
-            if (IsLearing == false)
+            if (IsLearing == false && IsProcessing == false)
             {
                 Title = "Project LENA - WPF";
                 TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
@@ -1824,7 +2313,7 @@ namespace Project_LENA___WPF
         {
             Title = "Project LENA - WPF (Paused)";
             SetText1("\r\nProcess is paused." + Environment.NewLine);
-            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+            if (IsProcessing == false) TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
             this.button2.Content = "Resume";
             button3.IsEnabled = false;
             pTokenSource2.IsPaused = !pTokenSource2.IsPaused;
@@ -1833,8 +2322,8 @@ namespace Project_LENA___WPF
         private void Button_Pause_Unchecked(object sender, RoutedEventArgs e)
         {
             Title = "Project LENA - WPF (Working)";
-            SetText1("Process is resumed." + Environment.NewLine);
-            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
+            SetText1("Process is resumed.\r\n" + Environment.NewLine);
+            if (IsProcessing == false) TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
             this.button2.Content = "Pause";
             button3.IsEnabled = true;
             pTokenSource2.IsPaused = !pTokenSource2.IsPaused;
@@ -1891,7 +2380,7 @@ namespace Project_LENA___WPF
 
         private void RadioButton_Pixels_Checked(object sender, RoutedEventArgs e)
         {
-            this.AnimateWindowSize(365);
+            if (IsProcessing == false) this.AnimateWindowSize(365);
 
             label1.Visibility = Visibility.Visible;
             label1.Content = "Number of sectors:";
@@ -1944,7 +2433,7 @@ namespace Project_LENA___WPF
 
         private void RadioButton_Patches_Checked(object sender, RoutedEventArgs e)
         {
-            this.AnimateWindowSize(365);
+            if (IsProcessing == false) this.AnimateWindowSize(365);
 
             label1.Visibility = Visibility.Visible;
             label1.Content = "Method:";
@@ -1958,7 +2447,7 @@ namespace Project_LENA___WPF
             comboBox7.Items.Clear();
             comboBox7.Items.Add("Legacy method");
             comboBox7.Items.Add("New patch method");
-            comboBox7.ToolTip = "The patch function to be used.";         
+            comboBox7.ToolTip = "The patch function to be used.";
 
             label2.Visibility = Visibility.Visible;
             label2.Content = "Number of sectors:";
@@ -2028,7 +2517,7 @@ namespace Project_LENA___WPF
 
             // Set filter for file extension and default file extension 
             dlg.DefaultExt = ".xml";
-            dlg.Filter = "XML Documents (*.xml)|*.xml|All files (*.*)|*.*";            
+            dlg.Filter = "XML Documents (*.xml)|*.xml|All files (*.*)|*.*";
 
             if (radioButton3.IsChecked == true) // Save pixel parameters
             {
@@ -2313,7 +2802,7 @@ namespace Project_LENA___WPF
                     stopwatch.Stop();
 
                     // Write result
-                    SetText2("Time elapsed: " + stopwatch.Elapsed + Environment.NewLine);
+                    SetText2("\r\nTime elapsed: " + stopwatch.Elapsed + Environment.NewLine);
 
                     string fileName = Path.GetFileNameWithoutExtension(textBox14.Text) + "_Pixels_" + kernel + ".tif";
 
@@ -2520,10 +3009,19 @@ namespace Project_LENA___WPF
             radioButton4.IsEnabled = true;
             //button17.Enabled = true;
             //button22.Enabled = true;
-            Title = "Project LENA - WPF";
 
             progressBar1.Value = 0;
-            TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum;
+            TaskbarItemInfo.ProgressValue = 0;
+
+            if (IsLearing == false || IsTesting == false)
+            {
+                Title = "Project LENA - WPF";
+            }
+
+            if (IsLearing == true)
+            {
+                TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
+            }
 
 
             //ProgressBar1.Foreground = Brushes.Green;
@@ -2543,7 +3041,7 @@ namespace Project_LENA___WPF
 
         private void Button_Pause_1_Unchecked(object sender, RoutedEventArgs e)
         {
-            
+
             Title = "Project LENA - WPF (Working)";
             SetText2("Process is resumed.\r\n" + Environment.NewLine);
             progressBar1.Foreground = new SolidColorBrush() { Color = new Color() { A = 255, R = 6, G = 176, B = 37 } };
@@ -2555,7 +3053,7 @@ namespace Project_LENA___WPF
 
         private void Button_Cancel_1_Click(object sender, RoutedEventArgs e)
         {
-            progressBar1.Foreground = new SolidColorBrush(){Color = new Color(){A = 255, R = 218, G = 38,B = 38}};
+            progressBar1.Foreground = new SolidColorBrush() { Color = new Color() { A = 255, R = 218, G = 38, B = 38 } };
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Error;
             if (cTokenSource1 != null)
             {

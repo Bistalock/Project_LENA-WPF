@@ -93,6 +93,9 @@ namespace Project_LENA___WPF
                 //Increments progress bar
                 window.SetProgress1(1);
 
+                // Writes progress to console
+                if (Q % 10 == 0) window.SetText2("pixels in row " + (Q) + " of " + height + " done." + Environment.NewLine);
+                if (Q == height && Q % 10 != 0) window.SetText2("pixels in row " + (Q) + " of " + height + " done." + Environment.NewLine);
             };//);  
             return noisyImage;
         }// end method

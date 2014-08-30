@@ -95,7 +95,7 @@ namespace Project_LENA___WPF
             int newWidth = width + (offset * 2);
             byte[,] image = new byte[newHeight, newWidth];
 
-            Window.SetText2("Calling MirrorImage... Done.\r\nSize of new matrix is " + newWidth + " by " + newHeight + Environment.NewLine);
+            Window.SetText2("Calling MirrorImage... Done.\r\nSize of new matrix is " + newWidth + " by " + newHeight + Environment.NewLine + Environment.NewLine);
             // copy original image
             for (int i = 0; i < height; i++)
             {
