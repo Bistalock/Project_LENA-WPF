@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Numerics; // Complex numbers
 using System.Threading; // CancellationToken
 using System.IO; // BinaryReader, open and save files
+using ManagedCuda.BasicTypes; // CUDA Libraries
 
 namespace Project_LENA___WPF
 {
@@ -94,8 +95,8 @@ namespace Project_LENA___WPF
                 window.SetProgress1(1);
 
                 // Writes progress to console
-                if (Q % 10 == 0) window.SetText2("pixels in row " + (Q) + " of " + height + " done." + Environment.NewLine);
-                if (Q == height && Q % 10 != 0) window.SetText2("pixels in row " + (Q) + " of " + height + " done." + Environment.NewLine);
+                if (Q % 10 == 0) window.SetText2("Pixels in row " + (Q) + " of " + height + " done." + Environment.NewLine);
+                if (Q == height && Q % 10 != 0) window.SetText2("Pixels in row " + (Q) + " of " + height + " done." + Environment.NewLine);
             };//);  
             return noisyImage;
         }// end method

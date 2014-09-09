@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 /* ---------------------- Added Libraries ---------------------- */
 using BitMiracle.LibTiff.Classic; // Use Tiff images
 using System.Threading; // PauseToken
+using ManagedCuda.BasicTypes; // CUDA Libraries
 
 namespace Project_LENA___WPF
 {

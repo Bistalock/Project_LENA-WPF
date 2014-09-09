@@ -61,6 +61,9 @@
     <Reference Include="BitMiracle.LibTiff.NET">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\External\libtiff.net_bin-2.3.642.0\BitMiracle.LibTiff.NET.dll</HintPath>
     </Reference>
+    <Reference Include="ManagedCuda">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\External\CUDA 6.5\Release\ManagedCuda.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Numerics" />

@@ -19,7 +19,6 @@ C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Debug\Proj
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Debug\BitMiracle.LibTiff.NET.dll
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Debug\BitMiracle.LibTiff.NET.xml
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\InfoButton.baml
-C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\InfoButton1.baml
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\MainWindow.baml
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\App.baml
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\MainWindow.g.cs
@@ -31,3 +30,6 @@ C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\Proj
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\Project LENA - WPF.exe
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\Project LENA - WPF.pdb
 C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Debug\Project LENA - WPF.csprojResolveAssemblyReference.cache
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Debug\ManagedCuda.dll
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Debug\ManagedCuda.pdb
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Debug\ManagedCuda.xml

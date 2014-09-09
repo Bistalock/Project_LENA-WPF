@@ -24,6 +24,7 @@ using System.Diagnostics; // Stopwatch
 using System.IO; // BinaryReader, open and save files
 using System.Numerics; // Incoporates the use of complex numbers
 using System.Windows.Interop;
+using ManagedCuda.BasicTypes; // CUDA Libraries
 
 namespace Project_LENA___WPF
 {
@@ -334,18 +335,6 @@ namespace Project_LENA___WPF
             BOTTOMRIGHT = 8
         }
 
-        //public enum SysCommandSize : int
-        //{
-        //    SC_SIZE_HTLEFT = 1,
-        //    SC_SIZE_HTRIGHT = 2,
-        //    SC_SIZE_HTTOP = 3,
-        //    SC_SIZE_HTTOPLEFT = 4,
-        //    SC_SIZE_HTTOPRIGHT = 5,
-        //    SC_SIZE_HTBOTTOM = 6,
-        //    SC_SIZE_HTBOTTOMLEFT = 7,
-        //    SC_SIZE_HTBOTTOMRIGHT = 8
-        //}
-
         /// <summary>
         /// EnableMenuItem uEnable values, MF_*
         /// </summary>
@@ -423,94 +412,60 @@ namespace Project_LENA___WPF
 
         }
 
-        
-
         [DllImport("User32.dll")]
         public static extern IntPtr SendMessage(
              IntPtr hWnd, UInt32 Msg, Int32 wParam, Int32 lParam);
+
+        // Variables having to do with the resizing code follow
+        protected bool bSizeMode = false;
+
+        // <summary>
+        /// Raise BeginResize event
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnBeginResize(System.EventArgs e)
+        {
+            if (BeginResize != null)
+                BeginResize(this, e);
+        }
+
+        /// <summary>
+        /// Raise EndResize event
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnEndResize(System.EventArgs e)
+        {
+            if (EndResize != null)
+                EndResize(this, e);
+        }
+
+        /// <summary>
+        /// Fires once at the beginning of a resizing drag.
+        /// </summary>
+        public event EventHandler BeginResize;
+
+        /// <summary>
+        /// Fires once at the end of a resizing drag.
+        /// </summary>
+        public event EventHandler EndResize;
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             if (msg == (uint)WM.SYSCOMMAND)
             {
-
-
-
                 switch (wParam.ToInt32())
                 {
                     case (int)SC.SIZE:
                         {
                             handled = true;
-                            var htLocation = DefWindowProc(hwnd, msg, wParam, lParam).ToInt32();
-                            switch (htLocation)
-                            {
-                                //case (int)HT.SIZE:
-                                case (int)SC_Size_HT.BOTTOM:
-                                case (int)SC_Size_HT.BOTTOMLEFT:
-                                case (int)SC_Size_HT.BOTTOMRIGHT:
-                                //case (int)HT.LEFT:
-                                //case (int)HT.RIGHT:
-                                case (int)SC_Size_HT.TOP:
-                                case (int)SC_Size_HT.TOPLEFT:
-                                case (int)SC_Size_HT.TOPRIGHT:
-                                    htLocation = (int)HT.BORDER;
-                                    break;
-                            }
-                            return new IntPtr(htLocation);
                             //MessageBox.Show("No! Evil! NO RESIZING ALLOWED!");
-                            //handled = true;
-                            //        var htsizeLocation = DefWindowProc(hwnd, msg, wParam, lParam).ToInt32();
-                            //        switch (htsizeLocation)
-                            //{
-                            //            case (int) SysCommandSize.SC_SIZE_HTLEFT:
-                            //        }
                         }
-                    //break;
-
-
-                    //        //MessageBox.Show("No! Evil! NO RESIZING ALLOWED!");
-                    //        handled = true;
-                    //        break;
-                    //EnableMenuItem(wMenu, (uint)SC.SIZE, MF_GRAYED);
-                    //}
-
-                    //    WindowInteropHelper helper = new WindowInteropHelper(this);
-                    //    IntPtr callingWindow = helper.Handle;
-                    //    IntPtr wMenu = GetSystemMenu(callingWindow, false);
-                    //    // Display the menu
-                    //    EnableMenuItem(wMenu, (uint)SC.SIZE, MF_GRAYED);
-
-                    //    //int command = TrackPopupMenuEx(wMenu, TPM_LEFTALIGN | TPM_RETURNCMD, 100, 100, callingWindow, IntPtr.Zero);
-                    //    //if (command == 0)
-                    //    //    return IntPtr.Zero;
-
-                    //    //PostMessage(callingWindow, WM_SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
+                        return IntPtr.Zero;
 
                 }
 
 
             }
-
-            //if (msg == (uint)WM.SIZE)
-            //{
-            //    handled = true;
-            //    var htLocation = DefWindowProc(hwnd, msg, wParam, lParam).ToInt32();
-            //    switch (htLocation)
-            //    {
-            //        case (int)HT.SIZE:
-            //        case (int)HT.BOTTOM:
-            //        case (int)HT.BOTTOMLEFT:
-            //        case (int)HT.BOTTOMRIGHT:
-            //        case (int)HT.LEFT:
-            //        case (int)HT.RIGHT:
-            //        case (int)HT.TOP:
-            //        case (int)HT.TOPLEFT:
-            //        case (int)HT.TOPRIGHT:
-            //            htLocation = (int)HT.BORDER;
-            //            break;
-            //    }
-            //    return new IntPtr(htLocation);
-            //}
 
             if (msg == (uint)WM.NCHITTEST)
             {
@@ -518,7 +473,6 @@ namespace Project_LENA___WPF
                 var htLocation = DefWindowProc(hwnd, msg, wParam, lParam).ToInt32();
                 switch (htLocation)
                 {
-                    //case (int)HT.SIZE:
                     case (int)HT.BOTTOM:
                     case (int)HT.BOTTOMLEFT:
                     case (int)HT.BOTTOMRIGHT:
@@ -1374,8 +1328,8 @@ namespace Project_LENA___WPF
                         output.SetField(TiffTag.BITSPERSAMPLE, 8);
                         output.SetField(TiffTag.ORIENTATION, BitMiracle.LibTiff.Classic.Orientation.TOPLEFT);
                         output.SetField(TiffTag.ROWSPERSTRIP, height);
-                        output.SetField(TiffTag.XRESOLUTION, 88.0);
-                        output.SetField(TiffTag.YRESOLUTION, 88.0);
+                        output.SetField(TiffTag.XRESOLUTION, 96.0);
+                        output.SetField(TiffTag.YRESOLUTION, 96.0);
                         output.SetField(TiffTag.RESOLUTIONUNIT, ResUnit.INCH);
                         output.SetField(TiffTag.PLANARCONFIG, PlanarConfig.CONTIG);
                         output.SetField(TiffTag.PHOTOMETRIC, Photometric.RGB);
