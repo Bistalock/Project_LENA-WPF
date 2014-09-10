@@ -229,7 +229,7 @@
                         </Grid.ColumnDefinitions>
                         <Label Content="Project LENA" HorizontalAlignment="Left" Margin="285,10,0,0" VerticalAlignment="Top" Foreground="Black" FontFamily="Tahoma" FontSize="30" Grid.ColumnSpan="2"/>
                         <Image HorizontalAlignment="Left" Height="256" Margin="14,37,0,0" VerticalAlignment="Top" Width="256" Source="Lena.bmp" Stretch="UniformToFill"/>
-                        <Label Content="Version 0.8.9.4" HorizontalAlignment="Left" Margin="288,47,0,0" VerticalAlignment="Top" FontFamily="Tahoma"/>
+                        <Label Content="Version 0.8.9.5" HorizontalAlignment="Left" Margin="288,47,0,0" VerticalAlignment="Top" FontFamily="Tahoma"/>
                         <TextBlock TextWrapping="Wrap" Margin="285,71,0,0" Height="249" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5" Grid.ColumnSpan="2"><Run Text="This program uses an intelligent approach to image processing using MLMVN, otherwise known as Multilayer feedforward neural network based on multi-valued neurons."/><LineBreak/><Run/><LineBreak/><Run Text="The user may create and generate an image suitable to be filtered, generate samples used to create weights used to process images, generate the weights learned from this process, and filter a noisy image from the weights created. "/><LineBreak/><Run/><LineBreak/><Run Text="Additional help can be provided by hovering the cursor over a label of an element of interest. "/><LineBreak/><Run/><LineBreak/><Run Text="Developed by Mr. Plumlee and Mr. Del Pino. We would like to thank Dr. Aizenberg and Dr. Laddomada for their support to help us make this program a reality."/></TextBlock>
                     </Grid>
                 </Grid>

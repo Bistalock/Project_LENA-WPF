@@ -458,13 +458,10 @@ namespace Project_LENA___WPF
                     case (int)SC.SIZE:
                         {
                             handled = true;
-                            //MessageBox.Show("No! Evil! NO RESIZING ALLOWED!");
+                            //MessageBox.Show("null");
                         }
                         return IntPtr.Zero;
-
                 }
-
-
             }
 
             if (msg == (uint)WM.NCHITTEST)
