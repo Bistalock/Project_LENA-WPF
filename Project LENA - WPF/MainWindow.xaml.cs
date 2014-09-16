@@ -375,7 +375,7 @@ namespace Project_LENA___WPF
             InitializeComponent();
             //this.SourceInitialized += OnSourceInitialized;
 
-            this.Height = 230;
+            this.Height = 233;
 
             //ensure win32 handle is created
             var handle = new System.Windows.Interop.WindowInteropHelper(this).EnsureHandle();
@@ -561,13 +561,13 @@ namespace Project_LENA___WPF
                     // if the Noise Generation tab is selected.
                     if (Noise_Generation.IsSelected)
                     {
-                        if (checkBox3.IsChecked == false) this.AnimateWindowSize(230);
-                        else if (checkBox3.IsChecked == true) this.AnimateWindowSize(345);
+                        if (checkBox3.IsChecked == false) this.AnimateWindowSize(233);
+                        else if (checkBox3.IsChecked == true) this.AnimateWindowSize(348);
                     }
-                    else if (Sample_Generation.IsSelected) this.AnimateWindowSize(345);
+                    else if (Sample_Generation.IsSelected) this.AnimateWindowSize(348);
                     else if (Learning_of_Weights.IsSelected)
                     {
-                        if (IsLearing == false && IsTesting == false) this.AnimateWindowSize(405);
+                        if (IsLearing == false && IsTesting == false) this.AnimateWindowSize(408);
                         else if (IsLearing == true) this.AnimateWindowSize(655);
                         else if (IsTesting == true) this.AnimateWindowSize(620);
                     }
@@ -1369,12 +1369,12 @@ namespace Project_LENA___WPF
 
         private void checkBox3_Checked(object sender, RoutedEventArgs e)
         {
-            this.AnimateWindowSize(345);
+            this.AnimateWindowSize(348);
         }
 
         private void checkBox3_Unchecked(object sender, RoutedEventArgs e)
         {
-            this.AnimateWindowSize(230);
+            this.AnimateWindowSize(233);
         }
 
         private void Button_CreateGray_Click(object sender, RoutedEventArgs e)
@@ -2339,29 +2339,29 @@ namespace Project_LENA___WPF
 
             textBox16.Visibility = Visibility.Visible;
             Grid.SetColumn(textBox16, 0);
-            textBox16.Margin = new Thickness(127, 10, 20, 0);
+            textBox16.Margin = new Thickness(127, 13, 20, 0);
 
             label2.Visibility = Visibility.Visible;
             label2.Content = "Input layer size:";
             label2.ToolTip = "The size of the layers.";
-            Grid.SetColumn(label2, 2);
+            Grid.SetColumn(label2, 1);
             label2.Margin = new Thickness(0, 10, 0, 0);
 
             textBox17.Visibility = Visibility.Visible;
             Grid.SetColumn(textBox17, 2);
-            textBox17.Margin = new Thickness(100, 10, 0, 0);
+            textBox17.Margin = new Thickness(85, 13, 20, 0);
 
             label3.Visibility = Visibility.Visible;
             label3.Content = "Hidden layer size:";
-            Grid.SetColumn(label3, 4);
+            Grid.SetColumn(label3, 3);
             label3.Margin = new Thickness(0, 10, 0, 0);
             label3.ToolTip = "The size of the hidden layers used in the weights.";
 
             textBox18.Visibility = Visibility.Visible;
             //textBox18.Clear();
             //textBox18.Size = new Size(58, 20);
-            Grid.SetColumn(textBox18, 4);
-            textBox18.Margin = new Thickness(110, 10, 20, 0);
+            Grid.SetColumn(textBox18, 3);
+            textBox18.Margin = new Thickness(110, 13, 20, 0);
 
             label4.Visibility = Visibility.Visible;
             label4.Content = "Kernel size:";
@@ -2403,25 +2403,25 @@ namespace Project_LENA___WPF
             label2.Visibility = Visibility.Visible;
             label2.Content = "Number of sectors:";
             label2.ToolTip = "The number of sectors to be processed from the unit circle.\r\nUsed for classification in the learning algorithm.";
-            label2.Margin = new Thickness(10, 10, 0, 0);
+            label2.Margin = new Thickness(20, 10, 0, 0);
             Grid.SetColumn(label2, 1);
             //label2.Location = new Point(210, 30);
 
             textBox16.Visibility = Visibility.Visible;
-            textBox16.Margin = new Thickness(108, 10, 14, 0);
+            textBox16.Margin = new Thickness(120, 13, 4, 0);
             Grid.SetColumn(textBox16, 2);
             //textBox16.Location = new Point(117, 26);            
 
             label3.Visibility = Visibility.Visible;
             label3.Content = "Step:";
-            label3.Margin = new Thickness(10, 10, 0, 0);
-            Grid.SetColumn(label3, 4);
+            label3.Margin = new Thickness(20, 10, 0, 0);
+            Grid.SetColumn(label3, 3);
             //label3.Location = new Point(390, 30);
             label3.ToolTip = "The size to be overlapped by each patch.";
 
             textBox17.Visibility = Visibility.Visible;
-            textBox17.Margin = new Thickness(51, 10, 102, 0);
-            Grid.SetColumn(textBox17, 4);
+            textBox17.Margin = new Thickness(64, 13, 40, 0);
+            Grid.SetColumn(textBox17, 3);
             //textBox17.Location = new Point(296, 26);           
 
             label4.Visibility = Visibility.Visible;

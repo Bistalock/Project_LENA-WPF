@@ -27,21 +27,21 @@
                             <Label Content="Noise:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top" Height="26" Width="43" ToolTip="The percentage of Gaussian noise to be applied to the image in decimal."/>
                             <TextBox x:Name="textBox1" Height="23" Margin="61,13,122,0" VerticalAlignment="Top" Grid.ColumnSpan="3" Padding="2" AllowDrop="True" PreviewDrop="TextBox_PreviewDrop" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver"/>
                             <TextBox x:Name="textBox2" Height="23" Margin="61,44,0,0" VerticalAlignment="Top" Padding="2"/>
-                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="2" Click="Button_Load_Click" ToolTip="Load the grayscale image."/>
+                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,13,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="2" Click="Button_Load_Click" ToolTip="Load the grayscale image."/>
                             <CheckBox x:Name="checkBox1" Content="Add Gaussian noise to image" HorizontalAlignment="Center" Margin="10,47,0,0" VerticalAlignment="Top" IsChecked="True" Grid.Column="1" ToolTip="Check to add the Gaussian noise to the image.&#10;Uncheck to just generate the Gaussian noise."/>
                             <CheckBox x:Name="checkBox2" Content="Generate grayscale noise (color image)" HorizontalAlignment="Center" Margin="3,48,0,0" VerticalAlignment="Top" Grid.Column="2" ToolTip="Check to apply a grayscale only Gausian noise to a color image.&#10;Uncheck to apply a color Gaussian noise to the color image."/>
                         </Grid>
                     </GroupBox>
-                    <CheckBox x:Name="checkBox3" Content="Create grayscale image" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" Checked="checkBox3_Checked" Unchecked="checkBox3_Unchecked" ToolTip="Convert a color image to a grayscale version of the image."/>
-                    <Button Content="Create Gaussian Image" HorizontalAlignment="Right" Margin="0,121,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_CreateGauss_Click" Grid.Column="1" ToolTip="Generates the noise based on the size inputed."/>
-                    <GroupBox Header="GroupBox" Margin="10,154,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
+                    <CheckBox x:Name="checkBox3" Content="Create grayscale image" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" Checked="checkBox3_Checked" Unchecked="checkBox3_Unchecked" ToolTip="Convert a color image to a grayscale version of the image."/>
+                    <Button Content="Create Gaussian Image" HorizontalAlignment="Right" Margin="0,124,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_CreateGauss_Click" Grid.Column="1" ToolTip="Generates the noise based on the size inputed."/>
+                    <GroupBox Header="GroupBox" Margin="10,154,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="75">
                         <Grid>
-                            <Label Content="Color Image:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top" ToolTip="The color RGB Tiff image to be reduced to grayscale.&#10;Drag and drop function is supported."/>
-                            <TextBox x:Name="textBox3" Margin="92,14,122,0" VerticalAlignment="Top" Height="23" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
-                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,14,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_1_Click" ToolTip="Load a color TIFF image to be processed to a grayscale image."/>
+                            <Label Content="Color Image:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" ToolTip="The color RGB Tiff image to be reduced to grayscale.&#10;Drag and drop function is supported."/>
+                            <TextBox x:Name="textBox3" Margin="92,13,122,0" VerticalAlignment="Top" Height="23" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
+                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,13,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_1_Click" ToolTip="Load a color TIFF image to be processed to a grayscale image."/>
                         </Grid>
                     </GroupBox>
-                    <Button Content="Create Grayscale Image" HorizontalAlignment="Right" Margin="0,237,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_CreateGray_Click" Grid.Column="1" ToolTip="Generates the grayscale image."/>
+                    <Button Content="Create Grayscale Image" HorizontalAlignment="Right" Margin="0,240,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_CreateGray_Click" Grid.Column="1" ToolTip="Generates the grayscale image."/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="Sample_Generation" Header="Sample Generation">
@@ -56,38 +56,38 @@
                             <Label Content="Noisy Image:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top" ToolTip="The noisy image to be processed.&#10;Drag and drop function is supported."/>
                             <TextBox x:Name="textBox4" Height="23" Margin="93,13,122,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
                             <TextBox x:Name="textBox5" Height="23" Margin="93,44,122,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
-                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_2_Click" ToolTip="Load a clean grayscale image."/>
-                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,43,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_3_Click" ToolTip="Load a noisy grayscale image."/>
+                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,13,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_2_Click" ToolTip="Load a clean grayscale image."/>
+                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,44,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_3_Click" ToolTip="Load a noisy grayscale image."/>
                         </Grid>
                     </GroupBox>
-                    <Button Content="Create Fragment From Images. . ." HorizontalAlignment="Right" Margin="0,121,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="1" Click="Button_CreateFrag_Click" IsEnabled="False" ToolTip="Crop the clean and noisy image inputed to gather samples from specific region of image."/>
-                    <GroupBox Header="Kernel Size" Height="97" Margin="10,154,5,0" VerticalAlignment="Top">
+                    <Button Content="Create Fragment From Images. . ." HorizontalAlignment="Right" Margin="0,124,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="1" Click="Button_CreateFrag_Click" IsEnabled="False" ToolTip="Crop the clean and noisy image inputed to gather samples from specific region of image."/>
+                    <GroupBox Header="Kernel Size" Height="100" Margin="10,154,5,0" VerticalAlignment="Top">
                         <Grid>
-                            <ComboBox x:Name="comboBox1" Margin="10,10,150,0" VerticalAlignment="Top" IsEditable="True" IsEnabled="False" ToolTip="Size of the kernel surrounding the pixel being sampled.">
+                            <ComboBox x:Name="comboBox1" Margin="10,13,150,0" VerticalAlignment="Top" IsEditable="True" IsEnabled="False" ToolTip="Size of the kernel surrounding the pixel being sampled.">
                                 <ComboBoxItem Content="3 x 3"/>
                                 <ComboBoxItem Content="5 x 5"/>
                                 <ComboBoxItem Content="7 x 7"/>
                             </ComboBox>
-                            <ComboBox x:Name="comboBox2" Margin="10,43,150,0" VerticalAlignment="Top" IsEditable="True" IsEnabled="False" ToolTip="Size of the patch to be sampled.">
+                            <ComboBox x:Name="comboBox2" Margin="10,44,150,0" VerticalAlignment="Top" IsEditable="True" IsEnabled="False" ToolTip="Size of the patch to be sampled.">
                                 <ComboBoxItem Content="11 x 11"/>
                                 <ComboBoxItem Content="13 x 13"/>
                                 <ComboBoxItem Content="15 x 15"/>
                             </ComboBox>
-                            <RadioButton x:Name="radioButton1" Content="Process Using Pixels" HorizontalAlignment="Right" Margin="0,17,20,0" VerticalAlignment="Top" Checked="RadioButton_ProcesPixels_Checked" ToolTip="Create the samples based on a pixel and surrounding kernel.&#xA;If explicitly defined, one dimension may be entered."/>
-                            <RadioButton x:Name="radioButton2" Content="Process Using Patches" HorizontalAlignment="Right" Margin="0,43,9,0" VerticalAlignment="Top" Checked="RadioButton_ProcessPatches_Checked" ToolTip="Create the samples based on a patch size.&#xA;If explicitly defined, one dimension may be entered."/>
+                            <RadioButton x:Name="radioButton1" Content="Process Using Pixels" HorizontalAlignment="Right" Margin="0,16,19,0" VerticalAlignment="Top" Checked="RadioButton_ProcesPixels_Checked" ToolTip="Create the samples based on a pixel and surrounding kernel.&#xA;If explicitly defined, one dimension may be entered."/>
+                            <RadioButton x:Name="radioButton2" Content="Process Using Patches" HorizontalAlignment="Right" Margin="0,47,8,0" VerticalAlignment="Top" Checked="RadioButton_ProcessPatches_Checked" ToolTip="Create the samples based on a patch size.&#xA;If explicitly defined, one dimension may be entered."/>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Samples" Margin="5,154,10,0" VerticalAlignment="Top" Grid.Column="1">
+                    <GroupBox Header="Samples" Margin="5,154,10,0" VerticalAlignment="Top" Grid.Column="1" Height="75">
                         <Grid>
-                            <ComboBox x:Name="comboBox3" Margin="142,14,20,0" VerticalAlignment="Top" IsEditable="True" ToolTip="The number of pixels or patches to be sampled.">
+                            <ComboBox x:Name="comboBox3" Margin="142,13,20,0" VerticalAlignment="Top" IsEditable="True" ToolTip="The number of pixels or patches to be sampled.">
                                 <ComboBoxItem Content="200"/>
                                 <ComboBoxItem Content="300"/>
                                 <ComboBoxItem Content="400"/>
                             </ComboBox>
-                            <Label Content="Number of Samples:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top" ToolTip="The number of pixels or patches to be sampled."/>
+                            <Label Content="Number of Samples:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" ToolTip="The number of pixels or patches to be sampled."/>
                         </Grid>
                     </GroupBox>
-                    <Button x:Name="GenSample_Button" Content="Generate Samples" HorizontalAlignment="Right" Margin="0,237,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="1" Click="Button_GenSamples_Click" ToolTip="Start the generation of samples."/>
+                    <Button x:Name="GenSample_Button" Content="Generate Samples" HorizontalAlignment="Right" Margin="0,240,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="1" Click="Button_GenSamples_Click" ToolTip="Start the generation of samples."/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="Learning_of_Weights" Header="Learning of Weights">
@@ -98,26 +98,26 @@
                     </Grid.ColumnDefinitions>
                     <GroupBox Header="Inputs" Margin="10,10,10,0" VerticalAlignment="Top" Height="100" Grid.ColumnSpan="2">
                         <Grid>
-                            <Label Content="Samples:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top" ToolTip="The samples generated to be used to create weights.&#10;Drag and drop function is supported."/>
+                            <Label Content="Samples:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" ToolTip="The samples generated to be used to create weights.&#10;Drag and drop function is supported."/>
                             <Label Content="Initial Weights:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top" ToolTip="Use weights that have already been created, or generate random weights.&#10;Drag and drop function is supported if using existing weights."/>
                             <TextBox x:Name="textBox6" Height="23" Margin="72,13,133,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
                             <TextBox x:Name="textBox7" Height="23" Margin="237,44,133,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop" IsEnabled="False"/>
-                            <Button Content="Load Samples. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_4_Click" ToolTip="Load the samples to be used."/>
-                            <Button x:Name="button1" Content="Load Weights. . ." HorizontalAlignment="Right" Margin="0,43,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_5_Click" IsEnabled="False" ToolTip="Load existing weights."/>
+                            <Button Content="Load Samples. . ." HorizontalAlignment="Right" Margin="0,13,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_4_Click" ToolTip="Load the samples to be used."/>
+                            <Button x:Name="button1" Content="Load Weights. . ." HorizontalAlignment="Right" Margin="0,44,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_5_Click" IsEnabled="False" ToolTip="Load existing weights."/>
                             <ComboBox x:Name="comboBox4" Margin="103,44,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" SelectionChanged="ComboBox_Weights_SelectionChanged" ToolTip="Use weights that have already been created,&#10;or generate random weights.">
                                 <ComboBoxItem Content="Random"/>
                                 <ComboBoxItem Content="Existing"/>
                             </ComboBox>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Stopping Criteria" Margin="10,220,5,0" Height="65" VerticalAlignment="Top">
+                    <GroupBox Header="Stopping Criteria" Margin="10,220,5,0" Height="70" VerticalAlignment="Top">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <CheckBox x:Name="checkBox4" Content="Angular RMSE" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0" HorizontalContentAlignment="Right"/>
+                            <CheckBox x:Name="checkBox4" Content="Angular RMSE" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,16,10,0" HorizontalContentAlignment="Right"/>
 
-                            <ComboBox x:Name="comboBox6" Margin="10,10,119,0" VerticalAlignment="Top" SelectionChanged="ComboBox_StopCriteria_SelectionChanged" ToolTip="The method to be used to reach a final result.">
+                            <ComboBox x:Name="comboBox6" Margin="10,13,119,0" VerticalAlignment="Top" SelectionChanged="ComboBox_StopCriteria_SelectionChanged" ToolTip="The method to be used to reach a final result.">
                                 <ComboBoxItem Content="MAX"/>
                                 <ComboBoxItem Content="Error Rate"/>
                                 <ComboBoxItem Content="RMSE"/>
@@ -125,7 +125,7 @@
                             </ComboBox>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Thresholds" Margin="5,220,10,0" VerticalAlignment="Top" Grid.Column="1" Height="65">
+                    <GroupBox Header="Thresholds" Margin="5,220,10,0" VerticalAlignment="Top" Grid.Column="1" Height="70">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="169*"/>
@@ -133,14 +133,14 @@
                             </Grid.ColumnDefinitions>
                             <Label Content="Local Threshold:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" ToolTip="The threshold value to be used to calculate the stopping point&#10;to a given criteria in a local scope."/>
                             <Label Content="Global Threshold:" HorizontalAlignment="Left" Margin="13,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.903,0.885" Grid.Column="1" ToolTip="The threshold value to be used to calculate the stopping point&#10;to a given criteria througout the entire algorithm."/>
-                            <TextBox x:Name="textBox12" Height="23" Margin="111,10,13,0" VerticalAlignment="Top" Padding="2"/>
-                            <TextBox x:Name="textBox13" Height="23" Margin="121,10,10,0" VerticalAlignment="Top" Grid.Column="1" Padding="2"/>
+                            <TextBox x:Name="textBox12" Height="23" Margin="111,13,13,0" VerticalAlignment="Top" Padding="2"/>
+                            <TextBox x:Name="textBox13" Height="23" Margin="121,13,10,0" VerticalAlignment="Top" Grid.Column="1" Padding="2"/>
                         </Grid>
                     </GroupBox>
-                    <Button Content="Load Parameters. . ." HorizontalAlignment="Left" Margin="10,299,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_LoadParams_Click" ToolTip="Load existing parameter onto the program."/>
-                    <Button Content="Save Parameters. . ." HorizontalAlignment="Left" Margin="140,299,0,0" VerticalAlignment="Top" Padding="10,2" Grid.ColumnSpan="2" Click="Button_SaveParams_Click" ToolTip="Save the parameters as a file."/>
-                    <Button x:Name="Test_Button" Content="Test" HorizontalAlignment="Right" Margin="0,299,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Button_Test_Click" ToolTip="Test existing weights by checking their RMSE."/>
-                    <Button x:Name="Learn_Button" Content="Learn" HorizontalAlignment="Right" Margin="0,299,99,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Button_Learn_Click" ToolTip="Begin the learning of weights."/>
+                    <Button Content="Load Parameters. . ." HorizontalAlignment="Left" Margin="10,301,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_LoadParams_Click" ToolTip="Load existing parameter onto the program."/>
+                    <Button Content="Save Parameters. . ." HorizontalAlignment="Left" Margin="140,301,0,0" VerticalAlignment="Top" Padding="10,2" Grid.ColumnSpan="2" Click="Button_SaveParams_Click" ToolTip="Save the parameters as a file."/>
+                    <Button x:Name="Test_Button" Content="Test" HorizontalAlignment="Right" Margin="0,301,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Button_Test_Click" ToolTip="Test existing weights by checking their RMSE."/>
+                    <Button x:Name="Learn_Button" Content="Learn" HorizontalAlignment="Right" Margin="0,301,99,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" Click="Button_Learn_Click" ToolTip="Begin the learning of weights."/>
                     <TextBox x:Name="Console1" Height="200" Margin="10,335,10,0" TextWrapping="Wrap" VerticalAlignment="Top" AllowDrop="False" IsTabStop="False" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2" Background="Black" IsReadOnly="True" Foreground="White" FontFamily="Consolas"/>
                     <Button x:Name="button4" Content="Generate Image Parameters. . ." HorizontalAlignment="Left" Margin="10,549,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_GenImParams_Click" IsEnabled="False" ToolTip="Create the parameters to be used for the processing of image."/>
                     <Button x:Name="button3" Content="Cancel" HorizontalAlignment="Right" Margin="0,549,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" IsEnabled="False" Click="Button_Cancel_Click" ToolTip="Abort the learning of weights."/>
@@ -156,9 +156,9 @@
                             </Grid.ColumnDefinitions>
                             <Label Content="Network Size:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" ToolTip="The network array to be used to generate the weights."/>
                             <Label Content="Output:" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1" ToolTip="Used to determine wether the output will result&#10;in a discrete or continuous form."/>
-                            <TextBox x:Name="textBox8" Height="23" Margin="97,10,1,0" VerticalAlignment="Top" Padding="2"/>
-                            <TextBox x:Name="textBox9" Height="23" Margin="107,10,10,0" VerticalAlignment="Top" Padding="2" Grid.Column="2"/>
-                            <ComboBox x:Name="comboBox5" Margin="65,11,11,0" VerticalAlignment="Top" Grid.Column="1">
+                            <TextBox x:Name="textBox8" Height="23" Margin="97,13,1,0" VerticalAlignment="Top" Padding="2"/>
+                            <TextBox x:Name="textBox9" Height="23" Margin="107,13,10,0" VerticalAlignment="Top" Padding="2" Grid.Column="2"/>
+                            <ComboBox x:Name="comboBox5" Margin="65,13,11,0" VerticalAlignment="Top" Grid.Column="1">
                                 <ComboBoxItem Content="Discrete"/>
                                 <ComboBoxItem Content="Continuous"/>
                             </ComboBox>
@@ -182,10 +182,10 @@
                         <Grid>
                             <Label Content="Noisy Image:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top" ToolTip="The grayscale image with noise.&#10;Drag and drop function is supported."/>
                             <Label Content="Weights:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top" ToolTip="The file to be used to process the image.&#10;Drag and drop function is supported."/>
-                            <TextBox x:Name="textBox14" Height="23" Margin="93,13,133,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
+                            <TextBox x:Name="textBox14" Height="23" Margin="94,13,132,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
                             <TextBox x:Name="textBox15" Height="23" Margin="93,44,133,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
-                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,12,10,0" VerticalAlignment="Top" Padding="10,2" Width="109" Click="Button_Load_6_Click" ToolTip="Load the noisy image to be processed."/>
-                            <Button Content="Load Weights. . ." HorizontalAlignment="Right" Margin="0,43,10,0" VerticalAlignment="Top" Padding="10,2" ScrollViewer.CanContentScroll="True" Click="Button_Load_7_Click" ToolTip="Load the weights used to process the noisy image."/>
+                            <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,13,10,0" VerticalAlignment="Top" Padding="10,2" Width="109" Click="Button_Load_6_Click" ToolTip="Load the noisy image to be processed."/>
+                            <Button Content="Load Weights. . ." HorizontalAlignment="Right" Margin="0,44,10,0" VerticalAlignment="Top" Padding="10,2" ScrollViewer.CanContentScroll="True" Click="Button_Load_7_Click" ToolTip="Load the weights used to process the noisy image."/>
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="Parameters" Margin="10,144,10,0" VerticalAlignment="Top" Height="100" Grid.ColumnSpan="2">
@@ -193,20 +193,19 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="202*"/>
                                 <ColumnDefinition Width="16*"/>
-                                <ColumnDefinition Width="143*"/>
-                                <ColumnDefinition Width="33*"/>
-                                <ColumnDefinition Width="200*"/>
+                                <ColumnDefinition Width="191*"/>
+                                <ColumnDefinition Width="185*"/>
                             </Grid.ColumnDefinitions>
                             <Label x:Name="label1" Content="Method:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                            <TextBox x:Name="textBox16" Height="23" Margin="104,10,14,0" VerticalAlignment="Top" Grid.Column="2" Grid.ColumnSpan="2"/>
+                            <TextBox x:Name="textBox16" Height="23" Margin="104,13,29,0" VerticalAlignment="Top" Grid.Column="2"/>
                             <Label x:Name="label2" Content="Number of Sectors:" HorizontalAlignment="Left" Margin="3,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
-                            <TextBox x:Name="textBox17" Height="23" Margin="51,10,102,0" VerticalAlignment="Top" Grid.Column="4"/>
-                            <Label x:Name="label3" Content="Step:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Column="4"/>
+                            <TextBox x:Name="textBox17" Height="23" Margin="36,13,102,0" VerticalAlignment="Top" Grid.Column="3"/>
+                            <Label x:Name="label3" Content="Step:" HorizontalAlignment="Left" Margin="186,10,0,0" VerticalAlignment="Top" Grid.Column="2" Grid.ColumnSpan="2"/>
                             <TextBox x:Name="textBox18" Height="23" Margin="97,44,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                             <Label x:Name="label4" Content="Network Size:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
-                            <ComboBox x:Name="comboBox7" Margin="70,10,0,0" VerticalAlignment="Top" IsEditable="True"/>
-                            <Label x:Name="label5" Content="Output Neurons:" HorizontalAlignment="Left" Margin="6,41,0,0" VerticalAlignment="Top" Grid.Column="2"/>
-                            <TextBox x:Name="textBox19" Height="23" Margin="107,44,23,0" VerticalAlignment="Top" Grid.Column="2" Grid.ColumnSpan="2"/>
+                            <ComboBox x:Name="comboBox7" Margin="70,13,0,0" VerticalAlignment="Top" IsEditable="True"/>
+                            <Label x:Name="label5" Content="Output Neurons:" HorizontalAlignment="Left" Margin="17,41,0,0" VerticalAlignment="Top" Grid.Column="2"/>
+                            <TextBox x:Name="textBox19" Height="23" Margin="121,44,4,0" VerticalAlignment="Top" Grid.Column="2"/>
                         </Grid>
                     </GroupBox>
                     <Button Content="Load Parameters. . ." HorizontalAlignment="Left" Margin="10,258,0,0" VerticalAlignment="Top" Padding="10,2" Click="Button_LoadParams_1_Click" ToolTip="Load existing parameter onto the program."/>
