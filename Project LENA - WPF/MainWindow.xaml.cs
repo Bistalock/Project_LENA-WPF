@@ -42,6 +42,7 @@ namespace Project_LENA___WPF
         CancellationTokenSource cTokenSource2; // Declare a System.Threading.CancellationTokenSource for the third tab.
         PauseTokenSource pTokenSource2; // Declaring a usermade pausetoken for the third tab.
 
+        #region Message Handles
         [StructLayout(LayoutKind.Sequential)]
         public struct MARGINS
         {
@@ -67,6 +68,9 @@ namespace Project_LENA___WPF
             IntPtr wParam,
             IntPtr lParam);
 
+        /// <summary>
+        /// Window message values, WM_*
+        /// </summary>
         internal enum WM
         {
             NULL = 0x0000,
@@ -222,6 +226,9 @@ namespace Project_LENA___WPF
             APP = 0x8000,
         }
 
+        /// <summary>
+        /// Window message values, WM_*
+        /// </summary>
         internal enum SC
         {
             SIZE = 0xF000,
@@ -323,18 +330,6 @@ namespace Project_LENA___WPF
             HELP = 21
         }
 
-        public enum SC_Size_HT : int
-        {
-            LEFT = 1,
-            RIGHT = 2,
-            TOP = 3,
-            TOPLEFT = 4,
-            TOPRIGHT = 5,
-            BOTTOM = 6,
-            BOTTOMLEFT = 7,
-            BOTTOMRIGHT = 8
-        }
-
         /// <summary>
         /// EnableMenuItem uEnable values, MF_*
         /// </summary>
@@ -366,51 +361,14 @@ namespace Project_LENA___WPF
           int x, int y, IntPtr hwnd, IntPtr lptpm);
 
         [DllImport("user32.dll")]
-        private static extern bool InsertMenu(IntPtr hMenu, Int32 wPosition, Int32 wFlags, Int32 wIDNewItem, string lpNewItem);
-
-        public MainWindow()
-        {
-            functions = new Functions(this);
-            mlmvn = new MLMVN(this);
-            InitializeComponent();
-            //this.SourceInitialized += OnSourceInitialized;
-
-            this.Height = 233;
-
-            //ensure win32 handle is created
-            var handle = new System.Windows.Interop.WindowInteropHelper(this).EnsureHandle();
-
-            //set window background
-            var result = SetClassLong(handle, GCL_HBRBACKGROUND, GetSysColorBrush(COLOR_WINDOW));
-
-        }
+        private static extern bool InsertMenu(IntPtr hMenu, Int32 wPosition, Int32 wFlags, Int32 wIDNewItem, string lpNewItem);    
 
         private const int GWL_STYLE = -16;
-        private const int WS_MAXIMIZEBOX = 0x10000;
-        const UInt32 MF_GRAYED = 0x00000001;
-
-        private const int WM_SYSCOMMAND = 0x112;
 
         private const int TPM_LEFTBUTTON = 0x0000;
 
         //private const int TPM_LEFTBUTTON = 0x0000;
 
-
-        protected override void OnSourceInitialized(EventArgs e)
-        {
-            base.OnSourceInitialized(e);
-
-            IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
-            HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
-            mainWindowSrc.AddHook(WndProc);
-
-            IntPtr hwnd = new WindowInteropHelper(this).Handle;
-            int value = (int)GetWindowLong(hwnd, GWL_STYLE);
-            SetWindowLong(hwnd, GWL_STYLE, (int)(value & (uint)~WS.MAXIMIZEBOX));
-
-
-
-        }
 
         [DllImport("User32.dll")]
         public static extern IntPtr SendMessage(
@@ -419,35 +377,35 @@ namespace Project_LENA___WPF
         // Variables having to do with the resizing code follow
         protected bool bSizeMode = false;
 
-        // <summary>
-        /// Raise BeginResize event
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnBeginResize(System.EventArgs e)
-        {
-            if (BeginResize != null)
-                BeginResize(this, e);
-        }
+        //// <summary>
+        ///// Raise BeginResize event
+        ///// </summary>
+        ///// <param name="e"></param>
+        //protected virtual void OnBeginResize(System.EventArgs e)
+        //{
+        //    if (BeginResize != null)
+        //        BeginResize(this, e);
+        //}
 
-        /// <summary>
-        /// Raise EndResize event
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnEndResize(System.EventArgs e)
-        {
-            if (EndResize != null)
-                EndResize(this, e);
-        }
+        ///// <summary>
+        ///// Raise EndResize event
+        ///// </summary>
+        ///// <param name="e"></param>
+        //protected virtual void OnEndResize(System.EventArgs e)
+        //{
+        //    if (EndResize != null)
+        //        EndResize(this, e);
+        //}
 
-        /// <summary>
-        /// Fires once at the beginning of a resizing drag.
-        /// </summary>
-        public event EventHandler BeginResize;
+        ///// <summary>
+        ///// Fires once at the beginning of a resizing drag.
+        ///// </summary>
+        //public event EventHandler BeginResize;
 
-        /// <summary>
-        /// Fires once at the end of a resizing drag.
-        /// </summary>
-        public event EventHandler EndResize;
+        ///// <summary>
+        ///// Fires once at the end of a resizing drag.
+        ///// </summary>
+        //public event EventHandler EndResize;
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
@@ -530,26 +488,62 @@ namespace Project_LENA___WPF
         }
 
 
-        public static IntPtr SetClassLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
-        {
-            //check for x64
-            if (IntPtr.Size > 4)
-                return SetClassLongPtr64(hWnd, nIndex, dwNewLong);
-            else
-                return new IntPtr(SetClassLongPtr32(hWnd, nIndex, unchecked((uint)dwNewLong.ToInt32())));
-        }
+        //public static IntPtr SetClassLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
+        //{
+        //    //check for x64
+        //    if (IntPtr.Size > 4)
+        //        return SetClassLongPtr64(hWnd, nIndex, dwNewLong);
+        //    else
+        //        return new IntPtr(SetClassLongPtr32(hWnd, nIndex, unchecked((uint)dwNewLong.ToInt32())));
+        //}
 
+        // Manual background render value
         private const int GCL_HBRBACKGROUND = -10;
+        // Manual coloring of window value
         private const int COLOR_WINDOW = 5;
 
-        [DllImport("user32.dll", EntryPoint = "SetClassLong")]
-        public static extern uint SetClassLongPtr32(IntPtr hWnd, int nIndex, uint dwNewLong);
+        //[DllImport("user32.dll", EntryPoint = "SetClassLong")]
+        //public static extern uint SetClassLongPtr32(IntPtr hWnd, int nIndex, uint dwNewLong);
 
-        [DllImport("user32.dll", EntryPoint = "SetClassLongPtr")]
-        public static extern IntPtr SetClassLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+        //[DllImport("user32.dll", EntryPoint = "SetClassLongPtr")]
+        //public static extern IntPtr SetClassLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
+        // Recolors background
         [DllImport("user32.dll")]
         static extern IntPtr GetSysColorBrush(int nIndex);
+        #endregion
+
+        public MainWindow()
+        {
+            functions = new Functions(this);
+            mlmvn = new MLMVN(this);
+            InitializeComponent();
+
+            this.Height = 233;
+
+            //ensure win32 handle is created
+            var handle = new System.Windows.Interop.WindowInteropHelper(this).EnsureHandle();
+
+            
+            //var result = SetClassLong(handle, GCL_HBRBACKGROUND, GetSysColorBrush(COLOR_WINDOW));
+
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
+            HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
+            mainWindowSrc.AddHook(WndProc);
+
+            IntPtr hwnd = new WindowInteropHelper(this).Handle;
+            int value = (int)GetWindowLong(hwnd, GWL_STYLE);
+            SetWindowLong(hwnd, GWL_STYLE, (int)(value & (uint)~WS.MAXIMIZEBOX));
+
+            //set window background
+            SetWindowLong(hwnd, GCL_HBRBACKGROUND, (int)GetSysColorBrush(COLOR_WINDOW));
+        }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -780,8 +774,8 @@ namespace Project_LENA___WPF
                         output.SetField(TiffTag.BITSPERSAMPLE, 8);
                         output.SetField(TiffTag.ORIENTATION, BitMiracle.LibTiff.Classic.Orientation.TOPLEFT);
                         output.SetField(TiffTag.ROWSPERSTRIP, height);
-                        output.SetField(TiffTag.XRESOLUTION, 88.0);
-                        output.SetField(TiffTag.YRESOLUTION, 88.0);
+                        output.SetField(TiffTag.XRESOLUTION, 96.0);
+                        output.SetField(TiffTag.YRESOLUTION, 96.0);
                         output.SetField(TiffTag.RESOLUTIONUNIT, ResUnit.INCH);
                         output.SetField(TiffTag.PLANARCONFIG, PlanarConfig.CONTIG);
                         output.SetField(TiffTag.PHOTOMETRIC, Photometric.MINISBLACK);
@@ -1493,6 +1487,8 @@ namespace Project_LENA___WPF
                         // Write the tiff tags to the file
                         output.SetField(TiffTag.IMAGEWIDTH, width);
                         output.SetField(TiffTag.IMAGELENGTH, height);
+                        output.SetField(TiffTag.XRESOLUTION, 96);
+                        output.SetField(TiffTag.YRESOLUTION, 96);
                         output.SetField(TiffTag.COMPRESSION, Compression.NONE);
                         output.SetField(TiffTag.PLANARCONFIG, PlanarConfig.CONTIG);
                         output.SetField(TiffTag.PHOTOMETRIC, Photometric.MINISBLACK);
