@@ -488,25 +488,25 @@ namespace Project_LENA___WPF
         }
 
 
-        //public static IntPtr SetClassLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
-        //{
-        //    //check for x64
-        //    if (IntPtr.Size > 4)
-        //        return SetClassLongPtr64(hWnd, nIndex, dwNewLong);
-        //    else
-        //        return new IntPtr(SetClassLongPtr32(hWnd, nIndex, unchecked((uint)dwNewLong.ToInt32())));
-        //}
+        public static IntPtr SetClassLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
+        {
+            //check for x64
+            if (IntPtr.Size > 4)
+                return SetClassLongPtr64(hWnd, nIndex, dwNewLong);
+            else
+                return new IntPtr(SetClassLongPtr32(hWnd, nIndex, unchecked((uint)dwNewLong.ToInt32())));
+        }
 
         // Manual background render value
         private const int GCL_HBRBACKGROUND = -10;
         // Manual coloring of window value
         private const int COLOR_WINDOW = 5;
 
-        //[DllImport("user32.dll", EntryPoint = "SetClassLong")]
-        //public static extern uint SetClassLongPtr32(IntPtr hWnd, int nIndex, uint dwNewLong);
+        [DllImport("user32.dll", EntryPoint = "SetClassLong")]
+        public static extern uint SetClassLongPtr32(IntPtr hWnd, int nIndex, uint dwNewLong);
 
-        //[DllImport("user32.dll", EntryPoint = "SetClassLongPtr")]
-        //public static extern IntPtr SetClassLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+        [DllImport("user32.dll", EntryPoint = "SetClassLongPtr")]
+        public static extern IntPtr SetClassLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
         // Recolors background
         [DllImport("user32.dll")]
@@ -524,8 +524,8 @@ namespace Project_LENA___WPF
             //ensure win32 handle is created
             var handle = new System.Windows.Interop.WindowInteropHelper(this).EnsureHandle();
 
-            
-            //var result = SetClassLong(handle, GCL_HBRBACKGROUND, GetSysColorBrush(COLOR_WINDOW));
+
+            var result = SetClassLong(handle, GCL_HBRBACKGROUND, GetSysColorBrush(COLOR_WINDOW));
 
         }
 
@@ -2830,8 +2830,9 @@ namespace Project_LENA___WPF
                     // determine number of samples
                     int[] inputsPerSample = new int[layer];
                     inputsPerSample[0] = networkSize[layer - 1] + Convert.ToInt32(textBox19.Text);
+                    //inputsPerSample[0] = networkSize[layer - 1];
                     for (int i = 1; i < layer; i++)
-                        inputsPerSample[i] = networkSize[0] + Convert.ToInt32(textBox19.Text);
+                        inputsPerSample[i] = networkSize[i - 1] + Convert.ToInt32(textBox19.Text);
                     // end for
 
                     // parameters
@@ -2844,7 +2845,7 @@ namespace Project_LENA___WPF
                     progressBar1.Foreground = new SolidColorBrush() { Color = new Color() { A = 255, R = 6, G = 176, B = 37 } };
                     TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
                     int range_x;
-                    int pSize = (int)Math.Sqrt(networkSize[3]);
+                    int pSize = (int)Math.Sqrt(networkSize[networkSize.Length - 1]);
 
                     // using old patch method
                     if (comboBox7.SelectedIndex == 0)

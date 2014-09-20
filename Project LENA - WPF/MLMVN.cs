@@ -744,7 +744,7 @@ namespace Project_LENA___WPF
             Complex[,] CinputArray = new Complex[patchSz, patchSz];
             // output patch to be stored to actual image
             byte[,] outputArray = new byte[patchSz, patchSz];
-            byte[] output = new byte[(int)Math.Pow(patchSz, 2)];
+            byte[] output = new byte[Convert.ToInt32(Math.Pow(patchSz, 2))];
             // used when patch needs to be transformed to 1d array
             Complex[] S = new Complex[inputArray.Length];
             // store outputs of network

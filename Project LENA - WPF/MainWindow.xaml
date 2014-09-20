@@ -1,7 +1,7 @@
 ﻿<Window x:Name="projWindow" x:Class="Project_LENA___WPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Project LENA - WPF" Height="650" Width="640" Background="#FFE5E5E5" MinWidth="650" Icon="favicon.ico" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Right" MaxWidth="1024">
+        Title="Project LENA - WPF" Height="650" Width="700" Background="#FFE5E5E5" MinWidth="520" Icon="favicon.ico" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Right" MaxWidth="1024">
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo/>
     </Window.TaskbarItemInfo>
@@ -10,10 +10,9 @@
             <TabItem x:Name="Noise_Generation" Header="Noise Generation">
                 <Grid Background="White">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="175*"/>
-                        <ColumnDefinition Width="453*"/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <GroupBox Header="Gaussian Noise Generation" Margin="10,10,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
+                    <GroupBox Header="Gaussian Noise Generation" Margin="10,10,10,0" VerticalAlignment="Top">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="125*"/>
@@ -33,15 +32,15 @@
                         </Grid>
                     </GroupBox>
                     <CheckBox x:Name="checkBox3" Content="Create grayscale image" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" Checked="checkBox3_Checked" Unchecked="checkBox3_Unchecked" ToolTip="Convert a color image to a grayscale version of the image."/>
-                    <Button Content="Create Gaussian Image" HorizontalAlignment="Right" Margin="0,124,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_CreateGauss_Click" Grid.Column="1" ToolTip="Generates the noise based on the size inputed."/>
-                    <GroupBox Header="GroupBox" Margin="10,154,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="75">
+                    <Button Content="Create Gaussian Image" HorizontalAlignment="Right" Margin="0,124,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_CreateGauss_Click" ToolTip="Generates the noise based on the size inputed."/>
+                    <GroupBox Header="GroupBox" Margin="10,154,10,0" VerticalAlignment="Top" Height="75">
                         <Grid>
                             <Label Content="Color Image:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" ToolTip="The color RGB Tiff image to be reduced to grayscale.&#10;Drag and drop function is supported."/>
                             <TextBox x:Name="textBox3" Margin="92,13,122,0" VerticalAlignment="Top" Height="23" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
                             <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,13,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_1_Click" ToolTip="Load a color TIFF image to be processed to a grayscale image."/>
                         </Grid>
                     </GroupBox>
-                    <Button Content="Create Grayscale Image" HorizontalAlignment="Right" Margin="0,240,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_CreateGray_Click" Grid.Column="1" ToolTip="Generates the grayscale image."/>
+                    <Button Content="Create Grayscale Image" HorizontalAlignment="Right" Margin="0,240,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" Padding="10,2" Click="Button_CreateGray_Click" ToolTip="Generates the grayscale image."/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="Sample_Generation" Header="Sample Generation">
