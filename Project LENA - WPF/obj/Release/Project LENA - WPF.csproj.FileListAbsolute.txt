@@ -1,0 +1,17 @@
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Release\Project LENA - WPF.exe.config
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Release\Project LENA - WPF.exe
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Release\Project LENA - WPF.pdb
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Release\BitMiracle.LibTiff.NET.dll
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\bin\Release\BitMiracle.LibTiff.NET.xml
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Release\MainWindow.baml
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Release\App.baml
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Release\MainWindow.g.cs
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Release\App.g.cs
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Release\Project LENA - WPF_MarkupCompile.cache
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Release\Project LENA - WPF.g.resources
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Release\Project_LENA___WPF.Properties.Resources.resources
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Release\Project LENA - WPF.csproj.GenerateResource.Cache
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Release\Project LENA - WPF.exe
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Release\Project LENA - WPF.pdb
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Release\InfoButton.baml
+C:\Users\Gabriel\Source\Repos\Project_LENA-WPF\Project LENA - WPF\obj\Release\Project LENA - WPF.csprojResolveAssemblyReference.cache
