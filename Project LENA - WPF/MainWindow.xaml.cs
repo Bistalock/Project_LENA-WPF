@@ -2542,8 +2542,7 @@ namespace Project_LENA___WPF
 
         private async void Button_Process_Click(object sender, RoutedEventArgs e)
         {
-            IsProcessing = true;
-
+            
             Process_Button.IsEnabled = false; // Process Image button
             button6.IsEnabled = true; // Cancel button
             //button5.Checked = false; // Pause button; unchecked            
@@ -2561,6 +2560,67 @@ namespace Project_LENA___WPF
 
             #region Error checking
             // Error Windows when no image entered
+            //FileStream stream = null;
+
+            //try
+            //{
+            //    stream = File.Open(textBox14.Text, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            //}
+            //catch (IOException)
+            //{
+            //    //the file is unavailable because it is:
+            //    //still being written to
+            //    //or being processed by another thread
+            //    //or does not exist (has already been processed)
+            //    Process_Button.IsEnabled = true;
+            //    button6.IsEnabled = false;
+            //    button5.IsEnabled = false;
+            //    radioButton3.IsEnabled = true;
+            //    radioButton4.IsEnabled = true;
+            //    //button17.Enabled = true;
+            //    //button22.Enabled = true;
+            //    MessageBoxResult result = MessageBox.Show("The file is being used by another thread or process.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    if (result == MessageBoxResult.OK)
+            //    {
+            //        return;
+            //    }
+            //}
+            //finally
+            //{
+            //    if (stream != null)
+            //        stream.Close();
+            //}
+
+            //try
+            //{
+            //    stream = File.Open(textBox15.Text, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+            //}
+            //catch (IOException)
+            //{
+            //    //the file is unavailable because it is:
+            //    //still being written to
+            //    //or being processed by another thread
+            //    //or does not exist (has already been processed)
+            //    Process_Button.IsEnabled = true;
+            //    button6.IsEnabled = false;
+            //    button5.IsEnabled = false;
+            //    radioButton3.IsEnabled = true;
+            //    radioButton4.IsEnabled = true;
+            //    //button17.Enabled = true;
+            //    //button22.Enabled = true;
+            //    MessageBoxResult result = MessageBox.Show("The file is being used by another thread or process.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    if (result == MessageBoxResult.OK)
+            //    {
+            //        return;
+            //    }
+            //}
+            //finally
+            //{
+            //    if (stream != null)
+            //        stream.Close();
+            //}
+
+
             if (noisyimage == null)
             {
                 Process_Button.IsEnabled = true;
@@ -2576,7 +2636,7 @@ namespace Project_LENA___WPF
                     return;
                 }
             }
-            if (weights == "")
+            if (weights == null)
             {
                 Process_Button.IsEnabled = true;
                 button6.IsEnabled = false;
@@ -2609,6 +2669,9 @@ namespace Project_LENA___WPF
                 }
             }
             #endregion
+
+            // Processing begins
+            IsProcessing = true;
 
             // Create new stopwatch
             Stopwatch stopwatch = new Stopwatch();
