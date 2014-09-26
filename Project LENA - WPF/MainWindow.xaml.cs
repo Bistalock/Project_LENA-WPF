@@ -568,7 +568,7 @@ namespace Project_LENA___WPF
                     else if (Processing_Image.IsSelected)
                     {
                         if (IsProcessing == true) this.AnimateWindowSize(650);
-                        else if (radioButton3.IsChecked == true || radioButton4.IsChecked == true) this.AnimateWindowSize(365);
+                        else if (radioButton3.IsChecked == true || radioButton4.IsChecked == true) this.AnimateWindowSize(360);
                         else this.AnimateWindowSize(220);
                     }
                     else if (About.IsSelected) this.AnimateWindowSize(400);

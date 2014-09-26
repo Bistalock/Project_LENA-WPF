@@ -1,7 +1,7 @@
 ﻿<Window x:Name="projWindow" x:Class="Project_LENA___WPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Project LENA - WPF" Height="650" Width="700" Background="#FFE5E5E5" MinWidth="520" Icon="favicon.ico" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Right" MaxWidth="1024">
+        Title="Project LENA - WPF" Height="650" Width="700" Background="#FFE5E5E5" MinWidth="530" Icon="favicon.ico" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Right" MaxWidth="1024">
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo/>
     </Window.TaskbarItemInfo>
