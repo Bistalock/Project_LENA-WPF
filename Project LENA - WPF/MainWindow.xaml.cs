@@ -1936,7 +1936,7 @@ namespace Project_LENA___WPF
         private async void Button_Learn_Click(object sender, RoutedEventArgs e)
         {
             Learn_Button.IsEnabled = false;
-            IsLearing = true;
+            
             #region Error checking
             // Error Windows when no image entered
             if (string.IsNullOrEmpty(textBox6.Text))
@@ -2034,7 +2034,7 @@ namespace Project_LENA___WPF
 
             // convert string array to int
             string[] a = textBox8.Text.Split(',', '.');
-            int[] networkSize = new int[4];
+            int[] networkSize = new int[a.Length];
             for (int i = 0; i < a.Length; i++)
             {
                 networkSize[i] = Convert.ToInt32(a[i]);
@@ -2057,6 +2057,9 @@ namespace Project_LENA___WPF
             this.button2.IsEnabled = true;
             this.button3.IsEnabled = true;
             this.button4.IsEnabled = true;
+
+            IsLearing = true;
+
             this.AnimateWindowSize(655);
 
             // Begin processing
@@ -2070,7 +2073,7 @@ namespace Project_LENA___WPF
 
             try
             {
-                Complex[][,] weights = await Task.Run(() => mlmvn.Learning(Samples, NumberofSamples, Weights, 4, networkSize, inputsPerSample, NumberofSectors, GlobalThreshold, LocalThreshold, randomWeights, cTokenSource2.Token, pTokenSource2.Token));
+                Complex[][,] weights = await Task.Run(() => mlmvn.Learning(Samples, NumberofSamples, Weights, a.Length, networkSize, inputsPerSample, NumberofSectors, GlobalThreshold, LocalThreshold, randomWeights, cTokenSource2.Token, pTokenSource2.Token));
 
                 string[] imagename = System.IO.Path.GetFileNameWithoutExtension(textBox6.Text).Split('_');
 
@@ -2135,7 +2138,7 @@ namespace Project_LENA___WPF
         private async void Button_Test_Click(object sender, RoutedEventArgs e)
         {
             Test_Button.IsEnabled = false;
-            IsTesting = true;
+            
             #region Error checking
             // Error Windows when no image entered
             if (string.IsNullOrEmpty(textBox6.Text))
@@ -2178,7 +2181,7 @@ namespace Project_LENA___WPF
 
             // convert string array to int
             string[] a = textBox8.Text.Split(',', '.');
-            int[] networkSize = new int[4];
+            int[] networkSize = new int[a.Length];
             for (int i = 0; i < a.Length; i++)
             {
                 networkSize[i] = Convert.ToInt32(a[i]);
@@ -2197,13 +2200,16 @@ namespace Project_LENA___WPF
             this.button2.IsEnabled = true;
             this.button3.IsEnabled = true;
             this.button4.IsEnabled = true;
+
+            IsTesting = true;
+
             if (IsLearing == false) this.AnimateWindowSize(620);
 
             Title = "Project LENA - WPF (Working)";
 
             if (IsProcessing == false) TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
 
-            int[,] output = await Task.Run(() => mlmvn.TEST(Samples, NumberofSamples, Weights, 4, networkSize, inputsPerSample, NumberofSectors));
+            int[,] output = await Task.Run(() => mlmvn.TEST(Samples, NumberofSamples, Weights, a.Length, networkSize, inputsPerSample, NumberofSectors));
 
             if (IsLearing == false && IsProcessing == false)
             {
@@ -2392,8 +2398,8 @@ namespace Project_LENA___WPF
             Grid.SetColumn(comboBox7, 0);
             //comboBox7.Location = new Point(82, 57);
             comboBox7.Items.Clear();
-            comboBox7.Items.Add("Legacy method");
-            comboBox7.Items.Add("New patch method");
+            comboBox7.Items.Add("Overlaps");
+            comboBox7.Items.Add("No overlaps");
             comboBox7.ToolTip = "The patch function to be used.";
 
             label2.Visibility = Visibility.Visible;
@@ -2668,10 +2674,7 @@ namespace Project_LENA___WPF
                     return;
                 }
             }
-            #endregion
-
-            // Processing begins
-            IsProcessing = true;
+            #endregion          
 
             // Create new stopwatch
             Stopwatch stopwatch = new Stopwatch();
@@ -2785,6 +2788,9 @@ namespace Project_LENA___WPF
                             }
                         }
                     }
+
+                    // Processing begins
+                    IsProcessing = true;
 
                     // Enable the resize event
                     this.AnimateWindowSize(650);
@@ -2942,6 +2948,9 @@ namespace Project_LENA___WPF
                             return;
                         }
                     }
+
+                    // Processing begins
+                    IsProcessing = true;
 
                     // Enable the resize event
                     this.AnimateWindowSize(650);
