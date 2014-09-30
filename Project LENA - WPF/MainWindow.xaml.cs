@@ -73,8 +73,8 @@ namespace Project_LENA___WPF
         /// </summary>
         internal enum WM
         {          
-            NCHITTEST = 0x0084, //         
-            SYSCOMMAND = 0x0112, //
+            NCHITTEST = 0x0084,       
+            SYSCOMMAND = 0x0112,
         }
 
         /// <summary>
@@ -127,8 +127,6 @@ namespace Project_LENA___WPF
         private const int GWL_STYLE = -16;
 
         private const int TPM_LEFTBUTTON = 0x0000;
-
-        //private const int TPM_LEFTBUTTON = 0x0000;
 
 
         [DllImport("User32.dll")]
@@ -2189,6 +2187,7 @@ namespace Project_LENA___WPF
 
         private void Button_SaveParams_1_Click(object sender, RoutedEventArgs e)
         {
+            //
             // Create OpenFileDialog 
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
 
