@@ -152,7 +152,9 @@ namespace Project_LENA___WPF
             {
                 for (int j = 0; j < kernel; j++)
                 {
+                    //if (im.le
                     image[i, j] = im[row + i, col + j];
+
                 }
             }
             return image;

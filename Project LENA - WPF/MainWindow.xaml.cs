@@ -301,6 +301,10 @@ namespace Project_LENA___WPF
                         else if (radioButton3.IsChecked == true || radioButton4.IsChecked == true) this.AnimateWindowSize(365);
                         else this.AnimateWindowSize(220);
                     }
+                    else if (Gather_Statistics.IsSelected)
+                    {
+                        this.AnimateWindowSize(233);
+                    }
                     else if (About.IsSelected) this.AnimateWindowSize(400);
                 }
             }
@@ -989,7 +993,7 @@ namespace Project_LENA___WPF
 
 
 
-                string fileName = textBox18.Text;
+                string fileName = "";
                 if (checkBox2.IsChecked == true)
                 {
                     if (checkBox1.IsChecked == true)
@@ -1138,6 +1142,10 @@ namespace Project_LENA___WPF
                         red[i, j] = scanline[3 * j]; // PSNR: INFINITY, Channel is correct
                         green[i, j] = scanline[3 * j + 1]; // PSNR: INFINITY, Channel is correct
                         blue[i, j] = scanline[3 * j + 2]; // PSNR: INFINITY, Channel is correct
+
+                        //.299, .587, .114
+                        // -.14713, -.28886, 0.436
+                        //0.615, -0.514990, -.10001
 
 
                         // This is what MATLAB uses to convert RGB to YUV - PSNR 26.25002 to VEGA
@@ -1324,7 +1332,51 @@ namespace Project_LENA___WPF
 
         private void Button_CreateFrag_Click(object sender, RoutedEventArgs e)
         {
-            // Create Fragments of Images Button
+            // open the images
+            Tiff cleanimage = Tiff.Open(textBox4.Text, "r");
+            Tiff noisyimage = Tiff.Open(textBox5.Text, "r");
+
+            // Error Windows when no image entered
+            if (cleanimage == null || noisyimage == null)
+            {
+                MessageBoxResult result = MessageBox.Show("Invalid or no image entered.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+
+            // Obtain basic tag information of the images
+            #region GetTagInfo
+            int cleanwidth = cleanimage.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
+            int cleanheight = cleanimage.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
+            byte cleanpixel = cleanimage.GetField(TiffTag.SAMPLESPERPIXEL)[0].ToByte();
+
+            int noisywidth = noisyimage.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
+            int noisyheight = noisyimage.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
+            byte noisypixel = noisyimage.GetField(TiffTag.SAMPLESPERPIXEL)[0].ToByte();
+            #endregion
+
+            if (cleanheight != noisyheight || cleanwidth != noisywidth)
+            {
+                MessageBoxResult result = MessageBox.Show("Images must have the same height and width.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+
+            if (cleanpixel != noisypixel)
+            {
+                MessageBoxResult result = MessageBox.Show("Images must either be both grayscale or color images.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+
+            var Fragments = new Fragments(textBox4.Text, textBox5.Text);
+            Fragments.Show();
         }
 
         private void RadioButton_ProcesPixels_Checked(object sender, RoutedEventArgs e)
@@ -2121,7 +2173,8 @@ namespace Project_LENA___WPF
             //comboBox7.Location = new Point(82, 57);
             comboBox7.Items.Clear();
             comboBox7.Items.Add("Overlaps");
-            comboBox7.Items.Add("No overlaps");
+            comboBox7.Items.Add("Block Extraction");
+            comboBox7.Items.Add("Window Step");
             comboBox7.ToolTip = "The patch function to be used.";
 
             label2.Visibility = Visibility.Visible;
@@ -2436,6 +2489,15 @@ namespace Project_LENA___WPF
             byte[,] noisy = new byte[height, width];
             noisy = Functions.Tiff2Array(noisyimage, height, width);
 
+            byte[,] noisy2 = new byte[height, width];
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    noisy2[i,j] = noisy[i,j];
+                }
+            }
+
             // remove the loaded image from memory
             noisyimage.Dispose();
 
@@ -2530,7 +2592,7 @@ namespace Project_LENA___WPF
                     TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
                     progressBar1.Maximum = height + 8;
                     progressBar1.Value = 0;
-                    TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum; ;
+                    TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum;
 
                     progressBar1.Value += 4;
                     TaskbarItemInfo.ProgressValue = progressBar1.Value / progressBar1.Maximum;
@@ -2542,6 +2604,27 @@ namespace Project_LENA___WPF
 
                     // Write result
                     SetText2("\r\nTime elapsed: " + stopwatch.Elapsed + Environment.NewLine);
+
+                    // Calculation of the PSNR of the generated image versus the noisy image.
+                    double MSEsum = 0;
+
+                    for (int i = 0; i < height; i++)
+                    {
+                        for (int j = 0; j < width; j++)
+                        {
+                            MSEsum += Math.Pow((noisy2[i, j] - denoised[i, j]), 2);
+                        }
+                    }
+
+                    double MSE = MSEsum / (height * width);
+
+                    double RMSE = Math.Sqrt(MSE);
+
+                    double PSNR = 10 * Math.Log10(Math.Pow((255 - 1), 2) / MSE);
+
+                    // Write the RMSE and PSNR to console
+                    SetText2("\r\nThe standard deviation between the images: " + RMSE + Environment.NewLine);
+                    SetText2("The PSNR between the images (dB): " + PSNR + Environment.NewLine);
 
                     string fileName = Path.GetFileNameWithoutExtension(textBox14.Text) + "_Pixels_" + kernel + ".tif";
 
@@ -2655,6 +2738,13 @@ namespace Project_LENA___WPF
                         range_x = (width - (pSize - step)) / interval + 2;
                         progressBar1.Maximum = (range_x * range_y) + 4;
                     }
+                    else if (comboBox7.SelectedIndex == 2)
+                    {
+                        int interval = pSize - (step * 2);
+                        int range_y = (height - (pSize - step)) / interval + 2;
+                        range_x = (width - (pSize - step)) / interval + 2;
+                        progressBar1.Maximum = (range_x * range_y) + 4;
+                    }
                     else
                     {
                         Process_Button.IsEnabled = true;
@@ -2693,6 +2783,10 @@ namespace Project_LENA___WPF
                     {
                         denoised = await Task.Run(() => mlmvn.fdenoiseNeural2(noisy, step, weights, layer, networkSize, inputsPerSample, numberofsectors, cTokenSource1.Token, pTokenSource1.Token));//, progressBar1.Value, progressBar1.Maximum));
                     }
+                    else if (comboBox7.SelectedIndex == 2)
+                    {
+                        denoised = await Task.Run(() => mlmvn.fdenoiseNeural3(noisy, step, weights, layer, networkSize, numberofsectors, cTokenSource1.Token, pTokenSource1.Token));
+                    }
                     string fileName = System.IO.Path.GetFileNameWithoutExtension(textBox14.Text) + "_Patches_" + pSize + "_Network_[" +
                         networkSize[0] + "," + networkSize[1] + "," + networkSize[2] + "," + networkSize[3] + "]" + ".tif";
 
@@ -2702,6 +2796,26 @@ namespace Project_LENA___WPF
                     // Write result
                     SetText2("\r\nTime elapsed: " + stopwatch.Elapsed + Environment.NewLine);
 
+                    // Calculation of the PSNR of the generated image versus the noisy image.
+                    double MSEsum = 0;
+
+                    for (int i = 0; i < height; i++)
+                    {
+                        for (int j = 0; j < width; j++)
+                        {
+                            MSEsum += Math.Pow((noisy2[i, j] - denoised[i, j]), 2);
+                        }
+                    }
+
+                    double MSE = MSEsum / (height * width);
+
+                    double RMSE = Math.Sqrt(MSE);
+
+                    double PSNR = 10 * Math.Log10(Math.Pow((255 - 1), 2) / MSE);
+
+                    // Write the RMSE and PSNR to console
+                    SetText2("\r\nThe standard deviation between the images: " + RMSE + Environment.NewLine);
+                    SetText2("The PSNR between the images: " + PSNR + Environment.NewLine);
 
                     // Create OpenFileDialog 
                     Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
@@ -2802,6 +2916,111 @@ namespace Project_LENA___WPF
             {
                 cTokenSource1.Cancel();
             }
+        }
+        #endregion
+
+        #region Tab 5
+        private void Button_Load_8_Click(object sender, RoutedEventArgs e)
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            // Set filter for file extension and default file extension 
+            dlg.InitialDirectory = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, @"Resources");
+            dlg.DefaultExt = ".tif";
+            dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+
+            // Assigns the results value when Dialog is opened
+            var result = dlg.ShowDialog();
+
+            // Checks if value is true
+            if (result == true)
+            {
+                textBox20.Text = dlg.FileName;
+            }
+        }
+
+        private void Button_Load_9_Click(object sender, RoutedEventArgs e)
+        {
+             // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".tif";
+            dlg.Filter = "TIFF Image (*.tif;*.tiff)|*.tif;.tiff|All files (*.*)|*.*";
+
+            // Assigns the results value when Dialog is opened
+            var result = dlg.ShowDialog();
+
+            // Checks if value is true
+            if (result == true)
+            {
+                textBox21.Text = dlg.FileName;
+            }
+        }
+
+        private void Statistics_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(textBox20.Text))
+            {
+                MessageBoxResult result = MessageBox.Show("Please input the first image.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+
+            if (string.IsNullOrEmpty(textBox21.Text))
+            {
+                MessageBoxResult result = MessageBox.Show("Please input the second image.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (result == MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+
+            #region GetTagInfo
+            Tiff image1 = Tiff.Open(textBox20.Text, "r");
+
+            // Obtain basic tag information of the first image
+            int width1 = image1.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
+            int height1 = image1.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
+            byte bits1 = image1.GetField(TiffTag.BITSPERSAMPLE)[0].ToByte();
+            byte samples1 = image1.GetField(TiffTag.SAMPLESPERPIXEL)[0].ToByte();
+
+            Tiff image2 = Tiff.Open(textBox21.Text, "r");
+
+            // Obtain basic tag information of the first image
+            int width2 = image2.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
+            int height2 = image2.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
+            byte bits2 = image2.GetField(TiffTag.BITSPERSAMPLE)[0].ToByte();
+            byte samples2 = image2.GetField(TiffTag.SAMPLESPERPIXEL)[0].ToByte();
+            #endregion
+
+            byte[,] grey1 = new byte[height1, width1];
+            grey1 = Functions.Tiff2Array(image1, height1, width1);
+
+            byte[,] grey2 = new byte[height2, width2];
+            grey2 = Functions.Tiff2Array(image2, height2, width2);
+
+            double MSEsum = 0;
+
+            for (int i = 0; i < height1; i++)
+            {
+                for (int j = 0; j < width1; j++)
+                {
+                    MSEsum += Math.Pow((grey1[i, j] - grey2[i, j]), 2);
+                }
+            }
+
+            double MSE = MSEsum / (height1 * width1);
+
+            double RMSE = Math.Sqrt(MSE);
+
+            double PSNR = 10 * Math.Log10(Math.Pow((255 - 1), 2) / MSE);
+
+            var Statistics = new Statistics(RMSE, PSNR);
+            Statistics.Show();  
         }
         #endregion
 
@@ -3209,6 +3428,8 @@ namespace Project_LENA___WPF
             Xml.Dispose();
         }
         #endregion
+
+        
     }
 
     /// <summary>

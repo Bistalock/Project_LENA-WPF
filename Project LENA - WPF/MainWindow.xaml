@@ -59,7 +59,7 @@
                             <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,44,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_3_Click" ToolTip="Load a noisy grayscale image."/>
                         </Grid>
                     </GroupBox>
-                    <Button Content="Create Fragment From Images. . ." HorizontalAlignment="Right" Margin="0,124,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="1" Click="Button_CreateFrag_Click" IsEnabled="False" ToolTip="Crop the clean and noisy image inputed to gather samples from specific region of image."/>
+                    <Button Content="Create Fragment From Images. . ." HorizontalAlignment="Right" Margin="0,124,10,0" VerticalAlignment="Top" Padding="10,2" Grid.Column="1" Click="Button_CreateFrag_Click" ToolTip="Crop the clean and noisy image inputed to gather samples from specific region of image."/>
                     <GroupBox Header="Kernel Size" Height="100" Margin="10,154,5,0" VerticalAlignment="Top">
                         <Grid>
                             <ComboBox x:Name="comboBox1" Margin="10,13,150,0" VerticalAlignment="Top" IsEditable="True" IsEnabled="False" ToolTip="Size of the kernel surrounding the pixel being sampled.">
@@ -182,7 +182,7 @@
                             <Label Content="Noisy Image:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top" ToolTip="The grayscale image with noise.&#10;Drag and drop function is supported."/>
                             <Label Content="Weights:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top" ToolTip="The file to be used to process the image.&#10;Drag and drop function is supported."/>
                             <TextBox x:Name="textBox14" Height="23" Margin="94,13,132,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
-                            <TextBox x:Name="textBox15" Height="23" Margin="93,44,133,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
+                            <TextBox x:Name="textBox15" Height="23" Margin="71,44,133,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
                             <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,13,10,0" VerticalAlignment="Top" Padding="10,2" Width="109" Click="Button_Load_6_Click" ToolTip="Load the noisy image to be processed."/>
                             <Button Content="Load Weights. . ." HorizontalAlignment="Right" Margin="0,44,10,0" VerticalAlignment="Top" Padding="10,2" ScrollViewer.CanContentScroll="True" Click="Button_Load_7_Click" ToolTip="Load the weights used to process the noisy image."/>
                         </Grid>
@@ -216,6 +216,21 @@
                     <Button x:Name="button6" Content="Cancel" HorizontalAlignment="Right" Margin="0,544,10,0" VerticalAlignment="Top" Padding="30,2" Grid.Column="1" IsEnabled="False" Click="Button_Cancel_1_Click" ToolTip="Abort the current opperation."/>
                     <ProgressBar x:Name="progressBar1" Height="22" Margin="10,508,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                     <ToggleButton x:Name="button5" Content="Pause" Grid.Column="1" HorizontalAlignment="Right" Margin="0,544,112,0" VerticalAlignment="Top" Padding="30,2" IsEnabled="False" Checked="Button_Pause_1_Checked" Unchecked="Button_Pause_1_Unchecked" ToolTip="Pause the current opperation."/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="Gather_Statistics" Header="Gather Statistics">
+                <Grid Background="White">
+                    <GroupBox Header="Load Images" Margin="10,10,10,0" VerticalAlignment="Top" Height="100">
+                    <Grid>
+                        <Label Content="First Image:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top" ToolTip="The first image to be compaired.&#xA;Drag and drop function is supported."/>
+                        <Label Content="Second Image:" HorizontalAlignment="Left" Margin="10,41,0,10" VerticalAlignment="Top" ToolTip="The second image to be compared.&#xA;Drag and drop function is supported."/>
+                        <TextBox x:Name="textBox20" Height="23" Margin="86,13,122,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
+                        <TextBox x:Name="textBox21" Height="23" Margin="103,44,122,0" VerticalAlignment="Top" Padding="2" PreviewDragEnter="TextBox_PreviewDragEnter" PreviewDragOver="TextBox_PreviewDragOver" PreviewDrop="TextBox_PreviewDrop"/>
+                        <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,13,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_8_Click" ToolTip="Load a clean grayscale image."/>
+                        <Button Content="Load Image. . ." HorizontalAlignment="Right" Margin="0,44,10,0" VerticalAlignment="Top" Padding="10,2" Click="Button_Load_9_Click" ToolTip="Load a noisy grayscale image."/>
+                    </Grid>
+                </GroupBox>
+                    <Button x:Name="Statistics_Button" Content="Gather Image Statistics. . ." HorizontalAlignment="Right" Margin="0,124,10,0" VerticalAlignment="Top" Padding="10,2" Grid.IsSharedSizeScope="True" Click="Statistics_Button_Click" ToolTip="Start the processing of the image."/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="About" Header="About" IsHitTestVisible="True" Visibility="Hidden">
