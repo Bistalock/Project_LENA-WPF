@@ -25,5 +25,9 @@ namespace Project_LENA___WPF
             standardDevLabel.Content = RMSE;
             PSNRLabel.Content = PSNR;
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+        }
     }
 }

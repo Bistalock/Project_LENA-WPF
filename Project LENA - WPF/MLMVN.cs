@@ -24,11 +24,12 @@ namespace Project_LENA___WPF
 
         /* -------------------------- Denoise by Pixels ----------------------------------------------------------------- */
 
-        public async Task<byte[,]> Activation(byte[,] noisyImage, int kernel, string weights, int numberofsectors, int inLayerSize, int hidLayerSize, CancellationToken cancelToken, PauseToken pauseToken)
+        public async Task<byte[,,]> Activation(byte[,,] noisyImage, int kernel, string weights, int numberofsectors, int inLayerSize, int hidLayerSize, CancellationToken cancelToken, PauseToken pauseToken)
         {
             // get height and width
             int height = noisyImage.GetLength(0);
             int width = noisyImage.GetLength(1);
+            int samples = noisyImage.GetLength(2);
             int offset;
             switch (kernel)
             {
@@ -52,8 +53,8 @@ namespace Project_LENA___WPF
             }
 
             // extend the image
-            byte[,] image = new byte[height + offset * 2, width + offset * 2];
-            image = functions.MirrorImage(noisyImage, height, width, offset);
+            byte[,,] image = new byte[height + offset * 2, width + offset * 2, samples];
+            image = functions.MirrorImage(noisyImage, height, width, samples, offset);
 
             window.SetProgress1(4);
 
@@ -66,37 +67,59 @@ namespace Project_LENA___WPF
 
             byte[,] src;
 
+            string[] Channels;
+
+            switch (samples)
+            {
+                case 1:
+                    Channels = new string[] { "" };
+                    break;
+                case 3:
+                    Channels = new string[] { "red ", "green ", "blue " };
+                    break;
+                default:
+                    Channels = new string[] { "" };
+                    break;
+            }
+
             //int FirstQ = offset;
             //Parallel.For(FirstQ, height + offset, Q =>
-            for (int Q = offset; Q < height + offset; Q++)
+            for (int k = 0; k < samples; k++)
             {
-
-                for (int P = offset; P < width + offset; P++)
+                for (int Q = offset; Q < height + offset; Q++)
                 {
-                    src = Functions.CreateWindow(image, Q, P, kernel, offset);
-                    Array.Copy(src, inputArray, src.Length);
-                    // transformation of inputs into complex plane
-                    for (int i = 0; i < kernel; i++)
+
+                    for (int P = offset; P < width + offset; P++)
                     {
-                        for (int j = 0; j < kernel; j++)
-                            CinputArray[i, j] = Exp(complex1 * 2 * Math.PI * inputArray[i, j] / numberofsectors);
-                    } // end nested for loop
-                    // process
-                    noisyImage[Q - offset, P - offset] = NeuralNetwork(CinputArray, weights, numberofsectors, inLayerSize, hidLayerSize);
+
+                        src = Functions.CreateWindow(image, Q, P, k, kernel, offset);
+                        Array.Copy(src, inputArray, src.Length);
+                        // transformation of inputs into complex plane
+                        for (int i = 0; i < kernel; i++)
+                        {
+                            for (int j = 0; j < kernel; j++)
+                                CinputArray[i, j] = Exp(complex1 * 2 * Math.PI * inputArray[i, j] / numberofsectors);
+                        } // end nested for loop
+                        // process
+                        noisyImage[Q - offset, P - offset, k] = NeuralNetwork(CinputArray, weights, numberofsectors, inLayerSize, hidLayerSize);
+
+
+                    }
+
+                    // Action when cancel button is clicked
+                    if (cancelToken.IsCancellationRequested)
+                        cancelToken.ThrowIfCancellationRequested();
+
+                    // Action when pause button is clicked
+                    await pauseToken.WaitWhilePausedAsync();
+
+                    //Increments progress bar
+                    window.SetProgress1(1);
+
+                    // Writes progress to console
+                    if (Q % 10 == 0) window.SetText2("Pixels in " + Channels[k] + "row " + (Q) + " of " + height + " done." + Environment.NewLine);
+                    if (Q == height && Q % 10 != 0) window.SetText2("Pixels in " + Channels[k] + "row " + (Q) + " of " + height + " done." + Environment.NewLine);
                 }
-                // Action when cancel button is clicked
-                if (cancelToken.IsCancellationRequested)
-                    cancelToken.ThrowIfCancellationRequested();
-
-                // Action when pause button is clicked
-                await pauseToken.WaitWhilePausedAsync();
-
-                //Increments progress bar
-                window.SetProgress1(1);
-
-                // Writes progress to console
-                if (Q % 10 == 0) window.SetText2("Pixels in row " + (Q) + " of " + height + " done." + Environment.NewLine);
-                if (Q == height && Q % 10 != 0) window.SetText2("Pixels in row " + (Q) + " of " + height + " done." + Environment.NewLine);
             };//);  
             return noisyImage;
         }// end method
@@ -262,7 +285,7 @@ namespace Project_LENA___WPF
 
         /* -------------------------- Denoise by Patch ----------------------------------------------------------------- */
 
-        public async Task<byte[,]> fdenoiseNeural(byte[,] noisyIm, int step, string fileName, int layer, int[] networkSize, int[] inputsPerSample, int numberofsectors, CancellationToken cancelToken, PauseToken pauseToken)
+        public async Task<byte[,,]> fdenoiseNeural(byte[,,] noisyIm, int step, string fileName, int layer, int[] networkSize, int[] inputsPerSample, int numberofsectors, CancellationToken cancelToken, PauseToken pauseToken)
         {
             /*
                 noisyIm: an image corrupted by AWG noise
@@ -299,10 +322,11 @@ namespace Project_LENA___WPF
             int origHeight = height;
             int width = noisyIm.GetLength(1);
             int origWidth = width;
+            int samples = noisyIm.GetLength(2);
             if (p_diff > 0)
             {
-                noisyIm = new byte[height + p_diff * 2, width + p_diff * 2];
-                noisyIm = functions.MirrorImage(noisyIm, height, width, p_diff);
+                noisyIm = new byte[height + p_diff * 2, width + p_diff * 2, samples];
+                noisyIm = functions.MirrorImage(noisyIm, height, width, samples, p_diff);
                 // if extended the image, update the size
                 height = noisyIm.GetLength(0);
                 width = noisyIm.GetLength(1);
@@ -347,8 +371,8 @@ namespace Project_LENA___WPF
 
             // pre-instantiate complex 2d-arrays
             // patch of interest
-            int[,] cleanIm = new int[origHeight, origWidth];
-            byte[,] counter = new byte[origHeight, origWidth]; // counts the overlapped patch, then later store the processed image.
+            int[,,] cleanIm = new int[origHeight, origWidth, samples];
+            byte[,,] counter = new byte[origHeight, origWidth, samples]; // counts the overlapped patch, then later store the processed image.
             double[,] inputArray = new double[patchSz, patchSz];
             Complex[,] CinputArray = new Complex[patchSz, patchSz];
             // output patch to be stored to actual image
@@ -371,6 +395,21 @@ namespace Project_LENA___WPF
             int offset = ((patchSzOut - 3) / 2) + 1;
             double bb = (2 * Math.PI) / numberofsectors;
 
+            string[] Channels;
+
+            switch (samples)
+            {
+                case 1:
+                    Channels = new string[] { "" };
+                    break;
+                case 3:
+                    Channels = new string[] { "red ", "green ", "blue " };
+                    break;
+                default:
+                    Channels = new string[] { "" };
+                    break;
+            }
+
             window.SetText2("Done.\r\n" + Environment.NewLine);
             window.SetText2("Beginning the processing... \r\n" + Environment.NewLine);
             #endregion
@@ -380,50 +419,73 @@ namespace Project_LENA___WPF
             //double test3 = Math.Floor(test2);
             // --------------- Processing Begins ------------------------------
             // process each samples
-            for (int row = 0; row < range_y.GetLength(0); row++) // for each row
+
+            for (int k = 0; k < samples; k++)
             {
-                for (int col = 0; col < range_x.GetLength(0); col++) // for each column
+                for (int row = 0; row < range_y.GetLength(0); row++) // for each row
                 {
-
-                    #region process first layer
-                    // process first layer
-                    int ii = 0;
-                    byte[,] src = Functions.CreatePatch(noisyIm, range_y[row], range_x[col], patchSz);
-                    // upcast to double
-                    Array.Copy(src, inputArray, src.Length);
-                    // transformation of inputs into complex plane Inneficient?
-                    for (int i = 0; i < patchSz; i++)
-                        for (int j = 0; j < patchSz; j++)
-                            CinputArray[i, j] = Exp(complex1 * 2 * Math.PI * inputArray[i, j] / numberofsectors);
-                    // end nested for loop
-                    // transform to 1d array
-                    for (int i = 0; i < patchSz; i++)
-                        for (int j = 0; j < patchSz; j++)
-                            S[i * patchSz + j] = CinputArray[i, j];
-                    // end for loop
-                    #endregion
-                    #region calculate weighted sum of first layer and its activation, line on MATLAB 1283
-                    // calculate weighted sum & activation
-                    for (int i = 0; i < networkSize[0]; i++)
+                    for (int col = 0; col < range_x.GetLength(0); col++) // for each column
                     {
-                        for (int j = 1; j < inputsPerSample[0]; j++)
+
+                        #region process first layer
+                        // process first layer
+                        int ii = 0;
+                        byte[,] src = Functions.CreatePatch(noisyIm, range_y[row], range_x[col], k, patchSz);
+                        // upcast to double
+                        Array.Copy(src, inputArray, src.Length);
+                        // transformation of inputs into complex plane Inneficient?
+                        for (int i = 0; i < patchSz; i++)
+                            for (int j = 0; j < patchSz; j++)
+                                CinputArray[i, j] = Exp(complex1 * 2 * Math.PI * inputArray[i, j] / numberofsectors);
+                        // end nested for loop
+                        // transform to 1d array
+                        for (int i = 0; i < patchSz; i++)
+                            for (int j = 0; j < patchSz; j++)
+                                S[i * patchSz + j] = CinputArray[i, j];
+                        // end for loop
+                        #endregion
+                        #region calculate weighted sum of first layer and its activation, line on MATLAB 1283
+                        // calculate weighted sum & activation
+                        for (int i = 0; i < networkSize[0]; i++)
                         {
-                            sum = sum + weights[ii][i, j] * S[j - 1];
-                        }
-                        sum = sum + weights[ii][i, 0];
-                        outputNeurons[ii][i] = sum;
-                        sum = new Complex(0, 0);
-                    } // end for
+                            for (int j = 1; j < inputsPerSample[0]; j++)
+                            {
+                                sum = sum + weights[ii][i, j] * S[j - 1];
+                            }
+                            sum = sum + weights[ii][i, 0];
+                            outputNeurons[ii][i] = sum;
+                            sum = new Complex(0, 0);
+                        } // end for
 
-                    // apply continuous activation
-                    for (int t = 0; t < networkSize[ii]; t++)
-                        outputNeurons[ii][t] /= Complex.Abs(outputNeurons[ii][t]);
-                    // end for
-                    #endregion
-                    #region calculate weighted sum of second to last layer
-                    // ----------------- Process second to last hidden layers, then output layer
-                    for (ii = 1; ii < layer - 1; ii++)
-                    {
+                        // apply continuous activation
+                        for (int t = 0; t < networkSize[ii]; t++)
+                            outputNeurons[ii][t] /= Complex.Abs(outputNeurons[ii][t]);
+                        // end for
+                        #endregion
+                        #region calculate weighted sum of second to last layer
+                        // ----------------- Process second to last hidden layers, then output layer
+                        for (ii = 1; ii < layer - 1; ii++)
+                        {
+                            for (int i = 0; i < networkSize[ii]; i++)
+                            {
+                                for (int j = 1; j < inputsPerSample[ii]; j++)
+                                {
+                                    sum = sum + weights[ii][i, j] * outputNeurons[ii - 1][j - 1];
+                                }
+                                sum = sum + weights[ii][i, 0];
+                                outputNeurons[ii][i] = sum;
+                                sum = new Complex(0, 0);
+                            } // end for
+                            // apply contiunous activation
+                            for (int t = 0; t < networkSize[ii]; t++)
+                                outputNeurons[ii][t] /= Complex.Abs(outputNeurons[ii][t]);
+                            // end for
+                        } // end for ii
+
+
+                        // output layer
+                        ii = layer - 1; // set to last layer
+                        // calculate the weighted sum
                         for (int i = 0; i < networkSize[ii]; i++)
                         {
                             for (int j = 1; j < inputsPerSample[ii]; j++)
@@ -434,91 +496,76 @@ namespace Project_LENA___WPF
                             outputNeurons[ii][i] = sum;
                             sum = new Complex(0, 0);
                         } // end for
-                        // apply contiunous activation
-                        for (int t = 0; t < networkSize[ii]; t++)
-                            outputNeurons[ii][t] /= Complex.Abs(outputNeurons[ii][t]);
+
+                        for (int jj = 0; jj < networkSize[ii]; jj++)
+                        {
+                            // calculate discrete output
+                            // get angle
+                            dOutputNeurons[jj] = Math.Atan2(outputNeurons[ii][jj].Imaginary, outputNeurons[ii][jj].Real);
+                            if (dOutputNeurons[jj] < 0)
+                                dOutputNeurons[jj] = 2 * Math.PI + dOutputNeurons[jj];
+                            // end if
+                            // round
+                            dOutputNeurons[jj] = Math.Truncate(dOutputNeurons[jj] / bb);
+                            //dOutputNeurons[jj] = Math.Floor(dOutputNeurons[jj]/bb);
+
+                            if (dOutputNeurons[jj] > 255)
+                                if (dOutputNeurons[jj] < 320)
+                                    dOutputNeurons[jj] = 255;
+                                else
+                                    dOutputNeurons[jj] = 0;
+                            // end if 
+                            // convert results to byte
+                            output[jj] = Convert.ToByte(dOutputNeurons[jj]); //Trouble?
+                        } // end for
+
+                        #endregion second to last layer
+                        #region Process image
+                        // resize
+                        for (int i = 0; i < patchSzOut; i++)
+                            for (int j = 0; j < patchSzOut; j++)
+                                outputArray[i, j] = output[p_diff + j + (i * patchSz)];
                         // end for
-                    } // end for ii
+                        // add to the actual image
+                        for (int i = 0; i < patchSzOut; i++)
+                            for (int j = 0; j < patchSzOut; j++)
+                            {
+                                //if (counter[range_y[row] + i, range_x[col] + j] == 0)
+                                //{
+                                cleanIm[range_y[row] + i, range_x[col] + j, k] += outputArray[i, j];
+                                counter[range_y[row] + i, range_x[col] + j, k]++;
+                                //}
+                            }
+                        // end for
+                        // end for
+                        #endregion
+                        #region Form elements
+                        if (cancelToken.IsCancellationRequested)
+                            cancelToken.ThrowIfCancellationRequested();
 
+                        // Action when pause button is clicked
+                        await pauseToken.WaitWhilePausedAsync();
 
-                    // output layer
-                    ii = layer - 1; // set to last layer
-                    // calculate the weighted sum
-                    for (int i = 0; i < networkSize[ii]; i++)
-                    {
-                        for (int j = 1; j < inputsPerSample[ii]; j++)
-                        {
-                            sum = sum + weights[ii][i, j] * outputNeurons[ii - 1][j - 1];
-                        }
-                        sum = sum + weights[ii][i, 0];
-                        outputNeurons[ii][i] = sum;
-                        sum = new Complex(0, 0);
-                    } // end for
+                        window.SetProgress1(1);
+                        #endregion
 
-                    for (int jj = 0; jj < networkSize[ii]; jj++)
-                    {
-                        // calculate discrete output
-                        // get angle
-                        dOutputNeurons[jj] = Math.Atan2(outputNeurons[ii][jj].Imaginary, outputNeurons[ii][jj].Real);
-                        if (dOutputNeurons[jj] < 0)
-                            dOutputNeurons[jj] = 2 * Math.PI + dOutputNeurons[jj];
-                        // end if
-                        // round
-                        dOutputNeurons[jj] = Math.Truncate(dOutputNeurons[jj] / bb);
-                        //dOutputNeurons[jj] = Math.Floor(dOutputNeurons[jj]/bb);
+                    }//); // end col for loop
 
-                        if (dOutputNeurons[jj] > 255)
-                            if (dOutputNeurons[jj] < 320)
-                                dOutputNeurons[jj] = 255;
-                            else
-                                dOutputNeurons[jj] = 0;
-                        // end if 
-                        // convert results to byte
-                        output[jj] = Convert.ToByte(dOutputNeurons[jj]); //Trouble?
-                    } // end for
+                    window.SetText2("Patches in " + Channels[k] + "row " + (row + 1) + " of " + range_y.Length + " done." + Environment.NewLine);
 
-                    #endregion second to last layer
-                    #region Process image
-                    // resize
-                    for (int i = 0; i < patchSzOut; i++)
-                        for (int j = 0; j < patchSzOut; j++)
-                            outputArray[i, j] = output[p_diff + j + (i * patchSz)];
-                    // end for
-                    // add to the actual image
-                    for (int i = 0; i < patchSzOut; i++)
-                        for (int j = 0; j < patchSzOut; j++)
-                        {
-                            //if (counter[range_y[row] + i, range_x[col] + j] == 0)
-                            //{
-                            cleanIm[range_y[row] + i, range_x[col] + j] += outputArray[i, j];
-                            counter[range_y[row] + i, range_x[col] + j]++;
-                            //}
-                        }
-                    // end for
-                    // end for
-                    #endregion
-                    #region Form elements
-                    if (cancelToken.IsCancellationRequested)
-                        cancelToken.ThrowIfCancellationRequested();
-
-                    // Action when pause button is clicked
-                    await pauseToken.WaitWhilePausedAsync();
-
-                    window.SetProgress1(1);
-                    #endregion
-                }//); // end col for loop
-
-                window.SetText2("Patches in row " + (row + 1) + " of " + range_y.Length + " done." + Environment.NewLine);
-
-            }//); // end row for loop
+                }//); // end row for loop
+            }
             #region Average
             // Average
             for (int row = 0; row < origHeight; row++) // for each row
             {
                 for (int col = 0; col < origWidth; col++) // for each column
                 {
-                    cleanIm[row, col] /= counter[row, col];
-                    counter[row, col] = Convert.ToByte(cleanIm[row, col]);
+                    for (int k = 0; k < samples; k++) // for each sample
+                    {
+                        cleanIm[row, col, k] /= counter[row, col, k];
+                        counter[row, col, k] = Convert.ToByte(cleanIm[row, col, k]);
+                    }
                 }
             }
             #endregion
@@ -638,7 +685,7 @@ namespace Project_LENA___WPF
             return counter;
         } // end method
 
-        public async Task<byte[,]> fdenoiseNeural2(byte[,] noisyIm, int step, string fileName, int layer, int[] networkSize, int[] inputsPerSample, int numberofsectors, CancellationToken cancelToken, PauseToken pauseToken)//, double progressBar1, double progressBar1Max)
+        public async Task<byte[,,]> fdenoiseNeural2(byte[,,] noisyIm, int step, string fileName, int layer, int[] networkSize, int[] inputsPerSample, int numberofsectors, CancellationToken cancelToken, PauseToken pauseToken)//, double progressBar1, double progressBar1Max)
         {
             /*
             *   noisyIm: an image corrupted by AWG noise
@@ -678,10 +725,11 @@ namespace Project_LENA___WPF
             int origHeight = height;
             int width = noisyIm.GetLength(1);
             int origWidth = width;
+            int samples = noisyIm.GetLength(2);
             if (p_diff > 0)
             {
-                noisyIm = new byte[height + p_diff * 2, width + p_diff * 2];
-                noisyIm = functions.MirrorImage(noisyIm, height, width, p_diff);
+                noisyIm = new byte[height + p_diff * 2, width + p_diff * 2, samples];
+                noisyIm = functions.MirrorImage(noisyIm, height, width, samples, p_diff);
                 // if extended the image, update the size
                 height = noisyIm.GetLength(0);
                 width = noisyIm.GetLength(1);
@@ -737,7 +785,7 @@ namespace Project_LENA___WPF
 
             // pre-instantiate complex 2d-arrays
             // patch of interest
-            byte[,] cleanIm = new byte[origHeight, origWidth];
+            byte[,,] cleanIm = new byte[origHeight, origWidth, samples];
             //byte[,] counter = new byte[origHeight, origWidth]; // counts the overlapped patch, then later store the processed image.
             double[,] inputArray = new double[patchSz, patchSz];
             Complex[,] CinputArray = new Complex[patchSz, patchSz];
@@ -761,56 +809,92 @@ namespace Project_LENA___WPF
             int offset = ((patchSzOut - 3) / 2) + 1;
             double bb = (2 * Math.PI) / numberofsectors;
 
+            string[] Channels;
+
+            switch (samples)
+            {
+                case 1:
+                    Channels = new string[] {""};
+                    break;
+                case 3:
+                    Channels = new string[] {"red ", "green ", "blue "};
+                    break;
+                default:
+                    Channels = new string[] { "" };
+                    break;
+            }
+
             window.SetText2("Done.\r\n" + Environment.NewLine);
             window.SetText2("Beginning Processing... \r\n" + Environment.NewLine);
             #endregion
 
             // --------------- Processing Begins  ------------------------------
             // process each samples
-            for (int row = 0; row < range_y.GetLength(0); row++) // for each row
+            for (int k = 0; k < samples; k++)
             {
-                for (int col = 0; col < range_x.GetLength(0); col++) // for each column
+                for (int row = 0; row < range_y.GetLength(0); row++) // for each row
                 {
-
-                    #region process first layer
-                    // process first layer
-                    int ii = 0;
-                    byte[,] src = Functions.CreatePatch(noisyIm, range_y[row], range_x[col], patchSz);
-                    // upcast to double
-                    Array.Copy(src, inputArray, src.Length);
-                    // transformation of inputs into complex plane
-                    for (int i = 0; i < patchSz; i++)
-                        for (int j = 0; j < patchSz; j++)
-                            CinputArray[i, j] = Exp(complex1 * 2 * Math.PI * inputArray[i, j] / numberofsectors);
-                    // end nested for loop
-                    // transform to 1d array
-                    for (int i = 0; i < patchSz; i++)
-                        for (int j = 0; j < patchSz; j++)
-                            S[i * patchSz + j] = CinputArray[i, j];
-                    // end for loop
-                    #endregion
-                    #region calculate weighted sum of first layer and its activation
-                    // calculate weighted sum & activation
-                    for (int i = 0; i < networkSize[0]; i++)
+                    for (int col = 0; col < range_x.GetLength(0); col++) // for each column
                     {
-                        for (int j = 1; j < inputsPerSample[0]; j++)
+                        #region process first layer
+                        // process first layer
+                        int ii = 0;
+                        byte[,] src = Functions.CreatePatch(noisyIm, range_y[row], range_x[col], k, patchSz);
+                        // upcast to double
+                        Array.Copy(src, inputArray, src.Length);
+                        // transformation of inputs into complex plane
+                        for (int i = 0; i < patchSz; i++)
+                            for (int j = 0; j < patchSz; j++)
+                                CinputArray[i, j] = Exp(complex1 * 2 * Math.PI * inputArray[i, j] / numberofsectors);
+                        // end nested for loop
+                        // transform to 1d array
+                        for (int i = 0; i < patchSz; i++)
+                            for (int j = 0; j < patchSz; j++)
+                                S[i * patchSz + j] = CinputArray[i, j];
+                        // end for loop
+                        #endregion
+                        #region calculate weighted sum of first layer and its activation
+                        // calculate weighted sum & activation
+                        for (int i = 0; i < networkSize[0]; i++)
                         {
-                            sum = sum + weights[ii][i, j] * S[j - 1];
-                        }
-                        sum = sum + weights[ii][i, 0];
-                        outputNeurons[ii][i] = sum;
-                        sum = new Complex(0, 0);
-                    } // end for
+                            for (int j = 1; j < inputsPerSample[0]; j++)
+                            {
+                                sum = sum + weights[ii][i, j] * S[j - 1];
+                            }
+                            sum = sum + weights[ii][i, 0];
+                            outputNeurons[ii][i] = sum;
+                            sum = new Complex(0, 0);
+                        } // end for
 
-                    // apply continuous activation
-                    for (int t = 0; t < networkSize[ii]; t++)
-                        outputNeurons[ii][t] /= Complex.Abs(outputNeurons[ii][t]);
-                    // end for
-                    #endregion
-                    #region calculate weighted sum of second to last layer
-                    // ----------------- Process second to last hidden layers, then output layer
-                    for (ii = 1; ii < layer - 1; ii++)
-                    {
+                        // apply continuous activation
+                        for (int t = 0; t < networkSize[ii]; t++)
+                            outputNeurons[ii][t] /= Complex.Abs(outputNeurons[ii][t]);
+                        // end for
+                        #endregion
+                        #region calculate weighted sum of second to last layer
+                        // ----------------- Process second to last hidden layers, then output layer
+                        for (ii = 1; ii < layer - 1; ii++)
+                        {
+                            for (int i = 0; i < networkSize[ii]; i++)
+                            {
+                                for (int j = 1; j < inputsPerSample[ii]; j++)
+                                {
+                                    sum = sum + weights[ii][i, j] * outputNeurons[ii - 1][j - 1];
+                                }
+                                sum = sum + weights[ii][i, 0];
+                                outputNeurons[ii][i] = sum;
+                                sum = new Complex(0, 0);
+                            } // end for
+                            // apply contiunous activation
+                            for (int t = 0; t < networkSize[ii]; t++)
+                                outputNeurons[ii][t] /= Complex.Abs(outputNeurons[ii][t]);
+                            // end for
+                        } // end for ii
+
+
+                        // output layer
+                        ii = layer - 1; // set to last layer
+                        // calculate the weighted sum
                         for (int i = 0; i < networkSize[ii]; i++)
                         {
                             for (int j = 1; j < inputsPerSample[ii]; j++)
@@ -821,135 +905,116 @@ namespace Project_LENA___WPF
                             outputNeurons[ii][i] = sum;
                             sum = new Complex(0, 0);
                         } // end for
-                        // apply contiunous activation
-                        for (int t = 0; t < networkSize[ii]; t++)
-                            outputNeurons[ii][t] /= Complex.Abs(outputNeurons[ii][t]);
+
+                        for (int jj = 0; jj < networkSize[ii]; jj++)
+                        {
+                            // calculate discrete output
+                            // get angle
+                            dOutputNeurons[jj] = Math.Atan2(outputNeurons[ii][jj].Imaginary, outputNeurons[ii][jj].Real);
+                            if (dOutputNeurons[jj] < 0)
+                                dOutputNeurons[jj] = 2 * Math.PI + dOutputNeurons[jj];
+                            // end if
+                            // round
+                            dOutputNeurons[jj] = Math.Truncate(dOutputNeurons[jj] / bb);
+                            //dOutputNeurons[jj] = Math.Floor(dOutputNeurons[jj]/bb);
+
+                            if (dOutputNeurons[jj] > 255)
+                                if (dOutputNeurons[jj] < 320)
+                                    dOutputNeurons[jj] = 255;
+                                else
+                                    dOutputNeurons[jj] = 0;
+                            // end if 
+                            // convert results to byte
+                            output[jj] = Convert.ToByte(dOutputNeurons[jj]);
+                        } // end for
+
+                        #endregion second to last layer
+                        #region Process image
+                        // resize
+                        for (int i = 0; i < patchSzOut; i++)
+                            for (int j = 0; j < patchSzOut; j++)
+                                outputArray[i, j] = output[p_diff + j + (i * patchSz)];
                         // end for
-                    } // end for ii
 
+                        // Output to an acutal image.
+                        /* Codes below outputs the calculated patch into the output image.  Although the size of patch is 13 x 13, only center 7 * 7 will be copied to the
+                         * image because of overlapping method, with the only exception of when the patch touches the edge of the image.  In order to determine this, we will
+                         * first check whether the coordinate of the patch is either 0 or width(height) - patchSz. if so, we need to take the borders into account.  Otherwise,
+                         * we just need to copy center 7 x 7 pixels onto corresponding coordinates.
+                         */
 
-                    // output layer
-                    ii = layer - 1; // set to last layer
-                    // calculate the weighted sum
-                    for (int i = 0; i < networkSize[ii]; i++)
-                    {
-                        for (int j = 1; j < inputsPerSample[ii]; j++)
+                        // check
+                        if (range_y[row] == 0 || range_y[row] == height - patchSz || range_x[col] == 0 || range_x[col] == width - patchSz)
                         {
-                            sum = sum + weights[ii][i, j] * outputNeurons[ii - 1][j - 1];
-                        }
-                        sum = sum + weights[ii][i, 0];
-                        outputNeurons[ii][i] = sum;
-                        sum = new Complex(0, 0);
-                    } // end for
-
-                    for (int jj = 0; jj < networkSize[ii]; jj++)
-                    {
-                        // calculate discrete output
-                        // get angle
-                        dOutputNeurons[jj] = Math.Atan2(outputNeurons[ii][jj].Imaginary, outputNeurons[ii][jj].Real);
-                        if (dOutputNeurons[jj] < 0)
-                            dOutputNeurons[jj] = 2 * Math.PI + dOutputNeurons[jj];
-                        // end if
-                        // round
-                        dOutputNeurons[jj] = Math.Truncate(dOutputNeurons[jj] / bb);
-                        //dOutputNeurons[jj] = Math.Floor(dOutputNeurons[jj]/bb);
-
-                        if (dOutputNeurons[jj] > 255)
-                            if (dOutputNeurons[jj] < 320)
-                                dOutputNeurons[jj] = 255;
-                            else
-                                dOutputNeurons[jj] = 0;
-                        // end if 
-                        // convert results to byte
-                        output[jj] = Convert.ToByte(dOutputNeurons[jj]);
-                    } // end for
-
-                    #endregion second to last layer
-                    #region Process image
-                    // resize
-                    for (int i = 0; i < patchSzOut; i++)
-                        for (int j = 0; j < patchSzOut; j++)
-                            outputArray[i, j] = output[p_diff + j + (i * patchSz)];
-                    // end for
-
-                    // Output to an acutal image.
-                    /* Codes below outputs the calculated patch into the output image.  Although the size of patch is 13 x 13, only center 7 * 7 will be copied to the
-                     * image because of overlapping method, with the only exception of when the patch touches the edge of the image.  In order to determine this, we will
-                     * first check whether the coordinate of the patch is either 0 or width(height) - patchSz. if so, we need to take the borders into account.  Otherwise,
-                     * we just need to copy center 7 x 7 pixels onto corresponding coordinates.
-                     */
-
-                    // check
-                    if (range_y[row] == 0 || range_y[row] == height - patchSz || range_x[col] == 0 || range_x[col] == width - patchSz)
-                    {
-                        // startY and startX determines the starting coordinate of the local patch; it's initialized with step. if the patch is touching the edge, we need to
-                        // set them to 0, so whole patch side will be copied. The same for endY and endX.
-                        int startY, startX;
-                        startY = startX = step;
-                        int endY, endX;
-                        endY = endX = patchSzOut - step;
-                        // All outer patches
-                        if (range_y[row] == 0)
-                            startY = 0;
-                        // end if
-                        if (range_y[row] == height - patchSz)
-                        {
-                            // startY = patchSzOut - (height - (range_y[row - 1] + patchSz - (step * 2)));
-                            startY = patchSzOut - offsetY;
-                            endY = patchSzOut;
-                        }
-                        // end if
-
-                        if (range_x[col] == 0)
-                            startX = 0;
-                        // end if
-                        if (range_x[col] == width - patchSz)
-                        {
-                            startX = patchSzOut - offsetX;
-                            endX = patchSzOut;
-                        }
-                        // end if
-
-                        // Place patches
-                        for (int i = startY; i < endY; i++)
-                        {
-                            for (int j = startX; j < endX; j++)
+                            // startY and startX determines the starting coordinate of the local patch; it's initialized with step. if the patch is touching the edge, we need to
+                            // set them to 0, so whole patch side will be copied. The same for endY and endX.
+                            int startY, startX;
+                            startY = startX = step;
+                            int endY, endX;
+                            endY = endX = patchSzOut - step;
+                            // All outer patches
+                            if (range_y[row] == 0)
+                                startY = 0;
+                            // end if
+                            if (range_y[row] == height - patchSz)
                             {
-                                cleanIm[range_y[row] + i, range_x[col] + j] = outputArray[i, j];
-                            } // end for
-                        } //end
-                    }
-                    else
-                    {
-                        // All Inner Patches have outer edges cut off
-                        for (int i = step; i < patchSzOut - step; i++)
-                        {
-                            for (int j = step; j < patchSzOut - step; j++)
+                                // startY = patchSzOut - (height - (range_y[row - 1] + patchSz - (step * 2)));
+                                startY = patchSzOut - offsetY;
+                                endY = patchSzOut;
+                            }
+                            // end if
+
+                            if (range_x[col] == 0)
+                                startX = 0;
+                            // end if
+                            if (range_x[col] == width - patchSz)
                             {
-                                cleanIm[range_y[row] + i, range_x[col] + j] = outputArray[i, j];
-                            } // end for
-                        } //end
-                    }
+                                startX = patchSzOut - offsetX;
+                                endX = patchSzOut;
+                            }
+                            // end if
 
-                    #endregion
-                    #region Form elements
-                    if (cancelToken.IsCancellationRequested)
-                        cancelToken.ThrowIfCancellationRequested();
+                            // Place patches
+                            for (int i = startY; i < endY; i++)
+                            {
+                                for (int j = startX; j < endX; j++)
+                                {
+                                    cleanIm[range_y[row] + i, range_x[col] + j, k] = outputArray[i, j];
+                                } // end for
+                            } //end
+                        }
+                        else
+                        {
+                            // All Inner Patches have outer edges cut off
+                            for (int i = step; i < patchSzOut - step; i++)
+                            {
+                                for (int j = step; j < patchSzOut - step; j++)
+                                {
+                                    cleanIm[range_y[row] + i, range_x[col] + j, k] = outputArray[i, j];
+                                } // end for
+                            } //end
+                        }
 
-                    // Action when pause button is clicked
-                    await pauseToken.WaitWhilePausedAsync();
+                        #endregion
+                        #region Form elements
+                        if (cancelToken.IsCancellationRequested)
+                            cancelToken.ThrowIfCancellationRequested();
 
-                    window.SetProgress1(1);
-                    #endregion
-                } // end col for loop               
+                        // Action when pause button is clicked
+                        await pauseToken.WaitWhilePausedAsync();
 
-                window.SetText2("Patches in row " + (row + 1) + " of " + range_y.Length + " done." + Environment.NewLine);
-            } // end row for loop
+                        window.SetProgress1(1);
+                        #endregion
+                    } // end col for loop               
+
+                    window.SetText2("Patches in " + Channels[k] + "row " + (row + 1) + " of " + range_y.Length + " done." + Environment.NewLine);
+                } // end row for loop
+            }
 
             return cleanIm;
         } // end method
 
-        public async Task<byte[,]> fdenoiseNeural3(byte[,] noisyIm, int overlap, string fileName, int layer, int[] networkSize, int numberofsectors, CancellationToken cancelToken, PauseToken pauseToken)
+        public async Task<byte[,,]> fdenoiseNeural3(byte[,,] noisyIm, int overlap, string fileName, int layer, int[] networkSize, int numberofsectors, CancellationToken cancelToken, PauseToken pauseToken)
         {
             /*
              *   noisyIm: an image corrupted by AWG noise
@@ -999,10 +1064,11 @@ namespace Project_LENA___WPF
             int origHeight = height;
             int width = noisyIm.GetLength(1);
             int origWidth = width;
+            int samples = noisyIm.GetLength(2);
             if (p_diff > 0)
             {
-                noisyIm = new byte[height + p_diff * 2, width + p_diff * 2];
-                noisyIm = functions.MirrorImage(noisyIm, height, width, p_diff);
+                noisyIm = new byte[height + p_diff * 2, width + p_diff * 2, samples];
+                noisyIm = functions.MirrorImage(noisyIm, height, width, samples, p_diff);
                 // if extended the image, update the size
                 height = noisyIm.GetLength(0);
                 width = noisyIm.GetLength(1);
@@ -1052,8 +1118,8 @@ namespace Project_LENA___WPF
 
             // pre-instantiate complex 2d-arrays
             // patch of interest
-            byte[,] cleanIm = new byte[origHeight, origWidth];
-            byte[,] counter = new byte[origHeight, origWidth]; // counts the overlapped patch, then later store the processed image.
+            byte[,,] cleanIm = new byte[origHeight, origWidth, samples];
+            byte[,,] counter = new byte[origHeight, origWidth, samples]; // counts the overlapped patch, then later store the processed image.
             double[,] inputArray = new double[patchSz, patchSz];
             Complex[,] CinputArray = new Complex[patchSz, patchSz];
             // output patch to be stored to actual image
@@ -1076,55 +1142,91 @@ namespace Project_LENA___WPF
             int offset = ((patchSzOut - 3) / 2) + 1;
             double bb = (2 * Math.PI) / numberofsectors;
 
+            string[] Channels;
+
+            switch (samples)
+            {
+                case 1:
+                    Channels = new string[] { "" };
+                    break;
+                case 3:
+                    Channels = new string[] { "red ", "green ", "blue " };
+                    break;
+                default:
+                    Channels = new string[] { "" };
+                    break;
+            }
+
             window.SetText2("Done." + Environment.NewLine);
             window.SetText2("Beginning Processing.\r\n" + Environment.NewLine);
             #endregion
             // --------------- Processing Begins ------------------------------
             // process each samples
-            for (int row = 0; row < range_y.GetLength(0); row++) // for each row
+            for (int k = 0; k < samples; k++)
             {
-                for (int col = 0; col < range_x.GetLength(0); col++) // for each column
+                for (int row = 0; row < range_y.GetLength(0); row++) // for each row
                 {
-
-                    #region process first layer
-                    // process first layer
-                    int ii = 0;
-                    byte[,] src = Functions.CreatePatch(noisyIm, range_y[row], range_x[col], patchSz);
-                    // upcast to double
-                    Array.Copy(src, inputArray, src.Length);
-                    // transformation of inputs into complex plane
-                    for (int i = 0; i < patchSz; i++)
-                        for (int j = 0; j < patchSz; j++)
-                            CinputArray[i, j] = Exp(complex1 * 2 * Math.PI * inputArray[i, j] / numberofsectors);
-                    // end nested for loop
-                    // transform to 1d array
-                    for (int i = 0; i < patchSz; i++)
-                        for (int j = 0; j < patchSz; j++)
-                            S[i * patchSz + j] = CinputArray[i, j];
-                    // end for loop
-                    #endregion
-                    #region calculate weighted sum of first layer and its activation
-                    // calculate weighted sum & activation
-                    for (int i = 0; i < networkSize[0]; i++)
+                    for (int col = 0; col < range_x.GetLength(0); col++) // for each column
                     {
-                        for (int j = 1; j < inputsPerSample[0]; j++)
+                        #region process first layer
+                        // process first layer
+                        int ii = 0;
+                        byte[,] src = Functions.CreatePatch(noisyIm, range_y[row], range_x[col], k, patchSz);
+                        // upcast to double
+                        Array.Copy(src, inputArray, src.Length);
+                        // transformation of inputs into complex plane
+                        for (int i = 0; i < patchSz; i++)
+                            for (int j = 0; j < patchSz; j++)
+                                CinputArray[i, j] = Exp(complex1 * 2 * Math.PI * inputArray[i, j] / numberofsectors);
+                        // end nested for loop
+                        // transform to 1d array
+                        for (int i = 0; i < patchSz; i++)
+                            for (int j = 0; j < patchSz; j++)
+                                S[i * patchSz + j] = CinputArray[i, j];
+                        // end for loop
+                        #endregion
+                        #region calculate weighted sum of first layer and its activation
+                        // calculate weighted sum & activation
+                        for (int i = 0; i < networkSize[0]; i++)
                         {
-                            sum = sum + weights[ii][i, j] * S[j - 1];
-                        }
-                        sum = sum + weights[ii][i, 0];
-                        outputNeurons[ii][i] = sum;
-                        sum = new Complex(0, 0);
-                    } // end for
+                            for (int j = 1; j < inputsPerSample[0]; j++)
+                            {
+                                sum = sum + weights[ii][i, j] * S[j - 1];
+                            }
+                            sum = sum + weights[ii][i, 0];
+                            outputNeurons[ii][i] = sum;
+                            sum = new Complex(0, 0);
+                        } // end for
 
-                    // apply continuous activation
-                    for (int t = 0; t < networkSize[ii]; t++)
-                        outputNeurons[ii][t] /= Complex.Abs(outputNeurons[ii][t]);
-                    // end for
-                    #endregion
-                    #region calculate weighted sum of second to last layer
-                    // ----------------- Process second to last hidden layers, then output layer
-                    for (ii = 1; ii < layer - 1; ii++)
-                    {
+                        // apply continuous activation
+                        for (int t = 0; t < networkSize[ii]; t++)
+                            outputNeurons[ii][t] /= Complex.Abs(outputNeurons[ii][t]);
+                        // end for
+                        #endregion
+                        #region calculate weighted sum of second to last layer
+                        // ----------------- Process second to last hidden layers, then output layer
+                        for (ii = 1; ii < layer - 1; ii++)
+                        {
+                            for (int i = 0; i < networkSize[ii]; i++)
+                            {
+                                for (int j = 1; j < inputsPerSample[ii]; j++)
+                                {
+                                    sum = sum + weights[ii][i, j] * outputNeurons[ii - 1][j - 1];
+                                }
+                                sum = sum + weights[ii][i, 0];
+                                outputNeurons[ii][i] = sum;
+                                sum = new Complex(0, 0);
+                            } // end for
+                            // apply contiunous activation
+                            for (int t = 0; t < networkSize[ii]; t++)
+                                outputNeurons[ii][t] /= Complex.Abs(outputNeurons[ii][t]);
+                            // end for
+                        } // end for ii
+
+
+                        // output layer
+                        ii = layer - 1; // set to last layer
+                        // calculate the weighted sum
                         for (int i = 0; i < networkSize[ii]; i++)
                         {
                             for (int j = 1; j < inputsPerSample[ii]; j++)
@@ -1135,84 +1237,77 @@ namespace Project_LENA___WPF
                             outputNeurons[ii][i] = sum;
                             sum = new Complex(0, 0);
                         } // end for
-                        // apply contiunous activation
-                        for (int t = 0; t < networkSize[ii]; t++)
-                            outputNeurons[ii][t] /= Complex.Abs(outputNeurons[ii][t]);
+
+                        for (int jj = 0; jj < networkSize[ii]; jj++)
+                        {
+                            // calculate discrete output
+                            // get angle
+                            dOutputNeurons[jj] = Math.Atan2(outputNeurons[ii][jj].Imaginary, outputNeurons[ii][jj].Real);
+                            if (dOutputNeurons[jj] < 0)
+                                dOutputNeurons[jj] = 2 * Math.PI + dOutputNeurons[jj];
+                            // end if
+                            // round
+                            dOutputNeurons[jj] = Math.Truncate(dOutputNeurons[jj] / bb);
+                            //dOutputNeurons[jj] = Math.Floor(dOutputNeurons[jj]/bb);
+
+                            if (dOutputNeurons[jj] > 255)
+                                if (dOutputNeurons[jj] < 320)
+                                    dOutputNeurons[jj] = 255;
+                                else
+                                    dOutputNeurons[jj] = 0;
+                            // end if 
+                            // convert results to byte
+                            output[jj] = Convert.ToByte(dOutputNeurons[jj]);
+                        } // end for
+
+                        #endregion second to last layer
+                        #region Process image
+
+                        //// resize
+                        //for (int i = 0; i < patchSzOut; i++)
+                        //    for (int j = 0; j < patchSzOut; j++)
+                        //        outputArray[i, j] = output[p_diff + j + (i * patchSz)];
+                        //// end for
+
+                        // add to the actual image
+                        for (int i = 0; i < patchSzOut; i++)
+                            for (int j = 0; j < patchSzOut; j++)
+                            {
+                                //if (counter[range_y[row] + i, range_x[col] + j] == 0)
+                                //{
+                                cleanIm[range_y[row] + i, range_x[col] + j, k] += output[p_diff + j + (i * patchSz)];
+                                // end for
+                                //cleanIm[range_y[row] + i, range_x[col] + j, k] += outputArray[i, j];
+                                counter[range_y[row] + i, range_x[col] + j, k]++;
+                                //}
+                            }
                         // end for
-                    } // end for ii
 
+                        #endregion
+                        #region Form elements
+                        if (cancelToken.IsCancellationRequested)
+                            cancelToken.ThrowIfCancellationRequested();
 
-                    // output layer
-                    ii = layer - 1; // set to last layer
-                    // calculate the weighted sum
-                    for (int i = 0; i < networkSize[ii]; i++)
-                    {
-                        for (int j = 1; j < inputsPerSample[ii]; j++)
-                        {
-                            sum = sum + weights[ii][i, j] * outputNeurons[ii - 1][j - 1];
-                        }
-                        sum = sum + weights[ii][i, 0];
-                        outputNeurons[ii][i] = sum;
-                        sum = new Complex(0, 0);
-                    } // end for
+                        // Action when pause button is clicked
+                        await pauseToken.WaitWhilePausedAsync();
 
-                    for (int jj = 0; jj < networkSize[ii]; jj++)
-                    {
-                        // calculate discrete output
-                        // get angle
-                        dOutputNeurons[jj] = Math.Atan2(outputNeurons[ii][jj].Imaginary, outputNeurons[ii][jj].Real);
-                        if (dOutputNeurons[jj] < 0)
-                            dOutputNeurons[jj] = 2 * Math.PI + dOutputNeurons[jj];
-                        // end if
-                        // round
-                        dOutputNeurons[jj] = Math.Truncate(dOutputNeurons[jj] / bb);
-                        //dOutputNeurons[jj] = Math.Floor(dOutputNeurons[jj]/bb);
-
-                        if (dOutputNeurons[jj] > 255)
-                            if (dOutputNeurons[jj] < 320)
-                                dOutputNeurons[jj] = 255;
-                            else
-                                dOutputNeurons[jj] = 0;
-                        // end if 
-                        // convert results to byte
-                        output[jj] = Convert.ToByte(dOutputNeurons[jj]);
-                    } // end for
-
-                    #endregion second to last layer
-                    #region Process image
-                    // add to the actual image
-                    for (int i = 0; i < patchSzOut; i++)
-                        for (int j = 0; j < patchSzOut; j++)
-                        {
-                            //if (counter[range_y[row] + i, range_x[col] + j] == 0)
-                            //{
-                            cleanIm[range_y[row] + i, range_x[col] + j] += outputArray[i, j];
-                            counter[range_y[row] + i, range_x[col] + j]++;
-                            //}
-                        }
-                    // end for
-
-                    #endregion
-                    #region Form elements
-                    if (cancelToken.IsCancellationRequested)
-                        cancelToken.ThrowIfCancellationRequested();
-
-                    // Action when pause button is clicked
-                    await pauseToken.WaitWhilePausedAsync();
-
-                    window.SetProgress1(1);
-                    #endregion
-                } // end col for loop
-                window.SetText2("Patches in row " + (row + 1) +  " of " + range_y.Length + " done." + Environment.NewLine);
-            } // end row for loop
+                        window.SetProgress1(1);
+                        #endregion
+                    } // end col for loop
+                    window.SetText2("Patches in " + Channels[k] + "row " + (row + 1) + " of " + range_y.Length + " done." + Environment.NewLine);
+                } // end row for loop
+            }
             #region Average
             // Average
             for (int row = 0; row < origHeight; row++) // for each row
             {
                 for (int col = 0; col < origWidth; col++) // for each column
                 {
-                    cleanIm[row, col] /= counter[row, col];
-                    counter[row, col] = Convert.ToByte(cleanIm[row, col]);
+                    for (int k = 0; k < samples; k++) // for each sample
+                    {
+                    cleanIm[row, col, k] /= counter[row, col, k];
+                    counter[row, col, k] = Convert.ToByte(cleanIm[row, col, k]);
+                    }
                 }
             }
             #endregion

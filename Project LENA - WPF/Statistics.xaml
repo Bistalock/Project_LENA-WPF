@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Project_LENA___WPF.Statistics"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Image Statistics" Height="152" Width="300">
+        Title="Image Statistics" Height="152" Width="300" WindowStartupLocation="CenterOwner" Closed="Window_Closed">
     <Grid>
         <Label Content="Standard Deviation: " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label Content="PSNR (dB):" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
